@@ -6,8 +6,9 @@
 {% endblock %}
 
 {% block content %}
-
-    {#% formfield player.price with label="Please enter a number from 0 to 100 as your price" %}
+    {% for field in form %}
+        {% formfield field %}
+    {% endfor %}
 
 
 <p>{% next_button %}</p>
