@@ -60,6 +60,11 @@ class Results(Page):
 
 page_sequence = [
     Introduction,
+    Introduction1,
+    Introduction2,
+    Introduction3,
+    GameInstruction,
+    GameInstructions2,
     SetPrices,
     SelectSeller,
     ResultsWaitPage,

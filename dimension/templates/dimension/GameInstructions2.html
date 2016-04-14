@@ -1,0 +1,16 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+	Buyer Instructions
+{% endblock %}
+
+{% block content %}
+
+    {% Now imagine that you are playing as a buyer. Each round, you will buy and object from one of the two sellers in your group.  Both sellers are selling an identical object. However, they may have chosen different prices for that object.
+
+    When you buy an object, you will receive {{ maximum_price }}. %}
+
+<p>{% next_button %}</p>
+
+{% endblock %}

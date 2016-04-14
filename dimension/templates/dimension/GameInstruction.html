@@ -1,11 +1,13 @@
 {% extends "global/Base.html" %}
 {% load staticfiles otree_tags %}
 
+{% block title %}
+	Seller Instructions
+{% endblock %}
+
 {% block content %}
 
-    {% In this game, you and the other participants will be assigned one of two roles a buyer or a seller.  All roles will be reassigned each round.
-
-    Every time you play as a seller, you will be trying to sell an object which buyers can redeem at the end of a round for {{ maximum_price }}%}
+    {% Imagine that you are playing as a seller. Each round, you will be placed into a group with two buyers and one other seller.  The other seller in your group will face the same decision that you do.  For each object you sell, you will receive the sum of all prices you set for an object. %}
 
 <p>{% next_button %}</p>
 
