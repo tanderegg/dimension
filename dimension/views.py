@@ -14,6 +14,20 @@ class Introduction(Page):
     def is_displayed(self):
         return self.subsession.round_number == 1
 
+class Introduction1(Page):
+    template_name = 'dimension/Introduction1.html'
+
+class Introduction2(Page):
+    template_name = 'dimension/Introduction2.html'
+
+class Introduction3(Page):
+    template_name = 'dimension/Introduction3.html'
+
+class GameInstruction(Page):
+    template_name = 'dimension/GameInstruction.html'
+
+class GameInstructions2(Page):
+    template_name = 'dimension/GameInstructions2.html'
 
 class SetPrices(Page):
     template_name = 'dimension/SetPrices.html'
