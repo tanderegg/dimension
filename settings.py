@@ -109,7 +109,7 @@ mturk_hit_settings = {
 # e.g. self.session.config['participation_fee']
 
 SESSION_CONFIG_DEFAULTS = {
-    'real_world_currency_per_point': 0.01,
+    'real_world_currency_per_point': 0.0025,
     'participation_fee': 10.00,
     'num_bots': 12,
     'doc': "",
@@ -120,8 +120,8 @@ SESSION_CONFIG_DEFAULTS = {
 SESSION_CONFIGS = [
     {
         'name': 'dimension',
-        'display_name': "Bertrand Competition",
-        'num_demo_participants': 2,
+        'display_name': "Dimension",
+        'num_demo_participants': 4,
         'app_sequence': [
             'dimension',
         ],

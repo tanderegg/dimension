@@ -12,25 +12,11 @@ import random
 
 
 doc = """
-2 firms complete in a market by setting prices for homogenous goods.
+a description of this game.
 """
 
-bibliography = (
-    (
-        'Kruse, J. B., Rassenti, S., Reynolds, S. S., & Smith, V. L. (1994). '
-        'Bertrand-Edgeworth competition in experimental markets. '
-        'Econometrica: Journal of the Econometric Society, 343-371.'
-    ),
-    (
-        'Dufwenberg, M., & Gneezy, U. (2000). Price competition and market '
-        'concentration: an experimental study. International Journal of '
-        'Industrial Organization, 18(1), 7-22.'
-    )
-)
-
-
 class Constants(BaseConstants):
-    players_per_group = 2
+    players_per_group = 4
     name_in_url = 'bertrand_competition'
     num_rounds = 1
     bonus = c(10)
