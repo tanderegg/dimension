@@ -11,14 +11,8 @@ from .models import Constants
 
 
 class PlayerBot(Bot):
-
     def play_round(self):
-        # compete price
-        self.submit(views.Introduction)
-        self.submit(views.Question1, {'training_my_profit': c(1)})
-        self.submit(views.Feedback1)
-        self.submit(views.Decide, {'price': c(30)})
-        self.submit(views.Results)
+        pass
 
     def validate_play(self):
         pass
