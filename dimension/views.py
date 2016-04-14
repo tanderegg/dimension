@@ -9,7 +9,7 @@ from django.utils.safestring import mark_safe
 
 
 def vars_for_all_templates(self):
-    return {'instructions': 'bertrand_competition/Instructions.html'}
+    return {'instructions': 'dimension/Instructions.html'}
 
 
 class Introduction(Page):
