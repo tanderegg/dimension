@@ -49,9 +49,14 @@ class SelectSeller(Page):
         }
 
 
+class BuyerWaitPage(WaitPage):
+    pass
+
+
 class ResultsWaitPage(WaitPage):
     def after_all_players_arrive(self):
-        self.group.set_payoffs()
+        # TODO: compute final results
+        pass
 
 
 class Results(Page):
@@ -61,6 +66,7 @@ class Results(Page):
 page_sequence = [
     Introduction,
     SetPrices,
+    BuyerWaitPage,
     SelectSeller,
     ResultsWaitPage,
     Results,
