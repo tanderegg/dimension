@@ -20,6 +20,9 @@ class Introduction1(Page):
 class Introduction2(Page):
     template_name = 'dimension/Introduction2.html'
 
+    def vars_for_template(self):
+        return {'num_rounds': models.Constants.num_rounds}
+
 class Introduction3(Page):
     template_name = 'dimension/Introduction3.html'
 
