@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # <standard imports>
 from __future__ import division
+
 from otree.db import models
 from otree.constants import BaseConstants
 from otree.models import BaseSubsession, BaseGroup, BasePlayer
@@ -50,4 +51,14 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    pass
+    buyer_choice = models.PositiveIntegerField(null=True, blank=True)
+    buyer_total = models.CurrencyField(null=True, blank=True)
+
+    seller_price0 = models.CurrencyField(null=True, blank=True)
+    seller_price1 = models.CurrencyField(null=True, blank=True)
+    seller_price2 = models.CurrencyField(null=True, blank=True)
+    seller_price3 = models.CurrencyField(null=True, blank=True)
+    seller_price4 = models.CurrencyField(null=True, blank=True)
+    seller_price5 = models.CurrencyField(null=True, blank=True)
+    seller_price6 = models.CurrencyField(null=True, blank=True)
+    seller_price7 = models.CurrencyField(null=True, blank=True)
