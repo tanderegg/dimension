@@ -16,7 +16,7 @@ class Introduction(Page):
 
 
 class SetPrices(Page):
-    template_name = 'global/SetPrices.html'
+    template_name = 'dimension/SetPrices.html'
     form_model = models.Player
 
     def is_displayed(self):
@@ -33,7 +33,7 @@ class SetPrices(Page):
 
 
 class SelectSeller(Page):
-    template_name = 'global/SelectSeller.html'
+    template_name = 'dimension/SelectSeller.html'
     form_model = models.Player
     form_fields = ('buyer_choice',)
 

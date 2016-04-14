@@ -12,7 +12,7 @@ from .models import Constants
 
 class PlayerBot(Bot):
     def play_round(self):
-        pass
+        self.submit(views.Introduction)
 
     def validate_play(self):
         pass
