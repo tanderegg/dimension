@@ -58,11 +58,12 @@ class SelectSeller(Page):
         return 'buyer' == self.player.participant.vars['role']
 
     def vars_for_template(self):
+        print self.group.get_players()
         return {
-            'sellers': filter(
-                lambda p: 'seller' == p.role,
+            'sellers': enumerate(filter(
+                lambda p: 'seller' == p.participant.vars['role'],
                 self.group.get_players()
-            ),
+            )),
         }
 
 

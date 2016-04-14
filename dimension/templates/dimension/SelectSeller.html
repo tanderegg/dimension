@@ -9,6 +9,11 @@
     {% for field in form %}
         {% formfield field %}
     {% endfor %}
+    {% for i, seller in sellers %}
+    <p><strong>Seller {{ i }}</strong></p>
+    <p>{{ seller.seller_price0 }}</p>
+    <p>{{ seller.seller_price1 }}</p>
+    {% endfor %}
 
 
 <p>{% next_button %}</p>
