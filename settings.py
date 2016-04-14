@@ -118,6 +118,15 @@ SESSION_CONFIG_DEFAULTS = {
 
 
 SESSION_CONFIGS = [
+    {
+        'name': 'dimension',
+        'display_name': "Bertrand Competition",
+        'num_demo_participants': 2,
+        'app_sequence': [
+            'dimension',
+        ],
+    },
+
     # {
     #     'name': '...',
     #     'display_name': '...',
