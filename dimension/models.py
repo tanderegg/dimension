@@ -32,7 +32,7 @@ class Constants(BaseConstants):
 class Subsession(BaseSubsession):
     def before_session_starts(self):
         for i, group in enumerate(self.get_groups()):
-            group.num_prices = 2 ** i
+            group.num_prices = 2 # TODO: vary by group!
 
             group_roles = self.generate_roles()
             for player, role in zip(group.get_players(), group_roles):
