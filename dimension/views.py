@@ -40,6 +40,10 @@ class SetPrices(Page):
         return 'seller' == self.player.participant.vars['role']
 
     def get_form_fields(self):
+        print([
+            'seller_price{}'.format(i)
+            for i in range(self.group.num_prices)
+            ])
         return [
             'seller_price{}'.format(i)
             for i in range(self.group.num_prices)
