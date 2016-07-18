@@ -1,21 +1,21 @@
 {% extends "global/Base.html" %}
 {% load staticfiles otree_tags %}
 
+
 {% block title %}
-    Select Seller
+    Round Summary
 {% endblock %}
 
 {% block content %}
-        {% formfield player.buyer_choice with label="Which seller do you select" %}
     {% for i, seller in sellers %}
     <p><strong>Seller {{ i }}</strong></p>
+    
     <p>{{ seller.seller_price0 }}</p>
     <p>{{ seller.seller_price1 }}</p>
     {% endfor %}
 
-
+    
 <p>{% next_button %}</p>
 
-    {% include instructions %}
 
 {% endblock %}

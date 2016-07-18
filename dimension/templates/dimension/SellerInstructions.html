@@ -1,0 +1,46 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block content %}
+
+<table width=100% height=100%>
+	<tr>
+		<td width=50%>
+			<p> Imagine that you are playing as a <b>seller</b>.  
+				Each round, you will be placed into a group with {{ buyers_per_group }} buyers and {{ num_other_sellers }}
+				{% if num_other_sellers == 1 %} seller.
+				{% else %} sellers.
+				{% endif %}  
+				The other 
+				{% if num_other_sellers == 1 %}seller
+				{% else %}sellers
+				{% endif %}
+				
+ 				in your group will face the same decision that you do. </p>
+
+			<p> As a seller, you can sell objects to earn tokens.  As a seller, you do not value owning the object itself, but you can sell the object to a buyer.  As a seller you must choose <b>{{num_prices}} {% if num_prices == 1 %}price{% else %}prices{% endif %} </b> for you object.  An example is shown in the table to the right.  </p>
+
+			<p> For each object that you sell, you must pay {{ production_cost }} tokens to produce the object.  For each object you sell, you will receive the {% if num_prices == 1 %} price {% else %} sum of {{ num_prices }} prices {% endif %}you set for the object. </p>
+		</td>
+
+		<td width=50%>
+		{% if num_prices == 1 %}
+		<table width = 100%, height = 70%>
+			<tr> <td>	Price 1	</td>  <td> 	700	</td> </tr>
+		</table>
+
+		{% else %}
+		<table width = 100%, height = 70%>
+			<tr> <td>	Price 1	</td>  <td> 	300	</td> </tr>
+			<tr> <td>	Price 2	</td>  <td> 	300	</td> </tr>
+		</table>
+
+		{% endif %}
+		</td>
+	</tr>
+</table>
+
+
+<p>{% next_button %}</p>
+
+{% endblock %}

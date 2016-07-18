@@ -6,13 +6,14 @@
 {% endblock %}
 
 {% block content %}
-<p>Please specify {{ num_prices}} price(s)</p>
+<p>Please specify {{ num_prices}} {% if num_prices == 1 %} price. 
+	{% else %} prices.</p>
+	{% endif %} 
     {% for field in form %}
         {% formfield field %}
     {% endfor %}
 
 <p>{% next_button %}</p>
 
-    {% include instructions %}
 
 {% endblock %}
