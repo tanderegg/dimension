@@ -3,6 +3,9 @@ from __future__ import division
 from . import models
 from ._builtin import Page, WaitPage
 
+from django.http import HttpResponse
+from django.views.generic import View
+
 
 def vars_for_all_templates(self):
     return {'instructions': 'dimension/Instructions.html'}
@@ -176,3 +179,16 @@ page_sequence = [
 # RiskQ4
 # Gender
 # EndExperiment
+
+
+class ClickView(View):
+    def get(self, request):
+        player_id = request.GET.get('player_id')
+
+        try:
+            player = models.Player.objects.get(pk=player_id)
+        except models.Player.DoesNotExist:
+            return HttpResponse('something went wrong')
+
+        clicks = player.add_click()
+        return HttpResponse('{} click(s)'.format(clicks))
