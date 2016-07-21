@@ -122,7 +122,7 @@ class SetPricesWaitPage(WaitPage):
     pass
 
 class BuyerWaitPage(WaitPage):
-    pass
+    template_name = 'dimension/BuyerWaitPage.html'
 
     
 class RoundSummary(Page):
