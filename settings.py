@@ -17,12 +17,12 @@ else:
     DEBUG = True
 
 ADMIN_USERNAME = 'admin'
-ADMIN_PASSWORD = 'otree'
+
+# for security, best to set admin password in an environment variable
+ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
 
 # don't share this with anybody.
-# Change this to something unique (e.g. mash your keyboard),
-# and then delete this comment.
-SECRET_KEY = 'zzzzzzzzzzzzzzzzzzzzzzzzzzz'
+SECRET_KEY = '6+2i60rc+__hp-ov1@%t0z^!yo#&x^!+=ta0ndmiaj8=tp49&#'
 
 PAGE_FOOTER = ''
 
@@ -49,14 +49,6 @@ DATABASES = {
 
 AUTH_LEVEL = environ.get('OTREE_AUTH_LEVEL')
 
-# ACCESS_CODE_FOR_DEFAULT_SESSION:
-# If you have a "default session" set,
-# then an access code will be appended to the URL for authentication.
-# You can change this as frequently as you'd like,
-# to prevent unauthorized server access.
-
-ACCESS_CODE_FOR_DEFAULT_SESSION = 'my_access_code'
-
 # setting for integration with AWS Mturk
 AWS_ACCESS_KEY_ID = environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = environ.get('AWS_SECRET_ACCESS_KEY')
@@ -67,9 +59,9 @@ REAL_WORLD_CURRENCY_CODE = 'USD'
 USE_POINTS = True
 
 
-# e.g. en-gb, de-de, it-it, fr-fr.
-# see: https://docs.djangoproject.com/en/1.6/topics/i18n/
-LANGUAGE_CODE = 'en-us'
+# e.g. en, de, fr, it, ja, zh-hans
+# see: https://docs.djangoproject.com/en/1.9/topics/i18n/#term-language-code
+LANGUAGE_CODE = 'en'
 
 # if an app is included in SESSION_CONFIGS, you don't need to list it here
 INSTALLED_APPS = []
@@ -93,13 +85,13 @@ mturk_hit_settings = {
     'frame_height': 500,
     'preview_template': 'global/MTurkPreview.html',
     'minutes_allotted_per_assignment': 60,
-    'expiration_hours': 7*24, # 7 days
-    #'grant_qualification_id': 'YOUR_QUALIFICATION_ID_HERE',# to prevent retakes
+    'expiration_hours': 7*24,  # 7 days
+    # 'grant_qualification_id': 'YOUR_QUALIFICATION_ID_HERE',# to prevent retakes
     'qualification_requirements': [
         qualification.LocaleRequirement("EqualTo", "US"),
         qualification.PercentAssignmentsApprovedRequirement("GreaterThanOrEqualTo", 50),
         qualification.NumberHitsApprovedRequirement("GreaterThanOrEqualTo", 5),
-        #qualification.Requirement('YOUR_QUALIFICATION_ID_HERE', 'DoesNotExist')
+        # qualification.Requirement('YOUR_QUALIFICATION_ID_HERE', 'DoesNotExist')
     ]
 }
 
@@ -109,7 +101,7 @@ mturk_hit_settings = {
 # e.g. self.session.config['participation_fee']
 
 SESSION_CONFIG_DEFAULTS = {
-    'real_world_currency_per_point': 0.0025,
+    'real_world_currency_per_point': 0.01,
     'participation_fee': 10.00,
     'num_bots': 12,
     'doc': "",
@@ -126,7 +118,6 @@ SESSION_CONFIGS = [
             'dimension',
         ],
     },
-
     # {
     #     'name': '...',
     #     'display_name': '...',
@@ -135,5 +126,6 @@ SESSION_CONFIGS = [
     # }
 ]
 
-# don't put anything after this line.
+# anything you put after the below line will override
+# oTree's default settings. Use with caution.
 otree.settings.augment_settings(globals())
