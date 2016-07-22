@@ -96,10 +96,10 @@ class SetPrices(Page):
         'role' : self.player.role,
         'role_int' : self.player.role_int}
 
-    #def error_message(self, value):
-    #    if sum(value.values()) > models.Constants.max_total_price:
-    #        return "The sum of all prices must be less than or equal to {}".format(
-    #            models.Constants.max_total_price)
+    def error_message(self, value):
+        if sum(value.values()) > models.Constants.max_total_price:
+            return "The sum of all prices must be less than or equal to {}".format(
+                models.Constants.max_total_price)
 
 
 class SelectSeller(Page):
