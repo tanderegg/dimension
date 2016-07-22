@@ -173,6 +173,9 @@ class Player(BasePlayer):
     # Both the buyers and sellers will need a randomly assigned identifier in
     # order to reference each anonymized player type
     identifier = models.PositiveIntegerField(null = True, blank = True)
+
+    # Number of clicks on the buyer wait page.
+    clicks = models.PositiveIntegerField(default=0)
     
     def role(self):
         return {1:'seller', 2:'buyer'}[self.role_int]
@@ -232,4 +235,8 @@ class Player(BasePlayer):
                     player.payoff = player.earnings
             else:
                 player.payoff = 0
-                
+
+    def add_click(self):
+        self.clicks = self.clicks + 1
+        self.save()
+        return self.clicks
