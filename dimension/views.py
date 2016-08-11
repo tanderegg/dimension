@@ -15,7 +15,8 @@ class Begin(Page):
     template_name = 'dimension/Begin.html'
 
     def is_displayed(self):
-        return self.subsession.round_number == 1
+        return ((self.subsession.round_number == 1) & 
+            (models.Constants.show_instructions))
 
 class PRA(Page):
     template_name = 'dimension/PRA.html'
@@ -24,7 +25,8 @@ class PRA(Page):
         self.group.set_identifier()
 
     def is_displayed(self):
-        return self.subsession.round_number == 1
+        return ((self.subsession.round_number == 1) & 
+            (models.Constants.show_instructions))
 
 
 class Introduction(Page):
@@ -33,6 +35,9 @@ class Introduction(Page):
     def vars_for_template(self):
         return {'num_rounds': models.Constants.num_rounds, 
         'num_games' : models.Constants.num_games}
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
 
 class IntroductionPayment(Page):
     template_name = 'dimension/IntroductionPayment.html'
@@ -43,6 +48,9 @@ class IntroductionPayment(Page):
         'tokens_per_dollar' : models.Constants.tokens_per_cent*100,
         'starting_tokens' : models.Constants.starting_tokens}
 
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
 class IntroductionRoles(Page):
     template_name = 'dimension/IntroductionRoles.html'
 
@@ -50,12 +58,18 @@ class IntroductionRoles(Page):
         return {'redeem_value': models.Constants.redeem_value,
         }
 
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
 class AssignedDirections(Page):
     template_name = 'dimension/AssignedDirections.html'
 
     def vars_for_template(self):
         return {'rounds_per_game': models.Constants.rounds_per_game,
         }
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
 
 class SellerInstructions(Page):
     template_name = 'dimension/SellerInstructions.html'
@@ -66,6 +80,9 @@ class SellerInstructions(Page):
         'num_prices' : self.subsession.num_prices,
         'production_cost' : models.Constants.production_cost}
 
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
 # class SellerQ1(Page):
 #     template_name = 'dimension/GameInstructions2.html'
 
@@ -75,8 +92,14 @@ class SellerInstructions(Page):
 class BuyerInstructions(Page):
     template_name = 'dimension/BuyerInstructions.html'
 
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
 class RoundSummaryExample(Page):
     template_name = 'dimension/RoundSummaryExample.html'
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
 
 class Intro(Page):
     template_name = 'dimension/Intro.html'
@@ -115,40 +138,53 @@ class SelectSeller(Page):
 
     def vars_for_template(self):
         return {
-            'sellers': enumerate(filter(
+            'sellers': enumerate(sorted(filter(
                 lambda p: 1 == p.role_int,
-                self.group.get_players()
-            )),
+                self.group.get_players()), key = lambda p: p.identifier
+            )), 'num_prices' : self.subsession.num_prices,
         }
+
 
 class SetPricesWaitPage(WaitPage):
     pass
 
+
 class BuyerWaitPage(WaitPage):
     template_name = 'dimension/BuyerWaitPage.html'
+    # wait_for_all_groups = True
+
+    def after_all_players_arrive(self):
+        self.group.total_cost()
+        self.group.buyer_cost()
+        self.group.number_sales()
+        self.group.calculate_payoff()
+        self.group.buyer_choice_to_seller_selected()
 
     
 class RoundSummary(Page):
     template_name = 'dimension/RoundSummary.html'
 
-    def after_all_players_arrive(self):
-        pass
-
+    # print models.player.buyer_choice +1 if models.player.role_int ==2 else models.player.buyer_choice
     def vars_for_template(self):
         return {
-        'sellers': enumerate(filter(
+        'sellers': enumerate(sorted(filter(
                 lambda p: 1 == p.role_int,
-                self.group.get_players()
+                self.group.get_players()), key = lambda p: p.identifier
             )), 'num_prices' : self.subsession.num_prices,
-        'totalcosts' : self.player.total_cost(),
-        'buyer_costs' : self.player.buyer_cost(),
-        'number_sales' : self.player.number_sales(),
-        'profits' : self.player.calculate_payoff()
+        'real_round' : self.subsession.is_real_round(),
+        'cumulative_profits' : sum([p.payoff for p in self.player.in_all_rounds()]),
+        'buyers' : enumerate(sorted(filter(
+            lambda p: 2 == p.role_int, 
+            self.group.get_players()), key = lambda p: p.identifier
+        ))
         
         }
 
 class RoundSummaryWait(WaitPage):
     wait_for_all_groups = True
+
+    def after_all_players_arrive(self):
+        self.group.adjust_payoff()
 
 page_sequence = [ 
     Begin,
