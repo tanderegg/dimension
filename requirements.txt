@@ -1,6 +1,7 @@
 alabaster==0.7.7
 amqp==1.4.9
-anaconda-navigator==1.1.0
+anaconda==4.1.11
+anaconda-navigator==1.2.1
 anyjson==0.3.3
 argcomplete==1.0.0
 asgi-redis==0.11.0
