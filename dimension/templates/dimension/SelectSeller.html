@@ -7,12 +7,51 @@
 
 {% block content %}
         {% formfield player.buyer_choice with label="Which seller do you select" %}
+    
+    {% if num_prices == 1 %}
     {% for i, seller in sellers %}
-    <p><strong>Seller {{ i }}</strong></p>
-    <p>{{ seller.seller_price0 }}</p>
-    <p>{{ seller.seller_price1 }}</p>
-    {% endfor %}
-
+    <table height = 50% width = 50%>
+    <tr> <th> <strong>Seller {{ seller.identifier }}</strong> </th> </tr>
+    	<tr>{{ seller.seller_price0 }}</tr>
+	</table>
+	{% endfor %}
+    {% elif num_prices == 8 %}
+    {% for i, seller in sellers %}
+    <table height = 50% width = 50%>
+    	<th> <strong> Seller {{ seller.identifier }} </strong> </th>
+		<tr>	<td>{{ seller.seller_price0 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price1 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price2 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price3 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price4 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price5 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price6 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price7 }}</td> </tr>
+	</table>
+	{% endfor %}
+    {% else %}
+    {% for i, seller in sellers %}
+    <table height = 50% width = 50%>
+    	<th> <strong> Seller {{ seller.identifier }} </strong> </th>
+		<tr>	<td>{{ seller.seller_price0 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price1 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price2 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price3 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price4 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price5 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price6 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price7 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price8 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price9 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price10 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price11 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price12 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price13 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price14 }}</td> </tr>
+		<tr>    <td>{{ seller.seller_price15 }}</td> </tr>
+	</table>
+	{% endfor %}
+	{% endif %} 
 
 <p>{% next_button %}</p>
 
