@@ -40,7 +40,7 @@ class Constants(BaseConstants):
     starting_tokens = 500
     production_cost = 100
     # For convenience of testing the experience of players
-    show_instructions = False 
+    show_instructions = False
 
 
 class Subsession(BaseSubsession):
@@ -181,7 +181,8 @@ class Group(BaseGroup):
             for buyer in buyers:        
                 if buyer.buyer_choice == (seller.identifier-1):
                     seller.sales += 1
-            seller.earnings = (seller.sales*seller.seller_total_price)
+            seller.earnings = (seller.sales*
+                (seller.seller_total_price-Constants.production_cost))
             
     def calculate_payoff(self):
         for player in self.get_players():
@@ -204,26 +205,56 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+
+    # Instruction Questions
+    q1 = models.CharField(
+        choices = ['0 Tokens', '800 Tokens', 'It depends on the prices I set'],
+        blank = True,
+        widget = widgets.RadioSelect(),
+        verbose_name = "How many tokens will you receive if you don't sell an object?")
+
+    q2 = models.CharField(
+        choices = ['0 tokens', '800 tokens', 'It depends on the prices I set'],
+        blank = True,
+        widget = widgets.RadioSelect(),
+        verbose_name = 'How many tokens will you receive if you sell an object?')
+
     # Role integer 1: seller, 2: buyer
     role_int = models.PositiveIntegerField(null = True, blank = True)
 
     # Storage of prices created by sellers
-    seller_price0 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price1 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price2 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price3 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price4 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price5 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price6 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price7 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price8 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price9 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price10 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price11 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price12 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price13 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price14 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price15 = models.CurrencyField(min=0, null=True, blank=True)
+    seller_price0 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 1")
+    seller_price1 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 2")
+    seller_price2 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 3")
+    seller_price3 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 4")
+    seller_price4 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 5")
+    seller_price5 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 6")
+    seller_price6 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 7")
+    seller_price7 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 8")
+    seller_price8 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 9")
+    seller_price9 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 10")
+    seller_price10 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 11")
+    seller_price11 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 12")
+    seller_price12 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 13")
+    seller_price13 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 14")
+    seller_price14 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 15")
+    seller_price15 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 16")
 
     seller_total_price = models.CurrencyField(null=True, blank=True)
     # @TODO Make the prices a list which then has the appropriate length
