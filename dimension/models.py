@@ -126,13 +126,13 @@ class Group(BaseGroup):
     def set_identifier(self):
         # Set identifier within each group for buyers
         buyers = [p for p in self.get_players() if p.role_int ==1]
-        buyer_ids = range(1,self.subsession.buyers_per_group+1)
+        buyer_ids = list(range(1,self.subsession.buyers_per_group+1))
         random.shuffle(buyer_ids) 
         for i,buyer in enumerate(buyers):
             buyers[i].identifier = buyer_ids[i]
         # Set identifier within each group for sellers
         sellers = [p for p in self.get_players() if p.role_int ==2]
-        seller_ids = range(1,self.subsession.sellers_per_group+1)
+        seller_ids = list(range(1,self.subsession.sellers_per_group+1))
         random.shuffle(seller_ids)
         for i,seller in enumerate(sellers):
             sellers[i].identifier = seller_ids[i]
