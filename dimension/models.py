@@ -108,7 +108,7 @@ class Subsession(BaseSubsession):
         buyers_per_group = int(Constants.players_per_group - sellers_per_group)
         num = int(Constants.players_per_group/2)
         roles = ['2'] * buyers_per_group + ['1'] * sellers_per_group
-        roles = map(int, roles)
+        roles = list(map(int, roles))
         random.shuffle(roles)
         return roles
 
