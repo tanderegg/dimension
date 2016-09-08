@@ -33,12 +33,15 @@ class Constants(BaseConstants):
     rounds_per_game = int((num_rounds-num_practice_rounds)/num_games)
     # This variable sets the number of prices used in each game in the exact 
     # order of this list
-    prices_per_seller = [4,1,8]
+    prices_per_seller = [8,1,16]
     redeem_value = 800
     max_total_price = 800
     tokens_per_cent = 4
     starting_tokens = 500
     production_cost = 100
+    # For convenience of testing the experience of players
+    show_instructions = False
+
 
 class Subsession(BaseSubsession):
     num_prices = models.PositiveIntegerField()
@@ -96,7 +99,6 @@ class Subsession(BaseSubsession):
         for group in self.get_groups():
             group.set_identifier()
 
-
     def is_real_round(self):
         return self.round_number > Constants.num_practice_rounds
    
@@ -109,7 +111,6 @@ class Subsession(BaseSubsession):
         roles = map(int, roles)
         random.shuffle(roles)
         return roles
-
 
 
 class Group(BaseGroup):
@@ -136,20 +137,125 @@ class Group(BaseGroup):
         for i,seller in enumerate(sellers):
             sellers[i].identifier = seller_ids[i]
 
+    # This will sum up the total cost of each product and keep this value stored
+    # in the sellers row
+    def total_cost(self):
+        for player in self.get_players():
+            if player.role_int == 1:
+                if self.subsession.num_prices ==1:
+                    player.seller_total_price = player.seller_price0
+                elif self.subsession.num_prices == 8:
+                    player.seller_total_price = sum([player.seller_price0,
+                        player.seller_price1, player.seller_price2,
+                        player.seller_price3, player.seller_price4,
+                        player.seller_price5, player.seller_price6,
+                        player.seller_price7])
+                else:
+                    player.seller_total_price = sum([player.seller_price0,
+                    player.seller_price1, player.seller_price2, 
+                    player.seller_price3, player.seller_price4,
+                    player.seller_price5, player.seller_price6,
+                    player.seller_price7, player.seller_price8, 
+                    player.seller_price9, player.seller_price10,
+                    player.seller_price11, player.seller_price12,
+                    player.seller_price13, player.seller_price14,
+                    player.seller_price15])
+            
+    # This will calculate the cost that each buyer must pay to the seller
+    # selected for that round
+    def buyer_cost(self):
+        buyers = [p for p in self.get_players() if p.role_int == 2]
+        for player_b in buyers:
+            sellers = [p for p in self.get_players() if p.role_int == 1]
+            for player_s in sellers:
+                if player_s.identifier == (player_b.buyer_choice+1):
+                    player_b.price_paid = player_s.seller_total_price
+
+    # This calculates the number of sales that each buyer made in order to
+    # calculate profits
+    def number_sales(self):
+        sellers = [p for p in self.get_players() if p.role_int==1]
+        for seller in sellers:
+            seller.sales = 0
+            buyers = [p for p in self.get_players() if p.role_int==2]
+            for buyer in buyers:        
+                if buyer.buyer_choice == (seller.identifier-1):
+                    seller.sales += 1
+            seller.earnings = (seller.sales*
+                (seller.seller_total_price-Constants.production_cost))
+            
+    def calculate_payoff(self):
+        for player in self.get_players():
+            if player.role_int == 2: 
+                # Profits for buyers
+                player.payoff = Constants.redeem_value - player.price_paid
+            else: 
+                # Profits for sellers
+                player.payoff = player.earnings
+
+    def adjust_payoff(self):
+        for player in self.get_players():
+            if self.subsession.is_real_round():
+                player.payoff = 0
+
+    def buyer_choice_to_seller_selected(self):
+        buyers = [p for p in self.get_players() if p.role_int ==2]
+        for buyer in buyers:
+            buyer.seller_selected = buyer.buyer_choice + 1
+
 
 class Player(BasePlayer):
+
+    # Instruction Questions
+    q1 = models.CharField(
+        choices = ['0 Tokens', '800 Tokens', 'It depends on the prices I set'],
+        blank = True,
+        widget = widgets.RadioSelect(),
+        verbose_name = "How many tokens will you receive if you don't sell an object?")
+
+    q2 = models.CharField(
+        choices = ['0 tokens', '800 tokens', 'It depends on the prices I set'],
+        blank = True,
+        widget = widgets.RadioSelect(),
+        verbose_name = 'How many tokens will you receive if you sell an object?')
+
     # Role integer 1: seller, 2: buyer
     role_int = models.PositiveIntegerField(null = True, blank = True)
 
     # Storage of prices created by sellers
-    seller_price0 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price1 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price2 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price3 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price4 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price5 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price6 = models.CurrencyField(min=0, null=True, blank=True)
-    seller_price7 = models.CurrencyField(min=0, null=True, blank=True)
+    seller_price0 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 1")
+    seller_price1 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 2")
+    seller_price2 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 3")
+    seller_price3 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 4")
+    seller_price4 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 5")
+    seller_price5 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 6")
+    seller_price6 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 7")
+    seller_price7 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 8")
+    seller_price8 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 9")
+    seller_price9 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 10")
+    seller_price10 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 11")
+    seller_price11 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 12")
+    seller_price12 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 13")
+    seller_price13 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 14")
+    seller_price14 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 15")
+    seller_price15 = models.CurrencyField(min=0, null=True, blank=True,
+        verbose_name = "Price 16")
+
     seller_total_price = models.CurrencyField(null=True, blank=True)
     # @TODO Make the prices a list which then has the appropriate length
     # for the subsession given the number of prices
@@ -162,11 +268,12 @@ class Player(BasePlayer):
 
     # Buyers choose a seller using the randomly assigned seller identifier
     buyer_choice = models.PositiveIntegerField(
-        choices=[(i, 'Buy from seller %i' % i) for i in
+        choices=[(i, 'Buy from seller %i' % (i+1)) for i in
                  range(0, int(Constants.players_per_group/2))] ,
         blank=True,
         widget=widgets.RadioSelect(),
         verbose_name='And you will')  
+    seller_selected = models.PositiveIntegerField(blank = True)
     # This will be the sum of prices of the seller a buyer selects
     price_paid = models.PositiveIntegerField(null = True, blank = True)
 
@@ -174,67 +281,14 @@ class Player(BasePlayer):
     # order to reference each anonymized player type
     identifier = models.PositiveIntegerField(null = True, blank = True)
 
+    # Cumulative profits
+    cum_profits = models.PositiveIntegerField(null = True, blank = True)
+
     # Number of clicks on the buyer wait page.
     clicks = models.PositiveIntegerField(default=0)
     
     def role(self):
         return {1:'seller', 2:'buyer'}[self.role_int]
-
-    # This will sum up the total cost of each product and keep this value stored
-    # in the sellers row
-    def total_cost(self):
-        for player in self.group.get_players():
-            if player.role_int == 1:
-                if self.subsession.num_prices ==1:
-                    player.seller_total_price = player.seller_price0
-                elif self.subsession.num_prices == 4:
-                    player.seller_total_price = sum([player.seller_price0,
-                        player.seller_price1, player.seller_price2,
-                        player.seller_price3])
-                else:
-                    player.seller_total_price = sum([player.seller_price0,
-                    player.seller_price1, player.seller_price2, 
-                    player.seller_price3, player.seller_price4,
-                    player.seller_price5, player.seller_price6,
-                    player.seller_price7])
-            
-    # This will calculate the cost that each buyer must pay to the seller
-    # selected for that round
-    def buyer_cost(self):
-
-        for player_b in self.group.get_players():
-            if player_b.role_int == 2:
-                for player_s in self.group.get_players():
-                    if player_s.role_int ==1:
-                        if player_s.identifier == (player_b.buyer_choice+1):
-                            player_b.price_paid = player_s.seller_total_price
-
-    # This calculates the number of sales that each buyer made in order to
-    # calculate profits
-    def number_sales(self):
-       
-        sellers = [p for p in self.group.get_players() if p.role_int==1]
-        for seller in sellers:
-            seller.sales = 0
-            buyers = [p for p in self.group.get_players() if p.role_int==2]
-            for buyer in buyers:        
-                if buyer.buyer_choice == (seller.identifier-1):
-                    seller.sales += 1
-            seller.earnings = (seller.sales*seller.seller_total_price)
-            
-    def calculate_payoff(self):
-       
-        for player in self.group.get_players():
-
-            if self.subsession.is_real_round():
-                if player.role_int == 2: 
-                    # Profits for buyers
-                    player.payoff = Constants.redeem_value - player.price_paid
-                else: 
-                    # Profits for sellers
-                    player.payoff = player.earnings
-            else:
-                player.payoff = 0
 
     def add_click(self):
         self.clicks = self.clicks + 1

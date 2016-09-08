@@ -18,21 +18,46 @@
 				
  				in your group will face the same decision that you do. </p>
 
-			<p> As a seller, you can sell objects to earn tokens.  As a seller, you do not value owning the object itself, but you can sell the object to a buyer.  As a seller you must choose <b>{{num_prices}} {% if num_prices == 1 %}price{% else %}prices{% endif %} </b> for you object.  An example is shown in the table to the right.  </p>
+			<p> As a seller, you can sell objects to earn tokens.  As a seller, you do not value owning the object itself, but you can sell the object to a buyer.  As a seller you must choose <b>{{num_prices}} {% if num_prices == 1 %}price{% else %}prices{% endif %} </b> for your object.  An example is shown in the table to the right.  </p>
 
 			<p> For each object that you sell, you must pay {{ production_cost }} tokens to produce the object.  For each object you sell, you will receive the {% if num_prices == 1 %} price {% else %} sum of {{ num_prices }} prices {% endif %}you set for the object. </p>
 		</td>
 
 		<td width=50%>
 		{% if num_prices == 1 %}
-		<table width = 100%, height = 70%>
+		<table width = 80%, height = 70%>
 			<tr> <td>	Price 1	</td>  <td> 	700	</td> </tr>
 		</table>
 
-		{% else %}
-		<table width = 100%, height = 70%>
+		{% elif num_prices == 8 %}
+		<table width = 80%, height = 70%>
 			<tr> <td>	Price 1	</td>  <td> 	300	</td> </tr>
-			<tr> <td>	Price 2	</td>  <td> 	300	</td> </tr>
+			<tr> <td>	Price 2	</td>  <td> 	30	</td> </tr>
+			<tr> <td>	Price 3	</td>  <td> 	30	</td> </tr>
+			<tr> <td>	Price 4	</td>  <td> 	30	</td> </tr>
+			<tr> <td>	Price 5	</td>  <td> 	30	</td> </tr>
+			<tr> <td>	Price 6	</td>  <td> 	30	</td> </tr>
+			<tr> <td>	Price 7	</td>  <td> 	30	</td> </tr>
+			<tr> <td>	Price 8	</td>  <td> 	30	</td> </tr>
+		</table>
+		{% else %}
+		<table width = 80%, height = 70%>
+			<tr> <td>	Price 1		</td>  <td> 	15	</td> </tr>
+			<tr> <td>	Price 2		</td>  <td> 	15	</td> </tr>
+			<tr> <td>	Price 3		</td>  <td> 	15	</td> </tr>
+			<tr> <td>	Price 4		</td>  <td> 	15	</td> </tr>
+			<tr> <td>	Price 5		</td>  <td> 	15	</td> </tr>
+			<tr> <td>	Price 6		</td>  <td> 	15	</td> </tr>
+			<tr> <td>	Price 7		</td>  <td> 	15	</td> </tr>
+			<tr> <td>	Price 8		</td>  <td> 	15	</td> </tr>
+			<tr> <td>	Price 9		</td>  <td> 	15	</td> </tr>
+			<tr> <td>	Price 10	</td>  <td> 	15	</td> </tr>
+			<tr> <td>	Price 11	</td>  <td> 	15	</td> </tr>
+			<tr> <td>	Price 12	</td>  <td> 	15	</td> </tr>
+			<tr> <td>	Price 13	</td>  <td> 	15	</td> </tr>
+			<tr> <td>	Price 14	</td>  <td> 	15	</td> </tr>
+			<tr> <td>	Price 15	</td>  <td> 	15	</td> </tr>
+			<tr> <td>	Price 16	</td>  <td> 	15	</td> </tr>
 		</table>
 
 		{% endif %}
