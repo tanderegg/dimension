@@ -5,6 +5,7 @@ import otree.test
 from otree.common import Currency as c, currency_range
 
 class Page(otree.views.Page):
+    is_debug = False
     z_models = models
 
     def z_autocomplete(self):
@@ -14,7 +15,7 @@ class Page(otree.views.Page):
 
 
 class WaitPage(otree.views.WaitPage):
-
+    is_debug = False
     z_models = models
 
     def z_autocomplete(self):
