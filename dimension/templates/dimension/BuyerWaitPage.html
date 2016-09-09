@@ -1,13 +1,13 @@
-{% extends "global/Base.html" %}
+{% extends "otree/WaitPage.html" %}
 {% load staticfiles otree_tags %}
 
 {% block title %}
-Buyer Wait Page
+Wait Page
 {% endblock %}
 
 {% block content %}
 <div>
-  <input type="button" value="Click me" id="click-button" />
+  <input type="hidden" value="Click me" id="click-button" />
   <div id="clicks"></div>
 </div>
 <script type="text/javascript">
