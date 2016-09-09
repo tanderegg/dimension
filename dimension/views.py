@@ -189,10 +189,7 @@ class SetPricesWaitPage(WaitPage):
 
 
 class BuyerWaitPage(WaitPage):
-    if models.Player.role == 'seller':
-        template_name = "WaitPage.html"
-    else: 
-        template_name = 'dimension/BuyerWaitPage.html'
+    template_name = 'dimension/BuyerWaitPage.html'
     # wait_for_all_groups = True
 
     def after_all_players_arrive(self):
@@ -225,8 +222,6 @@ class RoundSummary(Page):
 class RoundSummaryWait(WaitPage):
     wait_for_all_groups = True
 
-    def after_all_players_arrive(self):
-        self.group.adjust_payoff()
 
 page_sequence = [ 
     Begin,
