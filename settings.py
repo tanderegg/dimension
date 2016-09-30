@@ -113,7 +113,7 @@ SESSION_CONFIGS = [
     {
         'name': 'dimension',
         'display_name': "Dimension",
-        'num_demo_participants': 4,
+        'num_demo_participants': 12,
         'app_sequence': [
             'dimension',
         ],

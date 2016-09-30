@@ -84,17 +84,17 @@ class SellerInstructions(Page):
         return models.Constants.show_instructions
 
 class SellerQ1(Page):
-    template_name = 'dimension/GameInstructions2.html'
+    template_name = 'dimension/SellerQ1.html'
     form_model = models.Player
-    form_fields = ['q1']
+    form_fields = ['quiz_q1']
 
     def is_displayed(self):
         return models.Constants.show_instructions
 
 class SellerQ2(Page):
-    template_name = 'dimension/GameInstructions2.html'
+    template_name = 'dimension/SellerQ2.html'
     form_model = models.Player
-    form_fields = ['q2']
+    form_fields = ['quiz_q2']
 
     def is_displayed(self):
         return models.Constants.show_instructions
@@ -133,6 +133,11 @@ class SetPrices(Page):
         'role_int' : self.player.role_int}
 
     def error_message(self, value):
+        # Take all prices the user did not set and make them numeric and zero
+        for i, inputs in enumerate(value):
+            if value[inputs] == None:
+                value[inputs] = 0
+        # Check that the sum of prices is less than the maximum total price allowed
         if sum(value.values()) > models.Constants.max_total_price:
             return "The sum of all prices must be less than or equal to {}".format(
                 models.Constants.max_total_price)
@@ -163,25 +168,12 @@ class SelectSeller(Page):
         return self.player.role_int == 2
 
     def vars_for_template(self):
-        #seller1_prices(self)
-        #seller2_prices(self)
         return {
             'sellers': sorted(filter(
                 lambda p: 1 == p.role_int,
                 self.group.get_players()), key = lambda p: p.identifier
             ), 'num_prices' : self.subsession.num_prices,
-            #'prices1' : prices1,
-            #'prices2' : prices2,
         }
-
-# return {
-#            'sellers': enumerate(sorted(filter(
-#                 lambda p: 1 == p.role_int,
-#                 self.group.get_players()), key = lambda p: p.identifier
-#             )), 'num_prices' : self.subsession.num_prices,
-#             #'prices1' : prices1,
-#             #'prices2' : prices2,
-#         }
 
 
 class SetPricesWaitPage(WaitPage):
@@ -189,11 +181,12 @@ class SetPricesWaitPage(WaitPage):
 
 
 class BuyerWaitPage(WaitPage):
-    if models.Player.role == 'seller':
-        template_name = "WaitPage.html"
-    else: 
-        template_name = 'dimension/BuyerWaitPage.html'
-    # wait_for_all_groups = True
+    # if models.Player.role == 'seller':
+    #     template_name = "WaitPage.html"
+    # else: 
+    #     template_name = 'dimension/BuyerWaitPage.html'
+    # # wait_for_all_groups = True
+    #template_name = "WaitPage.html"
 
     def after_all_players_arrive(self):
         self.group.total_cost()
@@ -201,6 +194,7 @@ class BuyerWaitPage(WaitPage):
         self.group.number_sales()
         self.group.calculate_payoff()
         self.group.buyer_choice_to_seller_selected()
+
 
     
 class RoundSummary(Page):
@@ -214,7 +208,7 @@ class RoundSummary(Page):
                 self.group.get_players()), key = lambda p: p.identifier
             ), 'num_prices' : self.subsession.num_prices,
         'real_round' : self.subsession.is_real_round(),
-        'cumulative_profits' : sum([p.payoff for p in self.player.in_all_rounds()]),
+        'cumulative_payoff' : sum([p.payoff for p in self.player.in_all_rounds()]),
         'buyers' : enumerate(sorted(filter(
             lambda p: 2 == p.role_int, 
             self.group.get_players()), key = lambda p: p.identifier
@@ -223,10 +217,11 @@ class RoundSummary(Page):
         }
 
 class RoundSummaryWait(WaitPage):
-    wait_for_all_groups = True
+    #wait_for_all_groups = True
 
     def after_all_players_arrive(self):
         self.group.adjust_payoff()
+
 
 page_sequence = [ 
     Begin,

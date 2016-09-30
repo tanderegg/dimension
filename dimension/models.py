@@ -40,13 +40,15 @@ class Constants(BaseConstants):
     starting_tokens = 500
     production_cost = 100
     # For convenience of testing the experience of players
-    show_instructions = False
+    show_instructions = True
 
 
 class Subsession(BaseSubsession):
     num_prices = models.PositiveIntegerField()
     sellers_per_group = models.PositiveIntegerField()
     buyers_per_group = models.PositiveIntegerField()
+    game_number = models.PositiveIntegerField()
+    real_round = models.BooleanField()
 
     def before_session_starts(self):
         self.assign_groups(self)
@@ -80,16 +82,16 @@ class Subsession(BaseSubsession):
         # Set which game number will be displayed to participants
         if self.round_number <= (Constants.num_practice_rounds+ 
             Constants.rounds_per_game):
-            game = 1
+            self.game_number = 1
         elif self.round_number <= (Constants.num_practice_rounds + 
             2*Constants.rounds_per_game):
-            game = 2
+            self.game_number = 2
         else:
-            game = 3
+            self.game_number = 3
         # Setting how many prices should be part of the decisions
-        if game == 1:
+        if self.game_number == 1:
             self.num_prices = Constants.prices_per_seller[0]
-        elif game == 2:
+        elif self.game_number == 2:
             self.num_prices = Constants.prices_per_seller[1]
         else:
             self.num_prices = Constants.prices_per_seller[2]
@@ -100,7 +102,11 @@ class Subsession(BaseSubsession):
             group.set_identifier()
 
     def is_real_round(self):
-        return self.round_number > Constants.num_practice_rounds
+        if self.round_number > Constants.num_practice_rounds:
+            self.real_round = True
+        else:
+            self.real_round = False
+        return self.real_round
    
     @staticmethod
     def generate_roles():
@@ -192,10 +198,11 @@ class Group(BaseGroup):
             else: 
                 # Profits for sellers
                 player.payoff = player.earnings
+            player.cum_payoff = sum([p.payoff for p in player.in_all_rounds()])
 
     def adjust_payoff(self):
         for player in self.get_players():
-            if self.subsession.is_real_round():
+            if not self.subsession.is_real_round():
                 player.payoff = 0
 
     def buyer_choice_to_seller_selected(self):
@@ -207,13 +214,13 @@ class Group(BaseGroup):
 class Player(BasePlayer):
 
     # Instruction Questions
-    q1 = models.CharField(
-        choices = ['0 Tokens', '800 Tokens', 'It depends on the prices I set'],
+    quiz_q1 = models.CharField(
+        choices = ['0 tokens', '800 tokens', 'It depends on the prices I set'],
         blank = True,
         widget = widgets.RadioSelect(),
         verbose_name = "How many tokens will you receive if you don't sell an object?")
 
-    q2 = models.CharField(
+    quiz_q2 = models.CharField(
         choices = ['0 tokens', '800 tokens', 'It depends on the prices I set'],
         blank = True,
         widget = widgets.RadioSelect(),
@@ -282,7 +289,7 @@ class Player(BasePlayer):
     identifier = models.PositiveIntegerField(null = True, blank = True)
 
     # Cumulative profits
-    cum_profits = models.PositiveIntegerField(null = True, blank = True)
+    cum_payoff = models.PositiveIntegerField(null = True, blank = True)
 
     # Number of clicks on the buyer wait page.
     clicks = models.PositiveIntegerField(default=0)

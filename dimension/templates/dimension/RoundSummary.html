@@ -16,7 +16,7 @@
     	{% endfor %}
 		You {% if real_round %} {% else %} would have {% endif %}earned {% if player.role == "buyer" %} 
 		{{ player.payoff }} = {{Constants.redeem_value}} points (product value) - {{player.price_paid}} points (price) {% else %} {{ player.payoff }} = {{ player.sales }} (sales) x ({{ player.seller_total_price }} (total price) - {{ Constants.production_cost }} points (production cost)) {% endif %} this round.
-		{% if real_round %} You have earned a total of {{ cumulative_profits }} during the game so far. {% endif %}
+		{% if real_round %} You have earned a total of {{ cumulative_payoff }} during the game so far. {% endif %}
     	</td>
 
     </table>
