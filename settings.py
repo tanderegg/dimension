@@ -127,6 +127,14 @@ SESSION_CONFIGS = [
         ],
     },
 
+    {
+        'name': 'survey',
+        'display_name': "Survey questions",
+        'num_demo_participants': 1,
+        'app_sequence': [
+            'survey',
+        ],
+    },
     # {
     #     'name': '...',
     #     'display_name': '...',
