@@ -2,14 +2,14 @@
 {% load staticfiles otree_tags %}
 
 {% block title %}
-    Results
+	Quiz
 {% endblock %}
 
 {% block content %}
-    <p>TODO: Show results here!</p>
 
-<p>{% next_button %}</p>
+<p>
+{% formfield player.quiz_q1 %} 
 
-    {% include instructions %}
-    
+{% next_button %}</p>
+
 {% endblock %}
