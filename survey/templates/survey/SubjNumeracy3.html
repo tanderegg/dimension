@@ -1,0 +1,19 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Survey
+{% endblock %}
+
+{% block content %}
+
+    <p>
+        Please answer the following questions.
+    </p>
+
+    {% formfield player.q_subjNum7 %}
+    {% formfield player.q_subjNum8 %}
+
+    {% next_button %}
+
+{% endblock %}

@@ -19,10 +19,10 @@ class PlayerBot(Bot):
             'q_age': 24,
             'q_gender': 'Male'})
 
-        self.submit(views.CognitiveReflectionTest, {
-            'crt_bat': 10,
-            'crt_widget': 5,
-            'crt_lake': 48
+        self.submit(views.RiskQuestions, {
+            'q_risk1': 1,
+            'q_risk2': 1,
+            'q_risk3': 1
         })
 
     def validate_play(self):
