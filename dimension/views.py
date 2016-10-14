@@ -91,6 +91,15 @@ class SellerQ1(Page):
     def is_displayed(self):
         return models.Constants.show_instructions
 
+class SellerQ1Ans(Page):
+    template_name = 'dimension/SellerQ1Ans.html'
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
+    def vars_for_template(self):
+        return {'correct_answer' : '0 tokens'}
+
 class SellerQ2(Page):
     template_name = 'dimension/SellerQ2.html'
     form_model = models.Player
@@ -98,6 +107,15 @@ class SellerQ2(Page):
 
     def is_displayed(self):
         return models.Constants.show_instructions
+
+class SellerQ2Ans(Page):
+    template_name = 'dimension/SellerQ2Ans.html'
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
+    def vars_for_template(self):
+        return {'correct_answer' : 'It depends on the prices I set'}
 
 class BuyerInstructions(Page):
     template_name = 'dimension/BuyerInstructions.html'
@@ -232,7 +250,9 @@ page_sequence = [
     AssignedDirections,
     SellerInstructions,
     SellerQ1,
+    SellerQ1Ans,
     SellerQ2,
+    SellerQ2Ans,
     BuyerInstructions,
     RoundSummaryExample,
     Intro,

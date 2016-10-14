@@ -215,13 +215,13 @@ class Player(BasePlayer):
 
     # Instruction Questions
     quiz_q1 = models.CharField(
-        choices = ['0 tokens', '800 tokens', 'It depends on the prices I set'],
+        choices = ['0 tokens', '{} tokens'.format(Constants.redeem_value), 'It depends on the prices I set'],
         blank = True,
         widget = widgets.RadioSelect(),
         verbose_name = "How many tokens will you receive if you don't sell an object?")
 
     quiz_q2 = models.CharField(
-        choices = ['0 tokens', '800 tokens', 'It depends on the prices I set'],
+        choices = ['0 tokens', '{} tokens'.format(Constants.redeem_value), 'It depends on the prices I set'],
         blank = True,
         widget = widgets.RadioSelect(),
         verbose_name = 'How many tokens will you receive if you sell an object?')

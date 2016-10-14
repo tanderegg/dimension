@@ -22,9 +22,11 @@ class PlayerBot(Bot):
         self.submit(views.AssignedDirections)
         self.submit(views.SellerInstructions)
         # Selecting answers that 
-        choice = random.choice(['0 tokens', '800 tokens', 'It depends on the prices I set'])
+        choice = random.choice(['0 tokens', '{n} tokens'.format(self.Constants.redeem_value), 'It depends on the prices I set'])
         self.submit(views.SellerQ1, {'quiz_q1': choice})
+        self.submit(views.SellerQ1Ans)
         self.submit(views.SellerQ2, {'quiz_q2': choice})
+        self.submit(views.SellerQ2Ans)
         self.submit(views.BuyerInstructions)
         self.submit(views.RoundSummaryExample)
         self.submit(views.Intro)
