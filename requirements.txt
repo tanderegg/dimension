@@ -27,6 +27,7 @@ pbr==1.10.0
 py==1.4.31
 # can't upgrade to 3.0 because assert reinterp mode was removed
 # and now we have plain assertions. maybe can figure out
+psycopg2==2.5.1
 pytest==2.9.2
 pytest-django==3.0.0
 pytz==2016.6.1
