@@ -1,0 +1,104 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+
+
+{% block title %}Results{% endblock %}
+
+{% block content %}
+
+<p>You were {{ player.roledesc }} {{ player.rolenum }}.</p>
+<p>You made {{ player.profit }}.</p>
+
+<h3>Your Payout Calculation</h3>
+{% if player.roledesc == "Buyer" %}
+<table><tbody>
+<tr>
+    <td>Benefit:</td><td>{{ Constants.consbenefit }}</td>
+</tr><tr>
+    <td>Cost:</td><td>-{{ player.bid_total }}</td>
+</tr><tr>
+    <td>Total: </td><td>{{ player.profit }}</td>
+</tr>
+</tbody></table>
+{% else %}
+<table><tbody>
+<tr>
+    <td>Benefit:</td><td>{{ player.ask_total }}</td>
+</tr><tr>
+    <td>Cost:</td><td>-{{ Constants.prodcost }}</td>
+</tr><tr>
+    <td>Subtotal:</td><td>{{ subtotal }}</td>
+</tr><tr>
+    <td># Sold:</td><td> x {{ player.numsold }}</td>
+</tr><tr>
+    <td>Total: </td><td>{{ player.profit }}</td>
+</tr>
+</tbody></table>
+{% endif %}
+
+<h3>Sellers' Prices</h3>
+<table>
+    <thead>
+
+        <tr>
+            <th>Price</th>
+            <th>Seller 1</th><th>Seller 2</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for i, s1_pd, s2_pd in pricedims %}
+        <tr>
+            <td>
+                <label>{{ i }}</label>
+            </td>
+            <td>
+                <span class="pricedim" id="dim_{{ pd.dimnum}}">
+                    {{ s1_pd }}
+                </span>
+            </td>
+            <td>
+                <span class="pricedim" id="dim_{{ pd.dimnum}}">
+                    {{ s2_pd }}
+                </span>
+            </td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td>Total</td>
+        <td>
+            {{ s1_ask_total }}
+        </td>
+        <td>
+            {{ s2_ask_total }}
+        </td>
+    </tr>
+</tbody></table>
+
+<h3>Buyers' Choices</h3>
+<table>
+    <thead><tr>
+        <th></th><th>Seller 1</th><th>Seller 2</th>
+    </tr></thead>
+    <tbody>
+        <tr>
+            <td>Buyer 1</td>
+            <td>{% if b1_seller == 1 %}X{% endif %}</td>
+            <td>{% if b1_seller == 2 %}X{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Buyer 2</td>
+            <td>{% if b2_seller == 1 %}X{% endif %}</td>
+            <td>{% if b2_seller == 2 %}X{% endif %}</td>
+        </tr>
+    </tbody>
+</table>
+
+{% next_button %}
+
+{% endblock %}
+
+
+
+
+

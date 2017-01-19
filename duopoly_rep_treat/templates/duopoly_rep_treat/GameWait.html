@@ -1,0 +1,66 @@
+{% extends 'otree/WaitPage.html' %}
+{% load staticfiles otree_tags %}
+
+
+
+
+{% block title %} Please enjoy this game while you wait for buyers to make their choices {% endblock %}
+
+{% block content %}
+
+    <div id='puzzle'></div>
+    <div id='words'></div>
+    <input id='nextpuzzle' class="btn btn-primary btn-large btn-primary next-button" type="button" value="New Puzzle"></input>
+
+    <input type="text" name="gamewait_numcorrect" value="0" required />
+
+{% endblock %}
+
+
+{% block app_styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'duopoly_rep_treat/wordfindgame.css' %}">
+<style type="text/css">
+    .progress{
+        width: 100%;
+
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'duopoly_rep_treat/wordfind.js' %}"></script>
+    <script type="text/javascript" src="{% static 'duopoly_rep_treat/wordfindgame.js' %}"></script>
+
+    <script>
+
+        var words = ['cow', 'dog', 'cat', 'bird', 'fish', 'lion', 'tiger',
+                   'bear', 'elephant', 'giraffe', 'camel', 'hippo',
+                   'horse', 'sheep', 'pig', 'chicken', 'goat',
+                   'snake', 'lizard', 'frog', 'monkey', 'spider'];
+
+
+        $(document).ready(function(){
+            // start a word find game
+            var gamePuzzle = wordfindgame.create(getRandomSubarray(words, 8), '#puzzle', '#words');
+        })
+
+        $("#nextpuzzle").click(function(){
+            $(this).fadeOut();
+            wordfindgame.create(getRandomSubarray(words, 8), "#puzzle", "#words");
+        });
+
+        function getRandomSubarray(arr, size) {
+            // A "Fisher-Yates shuffle"
+            // From: http://stackoverflow.com/questions/11935175/sampling-a-random-subset-from-an-array/11935263
+            var shuffled = arr.slice(0), i = arr.length, min = i - size, temp, index;
+            while (i-- > min) {
+                index = Math.floor((i + 1) * Math.random());
+                temp = shuffled[index];
+                shuffled[index] = shuffled[i];
+                shuffled[i] = temp;
+            }
+            return shuffled.slice(min);
+        }
+
+    </script>
+{% endblock %}
