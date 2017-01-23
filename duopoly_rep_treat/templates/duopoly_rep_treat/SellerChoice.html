@@ -1,0 +1,112 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Round {{ subsession.round_number }} of {{ Constants.num_rounds }}
+{% endblock %}
+
+{% block content %}
+
+    <h4>Seller Choice</h4>
+    <p>
+        You are seller number {{ player.rolenum }}
+    </p>
+    <p>Please choose a price for each of the {{ subsession.vars.dims }} price dimensions</p>
+    <p>
+        Each price must be greater than {{ Constants.minprice }},
+        and the sum of all price dimensions must be less than {{ Constants.maxprice }}
+    </p>
+    {% formfield player.ask_total with label="Total price" %}
+    <input type="button" value="Distribute" id="distribute"></input>
+    <table><tbody>
+        {% for pd in price_dims %}
+            <tr>
+                <td>
+                    <label for="dim_{{ pd.dimnum }}">{{ pd.dimnum }}</label>
+                </td>
+                <td>
+                    <input type="number" class="pricedim" value="" id="dim_{{ pd.dimnum}}" name="dim_{{ pd.dimnum }}"
+                           autocomplete="off" required>
+                    </input>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody></table>
+
+
+    {% next_button %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+
+
+        // Update total when fields change
+        $(document).ready(function(){
+            $(".pricedim").change(function(){
+                var sum = 0;
+                $('.pricedim').each(function() {
+                    sum += Number($(this).val());
+                });
+                $("#id_ask_total").val(sum);
+            })
+        });
+
+
+
+        // Get new field data
+        // Trigger upload
+       $("#distribute").click(function () {
+
+            var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
+            console.log(csrftoken);
+
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+                data: {csrfmiddlewaretoken: csrftoken }
+
+            });
+
+
+            var file_name = "{{ participant.code }}_" + "{{ subsession.round_number }}" + ".png"
+//            var dataURL = canvas.toDataURL("image/png");
+            var self = $(this);
+            //e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "/duopoly_rep_treat/autopricedims/",
+                data: {
+                    ask_total: $("#id_ask_total").val(),
+                    numdims: $("input.pricedim").length
+                },
+                dataType: "json",
+                //processData: false,
+                //contentType: false,
+                success: function(result) {
+
+                    $.each(result.pricedims, function(i, pd){
+                        $("#dim_" + (i+1)).val(pd);
+                    });
+
+
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    console.log(textStatus);
+                }
+            });
+
+        });
+
+
+    </script>
+{% endblock %}

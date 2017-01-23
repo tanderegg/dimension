@@ -1,0 +1,24 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Round {{ subsession.round_number }} of {{ Constants.num_rounds }}
+{% endblock %}
+
+{% block content %}
+
+    <h4>Instructions</h4>
+    <p>
+        This is a duopoly game.
+        Two players are buyers and two players are sellers
+
+    </p>
+    <p>block: {{ subsession.block }}</p>
+    <p>treatment: {{ subsession.treatment }}</p>
+    <p>round: {{ subsession.round_number }}</p>
+    <p>practice: {{subsession.practiceround }}</p>
+    <p>In this game there are {{ subsession.dims }} dimensions </p>
+
+    {% next_button %}
+
+{% endblock %}

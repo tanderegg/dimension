@@ -137,16 +137,26 @@ SESSION_CONFIGS = [
             'survey',
         ],
     },
+    {
+        'name': 'duopoly_rep_treat',
+        'display_name': "Duopoly",
+        'num_demo_participants': 4,
+        'app_sequence': ['duopoly_rep_treat',],
+        'treatmentorder': [2, 2, 3],
+    },
     # {
     #     'name': '...',
     #     'display_name': '...',
     #     'num_demo_participants': ...,
     #     'app_sequence': ['...'],
     # }
+
 ]
+
+ROOT_URLCONF = 'duopoly_rep_treat.urls'
 
 # anything you put after the below line will override
 # oTree's default settings. Use with caution.
 otree.settings.augment_settings(globals())
 
-ROOT_URLCONF = 'urls'
+# ROOT_URLCONF = 'urls'
