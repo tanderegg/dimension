@@ -26,6 +26,7 @@
 
     // List of words for this game
     var wordList;
+    var wordFunc;
 
     /**
     * Draws the puzzle by inserting rows of buttons into el.
@@ -225,9 +226,7 @@
           $('.selected').addClass('found').append("<span class='cover'></span>");
           wordList.splice(i,1);
           $('.' + curWord).addClass('wordFound');
-          $("input[name='gamewait_numcorrect']").val(function(i, oldval) {
-              return ++oldval;
-          });
+          wordFunc();
         }
 
         if (wordList.length === 0) {
@@ -279,11 +278,13 @@
       * @param {String} wordsEl: Selector to use when inserting the word list
       * @param {Options} options: WordFind options to use when creating the puzzle
       */
-      create: function(words, puzzleEl, wordsEl, options) {
+      create: function(words, puzzleEl, wordsEl, wordf, options) {
         
         wordList = words.slice(0).sort();
+        wordFunc = wordf;
 
         var puzzle = wordfind.newPuzzle(words, options);
+        puzzle.wordFunc = wordFunc;
 
         // draw out all of the words
         drawPuzzle(puzzleEl, puzzle);

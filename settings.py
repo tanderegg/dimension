@@ -33,17 +33,17 @@ PAGE_FOOTER = ''
 # mysql://USER:PASSWORD@HOST:PORT/NAME
 
 DATABASES = {
-    # 'default': dj_database_url.config(
-    #     default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
-    # )
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'otree_user',
-        'PASSWORD': 'Pr3te$ting',
-        'HOST': 'localhost',
-        'PORT': '5432'
-    }
+    'default': dj_database_url.config(
+        default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+    )
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'postgres',
+    #     'USER': 'otree_user',
+    #     'PASSWORD': 'Pr3te$ting',
+    #     'HOST': 'localhost',
+    #     'PORT': '8000'
+    # }
 }
 
 # Sentry Account Information
@@ -143,8 +143,10 @@ SESSION_CONFIGS = [
         'num_demo_participants': 4,
         'app_sequence': ['duopoly_rep_treat',],
         'treatmentorder': [2, 2, 3],
+        'participation_fee': 5,
+        'real_world_currency_per_point': .01,
         'date': "20170130",
-        'time': "1430"
+        'time': "1430",
     },
     # {
     #     'name': '...',
@@ -156,6 +158,7 @@ SESSION_CONFIGS = [
 ]
 
 ROOT_URLCONF = 'duopoly_rep_treat.urls'
+POINTS_CUSTOM_NAME= ""
 
 # anything you put after the below line will override
 # oTree's default settings. Use with caution.

@@ -3,16 +3,20 @@
 
 
 
-
 {% block title %} Please enjoy this game while you wait for buyers to make their choices {% endblock %}
 
 {% block content %}
-
+    {% csrf_token %}
     <div id='puzzle'></div>
     <div id='words'></div>
     <input id='nextpuzzle' class="btn btn-primary btn-large btn-primary next-button" type="button" value="New Puzzle"></input>
 
-    <input type="text" name="gamewait_numcorrect" value="0" required />
+    <input type="text" name="gamewait_numcorrect" id="id_gamewait_numcorrect" value="0" required hidden
+            data-subsession-id="{{ subsession.id }}"
+           data-group-id="{{ group.id }}"
+           data-session-id="{{ session.id}}"
+           data-player-id="{{ player.id_in_group }}">
+    </input>
 
 {% endblock %}
 
@@ -30,24 +34,14 @@
 {% block scripts %}
     <script type="text/javascript" src="{% static 'duopoly_rep_treat/wordfind.js' %}"></script>
     <script type="text/javascript" src="{% static 'duopoly_rep_treat/wordfindgame.js' %}"></script>
+    <script type="text/javascript" src="{% static 'duopoly_rep_treat/utils.js' %}"></script>
 
-    <script>
+    <script type="text/javascript">
 
         var words = ['cow', 'dog', 'cat', 'bird', 'fish', 'lion', 'tiger',
                    'bear', 'elephant', 'giraffe', 'camel', 'hippo',
                    'horse', 'sheep', 'pig', 'chicken', 'goat',
                    'snake', 'lizard', 'frog', 'monkey', 'spider'];
-
-
-        $(document).ready(function(){
-            // start a word find game
-            var gamePuzzle = wordfindgame.create(getRandomSubarray(words, 8), '#puzzle', '#words');
-        })
-
-        $("#nextpuzzle").click(function(){
-            $(this).fadeOut();
-            wordfindgame.create(getRandomSubarray(words, 8), "#puzzle", "#words");
-        });
 
         function getRandomSubarray(arr, size) {
             // A "Fisher-Yates shuffle"
@@ -61,6 +55,49 @@
             }
             return shuffled.slice(min);
         }
+
+        $(document).ready(function(){
+            // AJAX stuff
+            setup_csrf();
+
+            var resultHandler = function(result) {
+//                console.log(result);
+            };
+
+            // When player manually changes a field, we want to send the whole list of fields back as a list
+            var ajaxPOST = function(){
+
+                var data = get_metadata($("#id_gamewait_numcorrect"));
+                $.ajax({
+                    type: "POST",
+                    url: "/duopoly_rep_treat/gamewaititercorrect/",
+                    data: data,
+                    dataType: "json",
+                    success: resultHandler
+                });
+            };
+
+            // start a word find game
+            wordFind = function(){
+                $("#id_gamewait_numcorrect").val(function(i, oldval) {
+                    return ++oldval;
+                });
+                ajaxPOST();
+            };
+
+            var gamePuzzle = wordfindgame.create(getRandomSubarray(words, 8), '#puzzle', '#words', wordFind);
+
+            $("#nextpuzzle").click(function(){
+                $(this).fadeOut();
+                wordfindgame.create(getRandomSubarray(words, 8), "#puzzle", "#words", wordFind);
+            });
+//
+
+
+
+        });
+
+
 
     </script>
 {% endblock %}

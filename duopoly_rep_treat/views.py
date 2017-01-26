@@ -1,13 +1,14 @@
 from otree.api import Currency as c, currency_range
 from . import models
 from ._builtin import Page, WaitPage
-from .models import Constants, PriceDim, Ask, Player, Subsession, Group
+from .models import Constants, PriceDim, Ask, Player, Subsession, Group, BaseSubsession
 from django.http import JsonResponse, HttpResponse
 from statistics import pstdev
 from django.shortcuts import render
 import csv
 from . import utils
-
+import datetime
+from otree.models.session import Session
 
 class Instructions(Page):
     def is_displayed(self):
@@ -151,22 +152,19 @@ class RoundResults(Page):
 
 
 # AJAX VIEWS
-
+# Seller Asks
 def AutoPricedims(request):
 
     pricejson = utils.get_autopricedims(
         ask_total=int(round(float(request.POST["ask_total"]))), numdims=int(round(float(request.POST["numdims"]))))
 
-    subsession = Subsession.objects.get(id=request.POST["subsession_id"])
-    group = Group.objects.get(id=request.POST["group_id"], subsession=subsession)
-    player = Player.objects.get(id_in_group=int(request.POST["player_id_in_group"]), group=group)
+    player = utils.get_player_from_request(request)
 
     ask = player.create_ask(total=pricejson["ask_total"], auto=True, manual=False, stdev=pricejson["ask_stdev"],
                             pricedims=pricejson["pricedims"])
 
     print(pricejson)
     return JsonResponse(pricejson)
-
 
 def ManualPricedims(request):
 
@@ -176,9 +174,7 @@ def ManualPricedims(request):
     pricedims = [None if pd=="" else int(round(float(pd))) for pd in pricedims_raw]
     total = sum([0 if pd=="" else int(round(float(pd))) for pd in pricedims_raw])
 
-    subsession = Subsession.objects.get(id=result["subsession_id"])
-    group = Group.objects.get(id=result["group_id"], subsession=subsession)
-    player = Player.objects.get(id_in_group=int(result["player_id_in_group"]), group=group)
+    player = utils.get_player_from_request(request)
 
     ask = player.create_ask(total=total, auto=False, manual=True, pricedims=pricedims)
     ask.stdev = pstdev([int(pd.value) for pd in ask.pricedim_set.all() if not pd.value==None ])
@@ -188,26 +184,34 @@ def ManualPricedims(request):
 
 
 
+
+# Wait Page Game
+def GameWaitIterCorrect(request):
+
+    player = utils.get_player_from_request(request)
+
+    player.gamewait_numcorrect += 1
+    player.save()
+    print(player.gamewait_numcorrect)
+
+
+    return JsonResponse({"gamewait_numcorrect": player.gamewait_numcorrect})
+
+
 # Data Views
 
 def ViewData(request):
-    return render(request, 'duopoly_rep_treat/data.html')
+    return render(request, 'duopoly_rep_treat/data.html', {"session_code": Session.objects.last().code})
 
-def get_filename(suffix):
-    subsession = Subsession.objects.last()
-    if subsession == None:
-        return ([], [])
-    date = subsession.session.config["date"]
-    time = subsession.session.config["time"]
-    filename = "{}_{}_{}.csv".format(date, time, suffix)
 
-    return filename
 
 def AskDataDownload(request):
     # Create the HttpResponse object with the appropriate CSV header.
-    filename = get_filename("askdata")
+    # filename = get_filename("askdata")
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=' + filename
+    response['Content-Disposition'] = 'attachment; filename="AskData (accessed {}).csv"'.format(
+        datetime.date.today().isoformat()
+    )
 
     (headers, body) = utils.export_asks()
 
@@ -233,9 +237,11 @@ def MarketDataView(request):
 
 
 def MarketDataDownload(request):
-    filename = get_filename("marketdata")
+    # filename = get_filename("marketdata")
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=' + filename
+    response['Content-Disposition'] = 'attachment; filename="MarketData (accessed {}).csv"'.format(
+        datetime.date.today().isoformat()
+    )
 
     (headers, body) = utils.export_marketdata()
 

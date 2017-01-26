@@ -8,7 +8,7 @@
 {% block content %}
 
 <p>You were {{ player.roledesc }} {{ player.rolenum }}.</p>
-<p>You made {{ player.profit }}.</p>
+<p>You made {{ player.payoff }}tokens.</p>
 
 <h3>Your Payout Calculation</h3>
 {% if player.roledesc == "Buyer" %}
@@ -18,7 +18,7 @@
 </tr><tr>
     <td>Cost:</td><td>-{{ player.bid_total }}</td>
 </tr><tr>
-    <td>Total: </td><td>{{ player.profit }}</td>
+    <td>Total: </td><td>{{ player.payoff }}</td>
 </tr>
 </tbody></table>
 {% else %}
@@ -32,17 +32,18 @@
 </tr><tr>
     <td># Sold:</td><td> x {{ player.numsold }}</td>
 </tr><tr>
-    <td>Total: </td><td>{{ player.profit }}</td>
+    <td>Total: </td><td>{{ player.payoff }}tokens</td>
 </tr>
 </tbody></table>
 {% endif %}
 
 <h3>Sellers' Prices</h3>
+
 <table>
     <thead>
 
         <tr>
-            <th>Price</th>
+            <th></th>
             <th>Seller 1</th><th>Seller 2</th>
         </tr>
     </thead>
@@ -53,12 +54,12 @@
                 <label>{{ i }}</label>
             </td>
             <td>
-                <span class="pricedim" id="dim_{{ pd.dimnum}}">
+                <span class="pricedim" id="dim_{{ pd.dimnum }}">
                     {{ s1_pd }}
                 </span>
             </td>
             <td>
-                <span class="pricedim" id="dim_{{ pd.dimnum}}">
+                <span class="pricedim" id="dim_{{ pd.dimnum }}">
                     {{ s2_pd }}
                 </span>
             </td>

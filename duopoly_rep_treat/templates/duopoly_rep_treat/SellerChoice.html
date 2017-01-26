@@ -50,26 +50,14 @@
 {% endblock %}
 
 {% block scripts %}
+    <script type="text/javascript" src="{% static 'duopoly_rep_treat/utils.js' %}"></script>
     <script type="text/javascript">
 
         // Update total when fields change
         $(document).ready(function(){
 
-            // CSRF TOKEN stuff is foregin to me...
-            //  most ajax code taken from this thread: https://groups.google.com/d/msg/otree/nUrvTTAu6QA/4DHiw8_zBQAJ
-            var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
-            function csrfSafeMethod(method) {
-                // these HTTP methods do not require CSRF protection
-                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-            }
-            $.ajaxSetup({
-                beforeSend: function(xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                },
-                data: {csrfmiddlewaretoken: csrftoken }
-            });
+            // in utils.js
+            setup_csrf();
 
             var resultHandler = function(result) {
                 // Over-writing user-input to enforce consistency.  The only reason this should ever be different
@@ -81,15 +69,6 @@
 
                 $("#id_ask_total").val(result.ask_total);
                 $("#id_ask_stdev").val(result.ask_stdev);
-            };
-
-            var get_metadata = function(data_holder){
-                return {
-                    player_id_in_group: data_holder.attr("data-player-id"),
-                    group_id: data_holder.attr("data-group-id"),
-                    session_id: data_holder.attr("data-session-id"),
-                    subsession_id: data_holder.attr("data-subsession-id"),
-                };
             };
 
             // When player manually changes a field, we want to send the whole list of fields back as a list

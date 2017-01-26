@@ -1,14 +1,30 @@
 
+function setup_csrf() {
+    // CSRF TOKEN stuff is foregin to me...
+    //  most ajax code taken from this thread: https://groups.google.com/d/msg/otree/nUrvTTAu6QA/4DHiw8_zBQAJ
+    var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
 
-function get_stdev(ask_total, numdims){
-    // This was estimated via data from the first experiment
-    // stata command:
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
 
-    ask_avg = ask_total/numdims;
-
-    stdev = Math.exp(0.7079252 + 0.0655263*ask_avg - 0.000551*Math.pow(ask_avg, 2));
-
-    return stdev;
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        data: {csrfmiddlewaretoken: csrftoken}
+    });
 }
 
+var get_metadata = function(data_holder){
+    return {
+        player_id_in_group: data_holder.attr("data-player-id"),
+        group_id: data_holder.attr("data-group-id"),
+        session_id: data_holder.attr("data-session-id"),
+        subsession_id: data_holder.attr("data-subsession-id"),
+    };
+};
 
