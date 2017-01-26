@@ -4,3 +4,10 @@ from otree.urls import urlpatterns
 from . import views
 
 urlpatterns.append(url(r'^duopoly_rep_treat/autopricedims/$', views.AutoPricedims))
+urlpatterns.append(url(r'^duopoly_rep_treat/manualpricedims/$', views.ManualPricedims))
+
+urlpatterns.append(url(r'^duopoly_rep_treat/data/$', views.ViewData))
+urlpatterns.append(url(r'^duopoly_rep_treat/data/market/download$', views.MarketDataDownload, name="market_data_download"))
+urlpatterns.append(url(r'^duopoly_rep_treat/data/market$', views.MarketDataView, name="market_data_view"))
+urlpatterns.append(url(r'^duopoly_rep_treat/data/ask/download$', views.AskDataDownload, name="ask_data_download"))
+urlpatterns.append(url(r'^duopoly_rep_treat/data/ask$', views.AskDataView, name="ask_data_view"))

@@ -135,6 +135,8 @@ SESSION_CONFIGS = [
         'num_demo_participants': 4,
         'app_sequence': ['duopoly_rep_treat',],
         'treatmentorder': [2, 2, 3],
+        'date': "20170130",
+        'time': "1430"
     },
     # {
     #     'name': '...',

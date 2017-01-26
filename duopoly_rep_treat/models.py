@@ -68,37 +68,50 @@ class Subsession(BaseSubsession):
             p.set_role()
 
             # create player price dims
-            p.generate_pricedims()
+            # p.generate_pricedims()
 
 
 class Group(BaseGroup):
     # The group class is used to store market-level data
     mkt_bid_avg = models.FloatField()
-    mkt_ask_min = models.IntegerField(default=800)
-    mkt_ask_max = models.IntegerField(default=0)
+    mkt_ask_min = models.IntegerField()
+    mkt_ask_max = models.IntegerField()
     mkt_ask_spread = models.IntegerField()
     mkt_ask_stdev_min = models.FloatField()
 
+    def create_contract(self, bid, ask):
+        contract = Contract(bid=bid, ask=ask, group=self)
+        contract.save()
+
     def set_marketvars(self):
         # this gets hit after all buyers and sellers have made their choices
-        sellers = Player.objects.filter(group=self, roledesc="Seller")
-        buyers = Player.objects.filter(group=self, roledesc="Buyer")
+        # sellers = Player.objects.filter(group=self, roledesc="Seller")
+        # buyers = Player.objects.filter(group=self, roledesc="Buyer")
 
-        # Seller data
-        for buyer in buyers:
-            # adjust numsold for sellers
-            self.get_player_by_role("S" + str(buyer.contract_seller_rolenum)).numsold += 1
-            # buyer profit
+        contracts = Contract.objects.filter(group=self)
 
-        for seller in sellers:
-            seller.profit = seller.numsold * (seller.ask_total - Constants.prodcost)
+        print("contracts")
+        print(contracts)
+        print("ask totals")
+        print([c.ask.total for c in contracts])
+
+        # Player data
+        for contract in contracts:
+            seller = contract.ask.player
+            buyer = contract.bid.player
+
+            seller.numsold += 1
+            seller.profit += seller.ask_total - Constants.prodcost
+
+            buyer.profit = Constants.consbenefit - buyer.bid_total
 
         # Market data
-        self.mkt_ask_min = min([ s.ask_total for s in sellers ])
-        self.mkt_ask_max = max([ s.ask_total for s in sellers ])
+        self.mkt_ask_min = min([c.ask.total for c in contracts])
+        self.mkt_ask_max = max([c.ask.total for c in contracts])
         self.mkt_ask_spread = self.mkt_ask_max - self.mkt_ask_min
-        self.mkt_bid_avg = float(sum([ int(b.bid_total) for b in buyers ])) / len(buyers)
-        self.mkt_ask_stdev_min = min([ s.ask_stdev for s in sellers ])
+        self.mkt_bid_avg = float(sum([c.bid.total for c in contracts])) / len(contracts)
+        self.mkt_ask_stdev_min = min([c.ask.stdev for c in contracts])
+
 
 
 
@@ -108,8 +121,10 @@ class Player(BasePlayer):
     # Both
     rolenum = models.IntegerField()
     roledesc = models.CharField()
-    profit = models.IntegerField()
-    profit_interim = models.IntegerField()
+    profit = models.IntegerField(default=0)
+    profit_interim = models.IntegerField(default=0)
+    buyer_bool = models.BooleanField()
+    seller_bool = models.BooleanField()
 
     # Seller
     ask_total = models.IntegerField(min=Constants.minprice, max=Constants.maxprice)
@@ -130,8 +145,62 @@ class Player(BasePlayer):
     # wait page game
     gamewait_numcorrect = models.IntegerField()# , widget=widgets.HiddenInput()# TextInput()) # attrs={"type":"hidden"}
 
+    def create_bid(self, bid_total, pricedims):
+        """ Creates a bid row associated with the buyer after the buyer makes his/her choice """
 
-    def set_prices_buyer(self):
+        bid = Bid(player=self, total=bid_total)
+        bid.save()
+        bid.set_pricedims(pricedims)
+
+        return bid
+
+    def create_ask(self, total, pricedims=None, auto=None, manual=None, stdev=None):
+        """
+            Creates an ask row associated with the seller
+            :param total: integer total price
+            :param pricedims: optional. list of integer pricedims
+            :return: ask object
+        """
+        ask = Ask(player=self, total=total, auto=auto, manual=manual, stdev=stdev)
+        ask.save()
+        # if pricedims == None:
+        #ask.generate_pricedims()
+        # else:
+        ask.set_pricedims(pricedims)
+
+        return ask
+
+    def get_ask(self):
+        """ Get the latest ask row associated with this player """
+        ask = self.ask_set.order_by("id").last()
+        return ask
+
+    def get_ask_pricedims(self):
+        ask = self.get_ask()
+        if ask == None:
+            return []
+        else:
+            return ask.pricedim_set.all()
+
+    def get_bid(self):
+        """ Get the latest bid row associated with this player """
+        bid = self.bid_set.last()
+        return bid
+
+    def get_bid_pricedims(self):
+        bid = self.get_bid()
+        if bid == None:
+            return []
+        else:
+            return bid.pricedim_set.all()
+
+    def get_pricedims(self):
+        if self.roledesc == "Seller":
+            return self.get_ask_pricedims()
+        elif self.roledesc == "Buyer":
+            return self.get_bid_pricedims()
+
+    def set_buyer_data(self):
         """ Use buyer's seller selection to fill in other attributes for the buyer """
         rolenum_other = [ rn for rn in [1,2] if rn != self.contract_seller_rolenum][0]
         seller = self.group.get_player_by_role("S" + str(self.contract_seller_rolenum))
@@ -142,36 +211,8 @@ class Player(BasePlayer):
         self.mistake_size = max(0, self.bid_total - self.other_seller_ask_total)
         self.mistake_bool = 0 if self.mistake_size <= 0 else 1
 
-        other_seller_ask_stddev = pstdev([ int(pd.value) for pd in seller_other.pricedim_set.all() ])
+        self.other_seller_ask_stddev = pstdev([ pd.value for pd in seller_other.get_ask().pricedim_set.all() ])
 
-        for pd in self.pricedim_set.all():
-            pd.value = seller.pricedim_set.get(dimnum=pd.dimnum).value
-            pd.save()
-
-        # profit
-        self.profit = Constants.consbenefit - self.bid_total
-
-
-    def set_prices_seller(self, submitted_data):
-        """ Get prices from seller form and save the values.
-            Seller profit and numsold (vars that depend on buyer actions) set in group.set_marketvars
-        """
-        # this filter doesn't seem necessary
-        # pricedims = self.player.pricedim_set.filter(player__exact=self.player)
-        pricedims = self.pricedim_set.all()
-
-        for pd in pricedims:
-            pd.value = submitted_data["dim_{}".format(pd.dimnum)]
-            pd.save()
-
-        self.ask_stdev = pstdev([int(pd.value) for pd in pricedims])
-
-    def generate_pricedims(self):
-        # if self.subsession.treatment:
-        # otree trying to assess subsession.treatment at build time, so this if just skips that
-        for i in range(self.subsession.dims):
-            pd = self.pricedim_set.create(dimnum = i + 1)
-            pd.save()
 
     def set_role(self):
         # since we've randomized player ids in groups in the subsession class, we can assign role via id_in_group here
@@ -187,13 +228,137 @@ class Player(BasePlayer):
         else:
             self.rolenum = 2
             self.roledesc = "Buyer"
+        if self.roledesc == "Seller":
+            self.buyer_bool = False
+            self.seller_bool = True
+        else:
+            self.buyer_bool = True
+            self.seller_bool = False
 
     def role(self):
         return self.roledesc[0] + str(self.rolenum)
+
+
+class Ask(Model):
+    """ Stores details of a seller's ask """
+    total = models.IntegerField(min=Constants.minprice, max=Constants.maxprice)
+    stdev = models.FloatField(min=0)
+    auto = models.BooleanField() # true if this ask was created automatically, else false
+    manual = models.BooleanField() # true if this ask was created via maually changing a field, else false
+    player = ForeignKey(Player)
+
+    # def generate_pricedims(self):
+    #     """ set through auto-generation of price dims """
+    #     for i in range(self.player.subsession.dims):
+    #
+    #         # pd = PriceDim(ask=self, dimnum=i + 1)
+    #         pd = self.pricedim_set.create(dimnum=i + 1)
+    #         pd.save()
+
+    def set_pricedims(self, pricedims):
+        """ set through manual manipulation of fields """
+        for i in range(self.player.subsession.dims):
+            pd = self.pricedim_set.create(dimnum=i + 1, value=pricedims[i])
+            pd.save()
+
+
+class Bid(Model):
+    """ Stores details of a buyer's bid. Not super useful at the moment given buyer's limited action space, but
+        future-proofs the code somewhat. It also just gives a nice symmetry for how we deal with the two roles.
+    """
+    total = models.IntegerField(min=Constants.minprice, max=Constants.maxprice)
+    player = ForeignKey(Player)
+
+    def set_pricedims(self, pricedims):
+        """ set through manual manipulation of fields """
+        for i in range(self.player.subsession.dims):
+            pd = self.pricedim_set.create(dimnum = i + 1, value=pricedims[i])
+            pd.save()
+
+
+class Contract(Model):
+    """ Relates a bid and an ask in a successful exchange """
+    ask = ForeignKey(Ask)
+    bid = ForeignKey(Bid, blank=True, null=True)
+    group = ForeignKey(Group)
+
 
 class PriceDim(Model):   # our custom model inherits from Django's base class "Model"
 
     value = models.IntegerField()
     dimnum = models.IntegerField()
 
-    player = ForeignKey(Player)    # creates 1:m relation -> this decision was made by a certain player
+    # in reality, there will be either, but not both, an ask or a bid associated with each pricedim
+    ask = ForeignKey(Ask, blank=True, null=True)    # creates 1:m relation -> this decision was made by a certain seller
+    bid = ForeignKey(Bid, blank=True, null=True)
+
+    # action = ForeignKey(Action)
+
+
+
+# class Action(Model):
+#     """
+#         super-class for bids and asks.  need this so that price dims can refer to a single non-null foreign key
+#     """
+#     total = models.IntegerField(min=Constants.minprice, max=Constants.maxprice)
+#     player = ForeignKey(Player)
+#
+#     def set_pricedims(self, pricedims):
+#         """ set through manual manipulation of fields """
+#         for i in range(self.player.subsession.dims):
+#             pd = self.pricedim_set.create(dimnum=i + 1, value=pricedims[i])
+#             pd.save()
+#
+#
+# class Ask(Action):
+#     """ Stores details of a seller's ask """
+#     stdev = models.FloatField(min=0)
+#     auto = models.BooleanField() # true if this ask was created automatically, else false
+#     manual = models.BooleanField() # true if this ask was created via maually changing a field, else false
+#     # dims = models.IntegerField()
+#
+#     def generate_pricedims(self):
+#         """ set through auto-generation of price dims """
+#         for i in range(self.player.subsession.dims):
+#             print("dim" + str(i))
+#
+#             pd = self.picedim_set.create(dimnum=i + 1)
+#             # pd = self.pricedim_set.create(dimnum=i + 1)
+#             print("got here")
+#             pd.save()
+#
+#
+# class Bid(Action):
+#     """ Stores details of a buyer's bid. Not super useful at the moment given buyer's limited action space, but
+#         future-proofs the code somewhat. It also just gives a nice symmetry for how we deal with the two roles.
+#         So far this adds nothing to the Action model
+#     """
+#     pass
+#
+#     # def set_pricedims(self, pricedims):
+#     #     """ set through manual manipulation of fields """
+#     #     for i in range(self.dims):
+#     #         pd = self.pricedim_set.create(dimnum = i + 1, value=pricedims[i])
+#     #         pd.save()
+#
+#
+# class Contract(Model):
+#     """ Relates a bid and an ask in a successful exchange """
+#     ask = ForeignKey(Ask)
+#     bid = ForeignKey(Bid)
+#     group = ForeignKey(Group)
+#
+#
+# class PriceDim(Model):   # our custom model inherits from Django's base class "Model"
+#
+#     value = models.IntegerField()
+#     dimnum = models.IntegerField()
+#
+#     # in reality, there will be either, but not both, an ask or a bid associated with each pricedim
+#     # ask = ForeignKey(Ask)    # creates 1:m relation -> this decision was made by a certain seller
+#     # bid = ForeignKey(Bid)
+#
+#     action = ForeignKey(Action)
+#
+#
+#

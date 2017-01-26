@@ -1,0 +1,49 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Duopoly Data
+{% endblock %}
+
+{% block content %}
+
+<table><tbody>
+<tr>
+    <td>
+        <h3>Market Data</h3>
+    </td>
+    <td>
+        <a class="btn btn-info" href="{% url 'market_data_view'%}">view</a>
+        <a class="btn btn-info" href="{% url 'market_data_download'%}">download</a>
+    </td>
+</tr>
+<tr>
+    <td>
+        <h3>Ask Data</h3>
+    </td>
+    <td>
+        <a class="btn btn-info" href="{% url 'ask_data_view'%}">view</a>
+        <a class="btn btn-info" href="{% url 'ask_data_download'%}">download</a>
+    </td>
+</tr>
+</tbody></table>
+{% endblock %}
+
+{% block styles %}
+    <style typ="text/css">
+        #form h2, h3, a{
+            float:left;
+            position: relative;
+            line-height: 32px;
+            margin: 15px 15px 0 0;
+        }
+        .btn{
+            padding:1px 5px 3px;
+        }
+        h2{
+            font-size: 40px;
+        }
+    </style>
+
+
+{% endblock %}

@@ -17,21 +17,32 @@
         and the sum of all price dimensions must be less than {{ Constants.maxprice }}
     </p>
     {% formfield player.ask_total with label="Total price" %}
-    <input type="button" value="Distribute" id="distribute"></input>
+
+    <input type="button" value="Distribute" id="distribute"
+           data-subsession-id="{{ subsession.id }}"
+           data-group-id="{{ group.id }}"
+           data-session-id="{{ session.id}}"
+           data-player-id="{{ player.id_in_group }}">
+    </input>
     <table><tbody>
         {% for pd in price_dims %}
             <tr>
                 <td>
-                    <label for="dim_{{ pd.dimnum }}">{{ pd.dimnum }}</label>
+                    <!--<label for="dim_{{ pd.dimnum }}">{{ pd.dimnum }}</label>-->
+                    <label for="dim_{{ pd }}">{{ pd}}</label>
                 </td>
                 <td>
-                    <input type="number" class="pricedim" value="" id="dim_{{ pd.dimnum}}" name="dim_{{ pd.dimnum }}"
-                           autocomplete="off" required>
+                    <!--<input type="number" class="pricedim" value="" id="dim_{{ pd.dimnum}}" name="dim_{{ pd.dimnum }}"-->
+                           <!--autocomplete="off" required min="0">-->
+                    <input type="number" class="pricedim" value="" id="dim_{{ pd }}" name="dim_{{ pd }}"
+                           autocomplete="off" required min="0">
                     </input>
                 </td>
             </tr>
         {% endfor %}
     </tbody></table>
+
+    <input type='hidden' id='id_ask_stdev' name='ask_stdev' value="" />
 
 
     {% next_button %}
@@ -41,32 +52,16 @@
 {% block scripts %}
     <script type="text/javascript">
 
-
         // Update total when fields change
         $(document).ready(function(){
-            $(".pricedim").change(function(){
-                var sum = 0;
-                $('.pricedim').each(function() {
-                    sum += Number($(this).val());
-                });
-                $("#id_ask_total").val(sum);
-            })
-        });
 
-
-
-        // Get new field data
-        // Trigger upload
-       $("#distribute").click(function () {
-
+            // CSRF TOKEN stuff is foregin to me...
+            //  most ajax code taken from this thread: https://groups.google.com/d/msg/otree/nUrvTTAu6QA/4DHiw8_zBQAJ
             var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
-            console.log(csrftoken);
-
             function csrfSafeMethod(method) {
                 // these HTTP methods do not require CSRF protection
                 return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
             }
-
             $.ajaxSetup({
                 beforeSend: function(xhr, settings) {
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -74,37 +69,79 @@
                     }
                 },
                 data: {csrfmiddlewaretoken: csrftoken }
-
             });
 
+            var resultHandler = function(result) {
+                // Over-writing user-input to enforce consistency.  The only reason this should ever be different
+                //  is if the user tried to enter a decimal-point
 
-            var file_name = "{{ participant.code }}_" + "{{ subsession.round_number }}" + ".png"
-//            var dataURL = canvas.toDataURL("image/png");
-            var self = $(this);
-            //e.preventDefault();
-            $.ajax({
-                type: "POST",
-                url: "/duopoly_rep_treat/autopricedims/",
-                data: {
-                    ask_total: $("#id_ask_total").val(),
-                    numdims: $("input.pricedim").length
-                },
-                dataType: "json",
-                //processData: false,
-                //contentType: false,
-                success: function(result) {
+                $.each(result.pricedims, function(i, pd){
+                    $("#dim_" + (i+1)).val(pd);
+                });
 
-                    $.each(result.pricedims, function(i, pd){
-                        $("#dim_" + (i+1)).val(pd);
-                    });
+                $("#id_ask_total").val(result.ask_total);
+                $("#id_ask_stdev").val(result.ask_stdev);
+            };
 
+            var get_metadata = function(data_holder){
+                return {
+                    player_id_in_group: data_holder.attr("data-player-id"),
+                    group_id: data_holder.attr("data-group-id"),
+                    session_id: data_holder.attr("data-session-id"),
+                    subsession_id: data_holder.attr("data-subsession-id"),
+                };
+            };
 
-                },
-                error: function(jqXHR, textStatus, errorThrown){
-                    console.log(textStatus);
+            // When player manually changes a field, we want to send the whole list of fields back as a list
+            $(".pricedim").change(function(){
+
+                var pricedims = [];
+                $(".pricedim").each(function(i, input) {
+                    pricedims.push($(input).val());
+                });
+                console.log(pricedims)
+
+                var data = get_metadata($("#distribute"));
+                data.pricedims = pricedims.toString();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/duopoly_rep_treat/manualpricedims/",
+//                    contentType: "json",
+                    data: data,
+                    dataType: "json",
+                    success: resultHandler
+                });
+            });
+
+            // When a player clicks the automatic distribute button, we ask the server for the list of price dims
+            $("#distribute").click(function() {
+
+                // #Distribute field validation.  Don't send if number not in range.
+                var myForm = $("form");
+                var myVal = $("#id_ask_total").val();
+                if( !myForm[0].checkValidity() && myVal>800 || myVal<0 || myVal=="" ) {
+                    // Leveraging built-in styling for "distribute" validation
+                    // Validation technique taken from
+                    //   http://stackoverflow.com/questions/10092580/stop-form-from-submitting-using-jquery#10092636
+                    // If the form is invalid, submit it. The form won't actually submit;
+                    //   this will just cause the browser to display the native HTML5 error messages.
+                    $("input[type=submit]").click();
+                    return;
                 }
-            });
 
+                var data = get_metadata($(this));
+                data.ask_total = $("#id_ask_total").val();
+                data.numdims = $("input.pricedim").length;
+
+                $.ajax({
+                    type: "POST",
+                    url: "/duopoly_rep_treat/autopricedims/",
+                    data: data,
+                    dataType: "json",
+                    success: resultHandler
+                });
+            });
         });
 
 
