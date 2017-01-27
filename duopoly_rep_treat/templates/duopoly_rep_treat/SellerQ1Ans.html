@@ -1,0 +1,19 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+
+{% if player.quiz_q1 == correct_answer %}
+You are correct!
+{% else %}
+The correct answer is <b> 0 tokens </b>. Remeber that you only receive tokens if you sell an object. If you do not sell to any buyers, you will receive 0 tokens.
+
+{% endif %}
+
+{% next_button %}
+
+{% endblock %}
+
