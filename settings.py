@@ -132,7 +132,7 @@ SESSION_CONFIGS = [
     {
         'name': 'survey',
         'display_name': "Survey",
-        'num_demo_participants': 12,
+        'num_demo_participants': 4,
         'app_sequence': [
             'survey',
         ],
@@ -141,8 +141,11 @@ SESSION_CONFIGS = [
         'name': 'duopoly_rep_treat',
         'display_name': "Duopoly",
         'num_demo_participants': 4,
-        'app_sequence': ['duopoly_rep_treat',],
-        'treatmentorder': [2, 2, 3],
+        'app_sequence': [
+            'duopoly_rep_treat',
+            'survey'
+        ],
+        'treatmentorder': [2,1,3],
         'participation_fee': 5,
         'real_world_currency_per_point': .01,
         'date': "20170130",

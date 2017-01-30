@@ -4,6 +4,8 @@ from otree.api import (
 )
 from otree.db.models import Model, ForeignKey
 from statistics import pstdev
+from otree.models.session import Session
+
 
 author = 'Dustin Beckett'
 
@@ -20,7 +22,7 @@ class Constants(BaseConstants):
     treatmentdims = [1, 8, 16]
     # treatmentorder = [1, 2, 3] # changes between sessions
     num_rounds_treatment = 1
-    num_rounds_practice = 1
+    num_rounds_practice = 0
     num_rounds = num_rounds_treatment * len(treatmentdims) + num_rounds_practice
     num_players = 12
     prodcost = 100
@@ -55,6 +57,8 @@ class Subsession(BaseSubsession):
             self.block = 2
         else:
             self.block = 3
+
+        print(self.block)
 
         self.treatment = self.session.config["treatmentorder"][self.block - 1]
         self.dims = Constants.treatmentdims[self.treatment - 1]
@@ -212,6 +216,7 @@ class Player(BasePlayer):
 
         self.bid_total = seller.ask_total
         self.other_seller_ask_total = seller_other.ask_total
+        self.other_seller_ask_stdev = seller_other.ask_stdev
         self.mistake_size = max(0, self.bid_total - self.other_seller_ask_total)
         self.mistake_bool = 0 if self.mistake_size <= 0 else 1
 

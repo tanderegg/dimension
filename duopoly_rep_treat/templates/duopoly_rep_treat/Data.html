@@ -8,15 +8,7 @@
 {% block content %}
 
 <table><tbody>
-<tr>
-    <td>
-        <h3>Market Data</h3>
-    </td>
-    <td>
-        <a class="btn btn-info" href="{% url 'market_data_download' %}">download</a>
-        <a class="btn btn-info" href="{% url 'market_data_view' %}">view</a>
-    </td>
-</tr>
+
 <tr>
     <td>
         <h3>Ask Data</h3>
@@ -26,6 +18,44 @@
         <a class="btn btn-info" href="{% url 'ask_data_view' %}">view</a>
     </td>
 </tr>
+<tr>
+    <td>
+        <h5>Contract Data</h5>
+    </td>
+    <td>
+        <a class="btn btn-info" href="{% url 'contract_data_download' %}">download</a>
+        <a class="btn btn-info" href="{% url 'contract_data_view' %}">view</a>
+    </td>
+</tr>
+
+<tr>
+    <td>
+        <h5>Market Data</h5>
+    </td>
+    <td>
+        <a class="btn btn-info" href="{% url 'market_data_download' %}">download</a>
+        <a class="btn btn-info" href="{% url 'market_data_view' %}">view</a>
+    </td>
+</tr>
+<tr>
+     <td>
+        <h5>Survey Data</h5>
+    </td>
+    <td>
+        <a class="btn btn-info" href="{% url 'survey_data_download' %}">download</a>
+        <a class="btn btn-info" href="{% url 'survey_data_view' %}">view</a>
+    </td>
+</tr>
+<tr>
+     <td>
+        <h3>Combined Data</h3>
+    </td>
+    <td>
+        <a class="btn btn-info" href="{% url 'combined_data_download' %}">download</a>
+        <a class="btn btn-info" href="{% url 'combined_data_view' %}">view</a>
+    </td>
+</tr>
+<tr><td><hr /></td></tr>
 <tr>
     <td>
         <h3>Response Times</h3>
@@ -43,6 +73,7 @@
         <a class="btn btn-info" href="{% url 'SessionPayments' session_code %}">view latest session</a>
     </td>
 </tr>
+
 </tbody></table>
 {% endblock %}
 
@@ -52,10 +83,11 @@
             float:left;
             position: relative;
             line-height: 32px;
-            margin: 15px 15px 0 0;
+            margin: 0 15px 0 0;
         }
         .btn{
             padding:1px 5px 3px;
+            margin: 0 5px 0 0;
         }
         h2{
             font-size: 40px;
