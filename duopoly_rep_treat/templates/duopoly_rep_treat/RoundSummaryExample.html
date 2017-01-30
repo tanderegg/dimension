@@ -1,0 +1,57 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %} Round Summary Example {% endblock %}
+
+{% block content %}
+
+<p>You were {{ player.roledesc }} {{ player.rolenum }}.</p>
+<p>You made {{ player.payoff }}tokens.</p>
+
+<h3>Your Payout Calculation</h3>
+additional text here
+
+<h3>Sellers' Prices</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th>Seller 1</th><th>Seller 2</th>
+        </tr>
+    </thead>
+    <tbody>
+  setting up example prices here
+    <tr>
+        <td>Total</td>
+        <td align="center">
+            400
+        </td>
+        <td align="center">
+            300
+        </td>
+    </tr>
+</tbody></table>
+
+<h3>Buyers' Choices</h3>
+<table>
+    <thead><tr>
+        <th></th><th>Seller 1</th><th>Seller 2</th>
+    </tr></thead>
+    <tbody>
+        <tr>
+            <td>Buyer 1</td>
+            <td align="center">	</td>
+            <td align="center"> X  </td>
+        </tr>
+        <tr>
+            <td>Buyer 2</td>
+            <td align="center">  X </td>
+            <td align="center">	</td>
+        </tr>
+    </tbody>
+</table>
+
+{% next_button %}
+
+{% endblock %}

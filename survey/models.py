@@ -17,6 +17,11 @@ class Constants(BaseConstants):
     name_in_url = 'survey'
     players_per_group = None
     num_rounds = 1
+    nfc_responses = [ [1, 'Extremely uncharacteristic of me'],
+                  [2, 'Somewhat uncharacteristic of me'],
+                  [3, 'Uncertain'],
+                  [4, 'Somewhat characteristic of me'],
+                  [5, 'Extremely characteristic of me'] ]
 
 
 class Subsession(BaseSubsession):
@@ -99,42 +104,36 @@ class Player(BasePlayer):
                                         decimal_places=3,
                                         initial=None)
 
-    nfc_responses = [ [1, 'Extremely uncharacteristic of me'],
-                      [2, 'Somewhat uncharacteristic of me'],
-                      [3, 'Uncertain'],
-                      [4, 'Somewhat characteristic of me'],
-                      [5, 'Extremely characteristic of me'] ]
-
     q_nfc1 = models.PositiveIntegerField(initial=None,
-                                choices=nfc_responses,
+                                choices=Constants.nfc_responses,
                                 verbose_name='I would prefer complex to simple problems.',
                                 widget=widgets.RadioSelect())
     q_nfc2 = models.PositiveIntegerField(initial=None,
-                                choices=nfc_responses,
+                                choices=Constants.nfc_responses,
                                 verbose_name='I like to have the responsibility of handling a situation that requires a lot of thinking.',
                                 widget=widgets.RadioSelect())
     q_nfc3 = models.PositiveIntegerField(initial=None,
-                                choices=nfc_responses,
+                                choices=Constants.nfc_responses,
                                 verbose_name='Thinking is not my idea of fun.',
                                 widget=widgets.RadioSelect())
     q_nfc4 = models.PositiveIntegerField(initial=None,
-                                choices=nfc_responses,
+                                choices=Constants.nfc_responses,
                                 verbose_name='I would rather do something that requires little thought than something that is sure to challenge my thinking abilities.',
                                 widget=widgets.RadioSelect())
     q_nfc5 = models.PositiveIntegerField(initial=None,
-                                choices=nfc_responses,
+                                choices=Constants.nfc_responses,
                                 verbose_name='I find satisfaction in deliberating hard and for long hours.',
                                 widget=widgets.RadioSelect())
     q_nfc6 = models.PositiveIntegerField(initial=None,
-                                choices=nfc_responses,
+                                choices=Constants.nfc_responses,
                                 verbose_name='I only think as hard as I have to.',
                                 widget=widgets.RadioSelect())
     q_nfc7 = models.PositiveIntegerField(initial=None,
-                                choices=nfc_responses,
+                                choices=Constants.nfc_responses,
                                 verbose_name='I prefer my life to be filled with puzzles I must solve.',
                                 widget=widgets.RadioSelect())
     q_nfc8 = models.PositiveIntegerField(initial=None,
-                                choices=nfc_responses,
+                                choices=Constants.nfc_responses,
                                 verbose_name='I feel relief rather than satisfaction after completing a task that requires a lot of mental effort.',
                                 widget=widgets.RadioSelect())
 

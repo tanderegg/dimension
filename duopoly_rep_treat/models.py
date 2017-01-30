@@ -29,6 +29,9 @@ class Constants(BaseConstants):
     consbenefit = 800
     maxprice = 800
     minprice = 0
+    starting_tokens = 500
+    # For convenience of testing the experience of players
+    show_instructions = True
 
 
 class Subsession(BaseSubsession):
@@ -37,6 +40,8 @@ class Subsession(BaseSubsession):
     block = models.IntegerField()
     treatment = models.IntegerField()
     dims = models.IntegerField()
+    num_dims = models.IntegerField()
+    currency_per_point = models.DecimalField(decimal_places = 2, max_digits = 6)
 
     def before_session_starts(self):
 
@@ -62,6 +67,8 @@ class Subsession(BaseSubsession):
 
         self.treatment = self.session.config["treatmentorder"][self.block - 1]
         self.dims = Constants.treatmentdims[self.treatment - 1]
+        self.num_dims = len(self.session.config["treatmentorder"])
+        self.currency_per_point = self.session.config["real_world_currency_per_point"]
 
         # Set player level variables
         # Randomize groups each round.
@@ -128,6 +135,20 @@ class Player(BasePlayer):
     # Both
     rolenum = models.IntegerField()
     roledesc = models.CharField()
+
+    # Instruction Questions
+    quiz_q1 = models.CharField(
+        choices = ['0 tokens', '{} tokens'.format(Constants.consbenefit), 'It depends on the prices I set'],
+        blank = True,
+        widget = widgets.RadioSelect(),
+        verbose_name = "How many tokens will you receive if you don't sell an object?")
+
+    quiz_q2 = models.CharField(
+        choices = ['0 tokens', '{} tokens'.format(Constants.consbenefit), 'It depends on the prices I set'],
+        blank = True,
+        widget = widgets.RadioSelect(),
+        verbose_name = 'How many tokens will you receive if you sell an object?')
+    
     # profit = models.IntegerField(default=0) # use built-in payoff field
     # profit_interim = models.IntegerField(default=0)
     payoff_interim = models.CurrencyField(default=0)

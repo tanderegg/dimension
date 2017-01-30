@@ -8,6 +8,113 @@ from django.shortcuts import render
 from . import utils, export
 from otree.models.session import Session
 
+class Begin(Page):
+
+    def is_displayed(self):
+        return ((self.subsession.round_number == 1) & 
+            (models.Constants.show_instructions))
+
+class PRA(Page):
+
+    def is_displayed(self):
+        return ((self.subsession.round_number == 1) & 
+            (models.Constants.show_instructions))
+
+
+class Introduction(Page):
+
+    def vars_for_template(self):
+        return {'num_rounds': models.Constants.num_rounds_treatment, 
+        'num_games' : self.subsession.num_dims}
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
+class IntroductionPayment(Page):
+
+    def vars_for_template(self):
+        return {'redeem_value': models.Constants.consbenefit,
+        'cents_per_token': self.subsession.currency_per_point,
+        'starting_tokens' : models.Constants.starting_tokens}
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
+class IntroductionRoles(Page):
+
+    def vars_for_template(self):
+        return {'redeem_value': models.Constants.consbenefit,
+        }
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
+class AssignedDirections(Page):
+
+    def vars_for_template(self):
+        return {'rounds_per_game': models.Constants.num_rounds_treatment,
+        }
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
+class SellerInstructions(Page):
+
+    def vars_for_template(self):
+        return {'buyers_per_group': models.Constants.buyers_per_group,
+        'num_other_sellers': models.Constants.sellers_per_group-1,
+        'num_prices' : self.subsession.dims,
+        'production_cost' : models.Constants.prodcost}
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
+class SellerQ1(Page):
+    form_model = models.Player
+    form_fields = ['quiz_q1']
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
+class SellerQ1Ans(Page):
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
+    def vars_for_template(self):
+        return {'correct_answer' : '0 tokens'}
+
+class SellerQ2(Page):
+    form_model = models.Player
+    form_fields = ['quiz_q2']
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
+class SellerQ2Ans(Page):
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
+    def vars_for_template(self):
+        return {'correct_answer' : 'It depends on the prices I set'}
+
+class BuyerInstructions(Page):
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
+class RoundSummaryExample(Page):
+
+    def is_displayed(self):
+        return models.Constants.show_instructions
+
+class Intro(Page):
+    
+    def vars_for_template(self):
+        return {'num_rounds_practice': models.Constants.num_rounds_practice,
+        'roledesc': self.player.roledesc.lower()}
+
 class Instructions(Page):
     def is_displayed(self):
         # want to display instructions before the first practice round, and before the first real round in all OTHER
@@ -271,6 +378,20 @@ def CombinedDataDownload(request):
 
 page_sequence = [
     StartWait,
+    Begin,
+    PRA,
+    Introduction,
+    IntroductionPayment,
+    IntroductionRoles,
+    AssignedDirections,
+    SellerInstructions,
+    SellerQ1,
+    SellerQ1Ans,
+    SellerQ2,
+    SellerQ2Ans,
+    BuyerInstructions,
+    RoundSummaryExample,
+    Intro,
     Instructions,
     SellerChoice,
     WaitSellersForSellers,  # for buyers while they wait for sellers # split in tow
