@@ -27,7 +27,7 @@ class Constants(BaseConstants):
     consbenefit = 800
     maxprice = 800
     minprice = 0
-    starting_tokens = 500
+    starting_tokens = maxprice
     # For convenience of testing the experience of players
     show_instructions = True
 
@@ -72,7 +72,7 @@ class Subsession(BaseSubsession):
 
         for p in self.get_players():
             # set player roles
-            p.set_role()
+            p.set_role() 
 
             # create player price dims
             # p.generate_pricedims()
