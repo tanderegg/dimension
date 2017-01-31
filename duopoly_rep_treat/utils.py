@@ -20,46 +20,9 @@ def get_player_from_request(request):
 
     return player
 
-#
-# def get_filename(suffix):
-#     subsession = Subsession.objects.last()
-#     if subsession == None:
-#         return ([], [])
-#     date = subsession.session.config["date"]
-#     time = subsession.session.config["time"]
-#     filename = "{}_{}_{}.csv".format(date, time, suffix)
-#
-#     return filename
 
 
-def list_from_obj(fieldnames, obj):
-    """
-        Small helper function to create a list from an object <obj> using <fieldnames>
-        as attributes.
-    """
-    data = []
-    for f in fieldnames:
-        if type(obj) == dict:
-            data.append(obj[f])
-        else:
-            data.append(getattr(obj, f))
 
-    return data
-
-def get_market_headers(maxdim):
-    hdrs = []
-
-    for role in ("S1", "S2"):
-        for suffix in ["id_in_group", "participant_id_in_sess", "payoff", "ask_total", "ask_stdev", "numsold"]:
-            hdrs.append(role + "_" + suffix)
-        for i in range(1, maxdim + 1):
-            hdrs.append(role + "_p" + str(i))
-
-    for role in ("B1", "B2"):
-        for suffix in ["id_in_group", "participant_id_in_sess", "payoff", "bid_total", "contract_seller_rolenum"]:
-            hdrs.append(role + "_" + suffix)
-
-    return hdrs
 
 
 def export_marketdata():
@@ -68,6 +31,7 @@ def export_marketdata():
             role_count_seller role_count_seller_1 role_count_seller_8 role_count_seller_16
             role_count_buyer role_count_buyer_1 role_count_buyer_8 role_count_buyer_16
         TODO: add survey data
+        key: app_label = subsession._meta.app_config.name
     """
     # this will be a list that contains data of all sessions
     body = []
@@ -107,6 +71,7 @@ def export_marketdata():
         for subsession in subsessions:
             subsession_list = list_from_obj(subsession_fns, subsession)
 
+
             # loop through all groups ordered by ID
             groups = sorted(subsession.get_groups(), key=lambda x: x.id_in_subsession)
             for group in groups:
@@ -116,7 +81,6 @@ def export_marketdata():
                 market_list = []
                 for role in ("S1", "S2"):
                     seller = group.get_player_by_role(role)
-                    # TODO if no ask, (bc round hasnt happened yet, add blank ask data
                     market_list += [seller.id_in_group, seller.participant.id_in_session, seller.payoff,
                                     seller.ask_total, seller.ask_stdev, seller.numsold]
 
@@ -132,7 +96,6 @@ def export_marketdata():
                             else:
                                 market_list += [""]
                 for role in ("B1", "B2"):
-                    print(role)
                     buyer = group.get_player_by_role(role)
                     market_list += [buyer.id_in_group, buyer.participant.id_in_session, buyer.payoff, buyer.bid_total,
                                     buyer.contract_seller_rolenum]
@@ -143,17 +106,8 @@ def export_marketdata():
                     participant = player.participant
                     player_list = [participant.id_in_session, participant.code] + list_from_obj(player_fns, player)
 
-                    pricedims = player.get_pricedims()
-                    if len(pricedims)==0:
-                        # only here if this row is not yet populated (checking data mid-stream)
-                        pricedim_list = [""]*maxdim
-                    else:
-                        pricedim_list = []
-                        for i in range(1, maxdim + 1):
-                            if i <= subsession.dims:
-                                pricedim_list += [pricedims[i-1].value]
-                            else:
-                                pricedim_list += [""]
+
+                    pricedim_list = get_pd_list(player, subsession.dims, maxdim)
 
                     body.append(session_list + metadata_list + subsession_list + group_list + market_list +
                                 player_list + pricedim_list)
@@ -161,69 +115,7 @@ def export_marketdata():
     return headers, body
 
 
-def export_asks():
-    """
-        Sends headers and data to views for csv data viewing/export.
-        Much code taken from:
-            https://github.com/WZBSocialScienceCenter/otree_custom_models/blob/master/example_decisions/views.py
-    """
-    # this will be a list that contains data of all sessions
-    body = []
 
-    # Create the header list
-    session_fns = ['code', 'id', 'label'] #get_field_names_for_csv(Session)
-    subsession_fns = ['round_number', 'practiceround']#, 'realround'], 'block', 'treatment', 'dims']
-    group_fns = ['id_in_subsession']
-    participant_fns = ['participant_id_in_sess', 'participant_code']
-    player_fns = ['id_in_group', 'rolenum']#, 'roledesc']
-    ask_fns = ['total', 'stdev', 'auto', 'manual']
-
-    maxdim = max(Constants.treatmentdims)
-    headers = session_fns + subsession_fns + group_fns + participant_fns + player_fns + ask_fns
-    for i in range(1, maxdim + 1):
-        headers.append("p" + str(i))
-
-
-    # get the complete result data from the database
-    qs_results = models.Player.objects.select_related('subsession', 'subsession__session', 'group', 'participant') \
-        .prefetch_related('ask_set') \
-        .all()
-
-    # get all sessions, order them by label
-    sessions = sorted(set([p.subsession.session for p in qs_results]), key=lambda x: x.label)
-
-    # loop through all sessions
-    for session in sessions:
-        session_list = list_from_obj(session_fns, session)
-
-        # loop through all subsessions (i.e. rounds) ordered by round number
-        subsessions = sorted(models.Subsession.objects.filter(session=session, treatment__gt=1),
-                             key=lambda x: x.round_number)
-        for subsession in subsessions:
-            subsession_list = list_from_obj(subsession_fns, subsession)
-
-            # loop through all groups ordered by ID
-            groups = sorted(subsession.get_groups(), key=lambda x: x.id_in_subsession)
-            for group in groups:
-                group_list = list_from_obj(group_fns, group)
-
-                # loop through all players ordered by ID
-                players = sorted(models.Player.objects.filter(group=group, roledesc="Seller"),
-                                 key=lambda x: x.participant.id_in_session)
-                for player in players:
-                    participant = player.participant
-                    player_list = [participant.id_in_session, participant.code] + list_from_obj(player_fns, player)
-
-                    asks=sorted(models.Ask.objects.filter(player=player), key=lambda x: x.id)
-                    for ask in asks:
-                        ask_list = list_from_obj(ask_fns, ask)
-
-                        pds = sorted(ask.pricedim_set.all(), key=lambda x: x.dimnum)
-                        vals = [pd.value for pd in pds]
-
-                        body.append( session_list + subsession_list + group_list + player_list + ask_list + vals )
-
-    return headers, body
 
 
 def get_stdev(ask_total, numdims):

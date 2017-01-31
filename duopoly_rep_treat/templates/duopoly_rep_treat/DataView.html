@@ -3,9 +3,12 @@
 
 {% block title %}
     {{ title }}
+
 {% endblock %}
 
 {% block content %}
+    <a class="back" href="{% url 'data' %}"><- data</a>
+
 <table>
     <thead><tr>
         {% for header in headers %}
@@ -56,6 +59,12 @@
         }
         tr:nth-child(even){
             background-color: lightgoldenrodyellow;
+        }
+        .back{
+            position: absolute;
+            top: 10px;
+            left: 8px;
+            font-size: 16px;
         }
     </style>
 {% endblock %}

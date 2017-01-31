@@ -11,39 +11,48 @@
     <p>
         You are seller number {{ player.rolenum }}
     </p>
-    <p>Please choose a price for each of the {{ subsession.vars.dims }} price dimensions</p>
-    <p>
-        Each price must be greater than {{ Constants.minprice }},
-        and the sum of all price dimensions must be less than {{ Constants.maxprice }}
-    </p>
-    {% formfield player.ask_total with label="Total price" %}
+    {% if subsession.treatment > 1 %}
+        <p>Please choose a price for each of the {{ subsession.vars.dims }} price dimensions</p>
+        <p>
+            Each price must be greater than {{ Constants.minprice }},
+            and the sum of all price dimensions must be less than {{ Constants.maxprice }}
+        </p>
+        {% formfield player.ask_total with label="Total price" %}
 
-    <input type="button" value="Distribute" id="distribute"
-           data-subsession-id="{{ subsession.id }}"
-           data-group-id="{{ group.id }}"
-           data-session-id="{{ session.id}}"
-           data-player-id="{{ player.id_in_group }}">
-    </input>
-    <table><tbody>
-        {% for pd in price_dims %}
-            <tr>
-                <td>
-                    <!--<label for="dim_{{ pd.dimnum }}">{{ pd.dimnum }}</label>-->
-                    <label for="dim_{{ pd }}">{{ pd}}</label>
-                </td>
-                <td>
-                    <!--<input type="number" class="pricedim" value="" id="dim_{{ pd.dimnum}}" name="dim_{{ pd.dimnum }}"-->
-                           <!--autocomplete="off" required min="0">-->
-                    <input type="number" class="pricedim" value="" id="dim_{{ pd }}" name="dim_{{ pd }}"
-                           autocomplete="off" required min="0">
-                    </input>
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody></table>
 
-    <input type='hidden' id='id_ask_stdev' name='ask_stdev' value="" />
+        <input type="button" value="Distribute" id="distribute" class="btn btn-info"
+               data-subsession-id="{{ subsession.id }}"
+               data-group-id="{{ group.id }}"
+               data-session-id="{{ session.id}}"
+               data-player-id="{{ player.id_in_group }}"
+               data-auto-url="{% url 'autopricedims' %}"
+               data-manual-url="{% url 'manualpricedims' %}"
+        >
+        </input>
+        <table><tbody>
+            {% for pd in price_dims %}
+                <tr>
+                    <td>
+                        <!--<label for="dim_{{ pd.dimnum }}">{{ pd.dimnum }}</label>-->
+                        <label for="dim_{{ pd }}">{{ pd}}</label>
+                    </td>
+                    <td>
+                        <!--<input type="number" class="pricedim" value="" id="dim_{{ pd.dimnum}}" name="dim_{{ pd.dimnum }}"-->
+                               <!--autocomplete="off" required min="0">-->
+                        <input type="number" class="pricedim" value="" id="dim_{{ pd }}" name="dim_{{ pd }}"
+                               autocomplete="off" required min="0">
+                        </input>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody></table>
 
+        <input type='hidden' id='id_ask_stdev' name='ask_stdev' value="" />
+    {% else %}
+        <p>Please choose a price.</p>
+        {% formfield player.ask_total with label="Price" %}
+        <input type='hidden' id='id_ask_stdev' name='ask_stdev' value="0" />
+    {% endif %}
 
     {% next_button %}
 
@@ -78,15 +87,13 @@
                 $(".pricedim").each(function(i, input) {
                     pricedims.push($(input).val());
                 });
-                console.log(pricedims)
 
                 var data = get_metadata($("#distribute"));
                 data.pricedims = pricedims.toString();
 
                 $.ajax({
                     type: "POST",
-                    url: "/duopoly_rep_treat/manualpricedims/",
-//                    contentType: "json",
+                    url: $("#distribute").attr("data-manual-url"),//"/duopoly_rep_treat/manualpricedims/",
                     data: data,
                     dataType: "json",
                     success: resultHandler
@@ -115,7 +122,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/duopoly_rep_treat/autopricedims/",
+                    url: $("#distribute").attr("data-auto-url"),//"/duopoly_rep_treat/autopricedims/",
                     data: data,
                     dataType: "json",
                     success: resultHandler

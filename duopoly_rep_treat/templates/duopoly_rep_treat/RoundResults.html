@@ -48,25 +48,31 @@
         </tr>
     </thead>
     <tbody>
-    {% for i, s1_pd, s2_pd in pricedims %}
-        <tr>
-            <td>
-                <label>{{ i }}</label>
-            </td>
-            <td>
-                <span class="pricedim" id="dim_{{ pd.dimnum }}">
-                    {{ s1_pd }}
-                </span>
-            </td>
-            <td>
-                <span class="pricedim" id="dim_{{ pd.dimnum }}">
-                    {{ s2_pd }}
-                </span>
-            </td>
-        </tr>
-    {% endfor %}
+    {% if subsession.dims > 1 %}
+        {% for i, s1_pd, s2_pd in pricedims %}
+            <tr>
+                <td>
+                    <label>{{ i }}</label>
+                </td>
+                <td>
+                    <span class="pricedim" id="dim_{{ pd.dimnum }}">
+                        {{ s1_pd }}
+                    </span>
+                </td>
+                <td>
+                    <span class="pricedim" id="dim_{{ pd.dimnum }}">
+                        {{ s2_pd }}
+                    </span>
+                </td>
+            </tr>
+        {% endfor %}
+    {% endif %}
     <tr>
-        <td>Total</td>
+        {% if subsession.dims > 1 %}
+            <td>Total</td>
+        {% else %}
+            <td>Price</td>
+        {% endif %}
         <td>
             {{ s1_ask_total }}
         </td>
