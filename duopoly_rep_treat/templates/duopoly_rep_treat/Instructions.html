@@ -13,12 +13,12 @@
         Two players are buyers and two players are sellers
 
     </p>
-    <p>block: {{ subsession.block }}</p>
-    <p>treatment: {{ subsession.treatment }}</p>
-    <p>round: {{ subsession.round_number }}</p>
-    <p>practice: {{subsession.practiceround }}</p>
-    <p>In this game there are {{ subsession.dims }} dimensions </p>
+    <li><b>block:</b> {{ subsession.block }}</li>
+    <li><b>treatment:</b> {{ subsession.treatment }}</li>
+    <li><b>round:</b> {{ subsession.round_number }}</li>
+    <li><b>practice:</b> {{subsession.practiceround }}</li>
+    <li>In this game there are <b>{{ subsession.dims }}</b> dimensions </li>
 
-    {% next_button %}
+    <button class="a-btn">Next</button>
 
 {% endblock %}
