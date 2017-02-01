@@ -12,61 +12,12 @@
         You are buyer number {{ player.rolenum }}
     </p>
 
-    {% if subsession.dims > 1 %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Price</th>
-                    <th>Seller 1</th><th>Seller 2</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for i, s1_pd, s2_pd in prices %}
-                <tr>
-                    <td>
-                        <label>{{ i }}</label>
-                    </td>
-                    <td>
-                        <span class="pricedim" id="dim_{{ pd.dimnum}}">
-                            {{ s1_pd }}
-                        </span>
-                    </td>
-                    <td>
-                        <span class="pricedim" id="dim_{{ pd.dimnum}}">
-                            {{ s2_pd }}
-                        </span>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody></table>
-    {% else %}
-        <table>
-            <thead>
-                <tr>
-                    <th></th><th>Seller 1</th><th>Seller 2</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        Price
-                    </td>
-                    {% for i, s1, s2 in prices %}
-                        <td>
-                            <span class="pricedim">
-                                {{ s1 }}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="pricedim">
-                                {{ s2 }}
-                        </td>
-                    {% endfor %}
-                </tr>
-        </tbody></table>
-    {% endif %}
+    {% include "duopoly_rep_treat/parts/buyerChoicePart.html" %}
 
-    {% formfield player.contract_seller_rolenum with label="Choose a Seller" %}
+
+
+
+
 
     {% next_button %}
 

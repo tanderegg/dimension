@@ -2,16 +2,17 @@
 {% load staticfiles otree_tags %}
 
 {% block title %}
-	Quiz
+	Seller Instructions Comprehension
 {% endblock %}
 
 {% block content %}
-{% if player.quiz_q2 == correct_answer %}
-Correct!
-{% else %}
-The correct answes is: <b> it depends on the prices that I set </b>.  Remeber that you will receive tokens according to the prices you set. In the case of a sale, the higher the price, the more tokens you will receive.
-{% endif %}
+    {% if player.quiz_q2 == correct_answer %}
+        <p>Correct!</p>
+    {% else %}
+        <p>The correct answer is: <b> it depends on the prices that I set </b>.  Remember that you will receive tokens according to the prices you set. In the case of a sale, the higher the price, the more tokens you will receive.
+        </p>
+    {% endif %}
 
-{% next_button %}
+    {% next_button %}
 
 {% endblock %}

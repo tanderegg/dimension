@@ -19,12 +19,4 @@ function setup_csrf() {
     });
 }
 
-var get_metadata = function(data_holder){
-    return {
-        player_id_in_group: data_holder.attr("data-player-id"),
-        group_id: data_holder.attr("data-group-id"),
-        session_id: data_holder.attr("data-session-id"),
-        subsession_id: data_holder.attr("data-subsession-id"),
-    };
-};
 
