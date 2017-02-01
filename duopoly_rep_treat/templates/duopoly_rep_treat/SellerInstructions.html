@@ -1,73 +1,28 @@
 {% extends "global/Base.html" %}
 {% load staticfiles otree_tags %}
-
+{% block title %}
+    Seller Instructions
+{% endblock %}
 {% block content %}
 
-<table width=100% height=100%>
-	<tr>
-		<td width=50%>
-			<p> Imagine that you are playing as a <b>seller</b>.  
-				Each round, you will be placed into a group with {{ buyers_per_group }} buyers and {{ num_other_sellers }}
-				{% if num_other_sellers == 1 %} seller.
-				{% else %} sellers.
-				{% endif %}  
-				The other 
-				{% if num_other_sellers == 1 %}seller
-				{% else %}sellers
-				{% endif %}
-				
- 				in your group will face the same decision that you do. </p>
+        <p> Imagine that you are playing as a <b>seller</b>.</p>
+        <p>Each round, you will be placed into a group with {{ Constants.buyers_per_group }} buyers and {{ Constants.sellers_per_group|add:-1 }} other seller{{ Constants.sellers_per_group|add:-1 | pluralize }}.
+        </p>
 
-			<p> As a seller, you can sell objects to earn tokens.  As a seller, you do not value owning the object itself, but you can sell the object to a buyer.  As a seller you must choose <b>{{num_prices}} {% if num_prices == 1 %}price{% else %}prices{% endif %} </b> for your object.  An example is shown in the table to the right.  </p>
+			<p>You can produce and sell objects to earn tokens.  You do not value owning objects themselves, but you can sell objects to buyers.  As a seller you first choose the prices at which you will sell objects in the market.  In this game, <b>each object has {{ subsession.dims }} price{{ subsession.dims |pluralize }}</b>. All {{ subsession.dims }} price{{ subsession.dims |pluralize }} are for a single object, and each object you sell will earn you the sum of the {{ subsession.dims }} price{{ subsession.dims |pluralize }}.</p>
 
-			<p> For each object that you sell, you must pay {{ production_cost }} tokens to produce the object.  For each object you sell, you will receive the {% if num_prices == 1 %} price {% else %} sum of {{ num_prices }} prices {% endif %}you set for the object. </p>
-		</td>
-
-		<td width=50%>
-		{% if num_prices == 1 %}
-		<table width = 80%, height = 70%>
-			<tr> <td> 			</td>  <td> Seller 1 </td> <td> Seller 2 </td> </tr>
-			<tr> <td>	Price 1	</td>  <td> 	700	</td> <td> 	700	</td> </tr>
-		</table>
-
-		{% elif num_prices == 8 %}
-		<table width = 80%, height = 70%>
-			<tr> <td> </td> <td align="center"> Seller 1 </td> <td align="center"> Seller 2 </td> </tr>
-			<tr> <td>	Price 1	</td>  <td align="center"> 	149	</td> <td align="center"> 178</td> </tr>
-			<tr> <td>	Price 2	</td>  <td align="center"> 	38	</td> <td align="center"> 69	</td> </tr>
-			<tr> <td>	Price 3	</td>  <td align="center"> 	3	</td> <td align="center"> 0	</td> </tr>
-			<tr> <td>	Price 4	</td>  <td align="center"> 	20	</td> <td align="center"> 6	</td> </tr>
-			<tr> <td>	Price 5	</td>  <td align="center"> 	2	</td> <td align="center"> 37	</td> </tr>
-			<tr> <td>	Price 6	</td>  <td align="center"> 	27	</td> <td align="center"> 14	</td> </tr>
-			<tr> <td>	Price 7	</td>  <td align="center"> 	12	</td> <td align="center"> 0	</td> </tr>
-			<tr> <td>	Price 8	</td>  <td align="center"> 	74	</td> <td align="center"> 71	</td> </tr>
-		</table>
-		{% else %}
-		<table width = 80%, height = 70%>
-		    <tr> <td> </td> <td align = "center"> Seller 1 </td> <td align = "center"> Seller 2 </td> </tr>
-			<tr> <td>	Price 1	 </td>  <td align="center">  144 	</td> <td align="center" > 71 </td> </tr>
-			<tr> <td>	Price 2	 </td>  <td align="center">  74  	</td> <td align="center" > 95 </td> </tr>
-			<tr> <td>	Price 3	 </td>  <td align="center">  13 	</td> <td align="center" > 93 </td> </tr>
-			<tr> <td>	Price 4	 </td>  <td align="center">  13 	</td> <td align="center" > 55 </td> </tr>
-			<tr> <td>	Price 5	 </td>  <td align="center">  19  	</td> <td align="center" > 9  </td> </tr>
-			<tr> <td>	Price 6	 </td>  <td align="center">  4  	</td> <td align="center" > 7  </td> </tr>
-			<tr> <td>	Price 7	 </td>  <td align="center">  10  	</td> <td align="center" > 8  </td> </tr>
-			<tr> <td>	Price 8	 </td>  <td align="center">  12  	</td> <td align="center" > 15 </td> </tr>
-			<tr> <td>	Price 9	 </td>  <td align="center">  16  	</td> <td align="center" > 7  </td> </tr>
-			<tr> <td>	Price 10 </td>  <td align="center">  0  	</td> <td align="center" > 0  </td> </tr>
-			<tr> <td>	Price 11 </td>  <td align="center">  8  	</td> <td align="center" > 4  </td> </tr>
-			<tr> <td>	Price 12 </td>  <td align="center">  2  	</td> <td align="center" > 1  </td> </tr>
-			<tr> <td>	Price 13 </td>  <td align="center">  5  	</td> <td align="center" > 4  </td> </tr>
-			<tr> <td>	Price 14 </td>  <td align="center">  0  	</td> <td align="center" > 0  </td> </tr>
-			<tr> <td>	Price 15 </td>  <td align="center">  2  	</td> <td align="center" > 1  </td> </tr>
-			<tr> <td>	Price 16 </td>  <td align="center">  3  	</td> <td align="center" > 5  </td> </tr>
-		</table>	 
-
-		{% endif %}
-		</td>
-	</tr>
-</table>
-
+        <p>After you set your prices, the buyers will decide if they want to buy from you or from the other seller.  You will then automatically produce the number of objects you sold in the market.
+        </p>
+        <p>Your cost of production is {{ Constants.prodcost }} tokens per objects.  So,
+            <ul>
+                <li>If you sell zero objects, you make 0 tokens and spend 0 tokens.</li>
+                <li>If you sell one object, you make the sum of your {{ subsession.dims }} price{{ subsession.dims |pluralize }} and spend {{ Constants.prodcost }} tokens.
+                </li>
+                <li>
+                    If you sell two objects, you make <i>two times</i> the sum of your {{ subsession.dims }} price{{ subsession.dims |pluralize }} and spend {{ Constants.prodcost|add:Constants.prodcost }} tokens.
+                </li>
+            </ul>
+        </p>
 
 
 <p><button class="a-btn">Next</button></p>

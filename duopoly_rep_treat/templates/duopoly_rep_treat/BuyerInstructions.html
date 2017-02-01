@@ -1,14 +1,51 @@
 {% extends "global/Base.html" %}
 {% load staticfiles otree_tags %}
 
+{% block title %}
+    Buyer Instructions
+{% endblock %}
+
 {% block content %}
+<div class="col_container">
+    <div class="col">
+        <p>Imagine that you are playing as a <b>buyer</b>.  You will buy one object per match.</p>
+        <!--<p>You will be placed into a group with {{ Constants.sellers_per_group }} sellers and {{ Constants.buyers_per_group|add:-1 }} other buyer{{ Constants.buyers_per_group|add:-1 | pluralize }}.-->
+        </p>
+        <p>First, you will see the {{ subsession.dims }} price{{ subsession.dims |pluralize }} that the sellers set for their objects, and be asked which of the {{ Constants.sellers_per_group }} sellers you want to buy from. You will then pay the seller you chose the sum of the {{ subsession.dims }} price{{ subsession.dims |pluralize }} that the seller set for their object.
+        </p>
+        <p>  The objects sold by the two sellers are identical.  The only differences are the prices. No matter which seller you choose, you will be awarded {{ Constants.consbenefit }} tokens in exchange for your object at the end of the match. The sum of each seller's prices will always be less than or equal to {{ Constants.maxprice }} tokens.
+        </p>
+        <p></p>
+        <p>An example of how you choose between sellers is shown in the table to the right. Note, that as the buyer you do not see the sum of the prices. You only see the {{ subsession.dims }} price{{ subsession.dims |pluralize }} themselves.
+        </p>
+        <p>Please choose a seller in the example table.  When you are done, press the "Next" button to continue.</p>
 
-    <p> Now imagine that you are playing as a <b>buyer</b>.  Each round, you will buy an object from one of the two sellers in your group.  Both sellers are selling an identical object.  However, they may have chosen different prices for that object. </p>
+        <!--<p>Each round, you will buy an object from one of the two sellers in your group.  Both sellers are selling an identical object.  However, they may have chosen different prices for that object. </p>-->
 
-    <p> When you buy an object, you will receive 800 tokens minus the total price, which is equal to the sum of the prices set by the seller.  For example ... </p>
-
+        <!--<p> When you buy an object, you will receive {{ Constants.maxprice }} tokens minus the total price, which is equal to the sum of the prices set by the seller.  For example ... </p>-->
+    </div>
+    <div class="col">
+        {% include "duopoly_rep_treat/parts/buyerChoicePart.html" %}
+    </div>
+</div>
 <p><button class="a-btn">Next</button></p>
 
-
-
+{% endblock %}
+{% block app_styles %}
+    <style type="text/css">
+        .col{
+            float:left;
+            position: relative;
+            width: 50%;
+            padding: 0 0 0 2.5%
+        }
+        .col:first-child{
+            padding: 0 2.5% 0 0;
+        }
+        .col_container{
+            float:left;
+            position: relative;
+            width: 100%;
+        }
+    </style>
 {% endblock %}

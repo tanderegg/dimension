@@ -11,63 +11,78 @@ from otree.models.session import Session
 class Begin(Page):
 
     def is_displayed(self):
-        return ((self.subsession.round_number == 1) & 
-            (models.Constants.show_instructions))
+        return self.subsession.round_number == 1 & Constants.show_instructions
 
 class PRA(Page):
 
     def is_displayed(self):
-        return ((self.subsession.round_number == 1) & 
-            (models.Constants.show_instructions))
+        return self.subsession.round_number == 1 & Constants.show_instructions
 
 
 class Introduction(Page):
 
     def vars_for_template(self):
-        return {'num_rounds': models.Constants.num_rounds_treatment, 
+        return {'num_rounds': Constants.num_rounds_treatment,
         'num_games' : self.subsession.num_dims}
 
     def is_displayed(self):
-        return models.Constants.show_instructions
+        return self.subsession.round_number == 1 & Constants.show_instructions
 
 class IntroductionPayment(Page):
 
     def vars_for_template(self):
-        return {'redeem_value': models.Constants.consbenefit,
-        'cents_per_token': self.subsession.currency_per_point,
-        'starting_tokens' : models.Constants.starting_tokens}
+        return {'redeem_value': Constants.consbenefit,
+            'cents_per_token': self.session.config["real_world_currency_per_point"],#self.subsession.currency_per_point,
+            'tokens_per_dollar': int(100./float(self.session.config["real_world_currency_per_point"])),
+            'starting_tokens' : Constants.starting_tokens,
+            'total_rounds': Constants.num_treatments*Constants.num_rounds_treatment + Constants.num_rounds_practice,
+            'showup': self.session.config['participation_fee'],
+        }
 
     def is_displayed(self):
-        return models.Constants.show_instructions
+        return self.subsession.round_number == 1 & Constants.show_instructions
 
 class IntroductionRoles(Page):
 
     def vars_for_template(self):
-        return {'redeem_value': models.Constants.consbenefit,
+        return {#'redeem_value': Constants.consbenefit,
+                'num_groups': int(Constants.num_players/Constants.players_per_group),
         }
 
     def is_displayed(self):
-        return models.Constants.show_instructions
+        return self.subsession.round_number == 1 & Constants.show_instructions
 
 class AssignedDirections(Page):
 
     def vars_for_template(self):
-        return {'rounds_per_game': models.Constants.num_rounds_treatment,
+        return {'rounds_per_game':Constants.num_rounds_treatment,
         }
 
     def is_displayed(self):
-        return models.Constants.show_instructions
+        return self.subsession.round_number == 1 & Constants.show_instructions
 
 class SellerInstructions(Page):
 
     def vars_for_template(self):
-        return {'buyers_per_group': models.Constants.buyers_per_group,
-        'num_other_sellers': models.Constants.sellers_per_group-1,
-        'num_prices' : self.subsession.dims,
-        'production_cost' : models.Constants.prodcost}
+        return {'buyers_per_group': Constants.buyers_per_group,
+            'num_other_sellers': Constants.sellers_per_group-1,
+            # 'num_prices' : self.subsession.dims,
+            'production_cost' : Constants.prodcost,
+            'price_dims': range(1, self.subsession.dims + 1)
+                }
 
     def is_displayed(self):
-        return models.Constants.show_instructions
+        return Constants.show_instructions
+
+class SellerInstructionsPrices(Page):
+
+    def vars_for_template(self):
+        return {
+            'price_dims': range(1, self.subsession.dims + 1)
+                }
+    def is_displayed(self):
+        return Constants.show_instructions
+
 
 class SellerQ1(Page):
     form_model = models.Player
@@ -104,10 +119,48 @@ class BuyerInstructions(Page):
     def is_displayed(self):
         return models.Constants.show_instructions
 
+    def vars_for_template(self):
+
+        return{
+            "prices": get_example_prices(self.subsession.dims),
+        }
+def get_example_prices(dims):
+    """
+        example dims generated through same process as Seller's page.
+        :param dims:
+        :return:
+    """
+    if dims == 8:
+        s1_pd = [57, 65, 3, 1, 40, 40, 37, 82]  # 325
+        s2_pd = [46, 91, 20, 64, 48, 45, 32, 29]  # 375
+    elif dims == 16:
+        s1_pd = [26, 4, 2, 39, 55, 44, 34, 1, 9, 10, 29, 0, 26, 0, 23, 23]  # 325
+        s2_pd = [7, 22, 0, 35, 16, 0, 31, 41, 28, 4, 2, 81, 32, 0, 17, 59]  # 375
+    elif dims == 1:
+        s1_pd = [325]
+        s2_pd = [375]
+    else:
+        raise ValueError('{} dimensions not supported'.format(dims))
+
+    return zip(range(1, dims + 1), s1_pd, s2_pd)
+
 class RoundSummaryExample(Page):
 
     def is_displayed(self):
         return models.Constants.show_instructions
+
+    def vars_for_template(self):
+        player = Player(roledesc="Seller", payoff=225, ask_total=325, numsold=1, rolenum=1)
+
+        return{
+            "player": player,
+            "subtotal": 225,
+            "prices": get_example_prices(self.subsession.dims),
+            "s1_ask_total": 325,
+            "s2_ask_total": 375,
+            "b1_seller": 1,
+            "b2_seller": 2,
+        }
 
 class Intro(Page):
     
@@ -251,7 +304,7 @@ class WaitRoundResults(WaitPage):
 class RoundResults(Page):
     def vars_for_template(self):
         return {
-            "pricedims": zip(range(1, self.subsession.dims + 1),
+            "prices": zip(range(1, self.subsession.dims + 1),
                              [pd.value for pd in self.group.get_player_by_role("S1").get_ask().pricedim_set.all() ],
                              [pd.value for pd in self.group.get_player_by_role("S2").get_ask().pricedim_set.all()] ),
             "s1_ask_total": self.group.get_player_by_role("S1").ask_total,
@@ -270,9 +323,11 @@ def AutoPricedims(request):
     pricejson = utils.get_autopricedims(
         ask_total=int(round(float(request.POST["ask_total"]))), numdims=int(round(float(request.POST["numdims"]))))
 
-    player = utils.get_player_from_request(request)
+    if not request.POST["example"] == "True":
+        # If this is being called from the instructions screen, we skip adding a row
+        player = utils.get_player_from_request(request)
 
-    ask = player.create_ask(total=pricejson["ask_total"], auto=True, manual=False, stdev=pricejson["ask_stdev"],
+        ask = player.create_ask(total=pricejson["ask_total"], auto=True, manual=False, stdev=pricejson["ask_stdev"],
                             pricedims=pricejson["pricedims"])
 
     print(pricejson)
@@ -286,13 +341,20 @@ def ManualPricedims(request):
     pricedims = [None if pd=="" else int(round(float(pd))) for pd in pricedims_raw]
     total = sum([0 if pd=="" else int(round(float(pd))) for pd in pricedims_raw])
 
-    player = utils.get_player_from_request(request)
+    if not request.POST["example"] == "True":
+        # If this is being called from the instructions screen, we skip adding a row
+        player = utils.get_player_from_request(request)
 
-    ask = player.create_ask(total=total, auto=False, manual=True, pricedims=pricedims)
-    ask.stdev = pstdev([int(pd.value) for pd in ask.pricedim_set.all() if not pd.value==None ])
-    ask.save()
+        ask = player.create_ask(total=total, auto=False, manual=True, pricedims=pricedims)
+        ask.stdev = pstdev([int(pd.value) for pd in ask.pricedim_set.all() if not pd.value==None ])
+        ask.save()
 
-    return JsonResponse({"pricedims": pricedims, "ask_total": ask.total, "ask_stdev": ask.stdev})
+        return JsonResponse({"pricedims": pricedims, "ask_total": ask.total, "ask_stdev": ask.stdev})
+    else:
+        # If here, this is an example request from the instructions screen
+        return JsonResponse({"pricedims": pricedims, "ask_total": total, "ask_stdev": 0})
+
+
 
 
 
@@ -377,22 +439,24 @@ def CombinedDataDownload(request):
 
 
 page_sequence = [
-    StartWait,
+StartWait,
+    # Instructions
     Begin,
     PRA,
     Introduction,
     IntroductionPayment,
     IntroductionRoles,
-    AssignedDirections,
     SellerInstructions,
+    SellerInstructionsPrices,
     SellerQ1,
     SellerQ1Ans,
     SellerQ2,
     SellerQ2Ans,
     BuyerInstructions,
     RoundSummaryExample,
+    AssignedDirections,
     Intro,
-    Instructions,
+    # Instructions,
     SellerChoice,
     WaitSellersForSellers,  # for buyers while they wait for sellers # split in tow
     WaitBuyersForSellers,  # for buyers while they wait for sellers # split in tow

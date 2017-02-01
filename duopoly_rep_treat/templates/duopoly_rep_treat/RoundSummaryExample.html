@@ -1,57 +1,44 @@
 {% extends "global/Base.html" %}
 {% load staticfiles otree_tags %}
 
-{% block title %} Round Summary Example {% endblock %}
+{% block title %}
+    Match Summary Example
+{% endblock %}
 
 {% block content %}
+    <div class="col_container">
+        <div class="col" style="width:40%">
+            <p>At the end of each match you will see a screen that summarizes your earnings in that match as well as the actions of each player in your group during that match.
+            </p>
+            <p>
+                An example of a summary screen is shown to the right.
+            </p>
+            <p>
+                This summary screen shows that in this example you were "Seller 1". You set prices that summed up to {{ s1_ask_total }}.  Buyer 1 bought from you, but buyer 2 bought from the other Seller.  Therefore you made {{ subtotal }} tokens ({{ s1_ask_total }} - {{  Constants.prodcost }}) in this match.
+            </p>
+        </div>
+        <div class="col" style="width:60%">
+            {% include "duopoly_rep_treat/parts/roundResultPart.html" %}
+        </div>
+    </div>
 
-<p>You were <b>{{ player.roledesc }} {{ player.rolenum }}</b>.</p>
-<p>You made <b>{{ player.payoff }}</b>tokens.</p>
+    <button class="a-btn">Next</button>
+    <style type="text/css">
 
-<h3>Your Payout Calculation</h3>
-<p>additional text here</p>
-
-<h3>Sellers' Prices</h3>
-
-<table>
-    <thead>
-        <tr>
-            <th></th>
-            <th>Seller 1</th><th>Seller 2</th>
-        </tr>
-    </thead>
-    <tbody>
-      <p>setting up example prices here</p>
-    <tr>
-        <td>Total</td>
-        <td align="center">
-            400
-        </td>
-        <td align="center">
-            300
-        </td>
-    </tr>
-</tbody></table>
-
-<h3>Buyers' Choices</h3>
-<table>
-    <thead><tr>
-        <th></th><th>Seller 1</th><th>Seller 2</th>
-    </tr></thead>
-    <tbody>
-        <tr>
-            <td>Buyer 1</td>
-            <td align="center">	</td>
-            <td align="center"> X  </td>
-        </tr>
-        <tr>
-            <td>Buyer 2</td>
-            <td align="center">  X </td>
-            <td align="center">	</td>
-        </tr>
-    </tbody>
-</table>
-
-<button class="a-btn">Next</button>
+        .col{
+            float:left;
+            position: relative;
+            width: 50%;
+            padding: 0 0 0 2.5%
+        }
+        .col:first-child{
+            padding: 0 2.5% 0 0;
+        }
+        .col_container{
+            float:left;
+            position: relative;
+            width: 100%;
+        }
+    </style>
 
 {% endblock %}
