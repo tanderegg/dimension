@@ -4,7 +4,12 @@
 
 
 {% block global_styles  %}
-    <link rel="stylesheet" type="text/css" href="{% static 'global/custom.css' %}" />
+    <link href="{% static "global/cf-core.min.css" %}" rel="stylesheet">
+    <link href="{% static "global/cf-typography.min.css" %}" rel="stylesheet">
+    <link href="{% static "global/cf-tables.min.css" %}" rel="stylesheet">
+    <link href="{% static "global/cf-buttons.min.css" %}" rel="stylesheet">
+    <link href="{% static "global/cf-froms.min.css" %}" rel="stylesheet">
+    <link href="{% static "global/custom.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block global_scripts  %}

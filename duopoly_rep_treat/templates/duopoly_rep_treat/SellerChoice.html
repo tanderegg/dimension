@@ -18,13 +18,12 @@
             Each price must be greater than {{ Constants.minprice }},
             and the sum of all price dimensions must be less than {{ Constants.maxprice }}
         </p>
-
     {% else %}
         <p>Please choose a price.</p>
     {% endif %}
     {% include "duopoly_rep_treat/parts/sellerChoicePart.html" with example="False" %}
 
-    {% next_button %}
+    <button class="a-btn">Next</button>
 
 {% endblock %}
 
