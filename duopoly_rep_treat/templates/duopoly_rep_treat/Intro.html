@@ -7,11 +7,13 @@
 
 {% block content %}
 
-First we will do {{ num_rounds_practice }} practice rounds, half as a buyer and half as a seller.  You will not gain any tokens during these rounds based on your decisions.
+{% if num_rounds_practice != 0 %}
+<p>First we will do {{ num_rounds_practice }} practice rounds, half as a buyer and half as a seller.  You will not gain any tokens during these rounds based on your decisions.</p>
+{% endif %}
 
-You are a {{ roledesc }} this round.
+<p>You are a <b>{{ roledesc }}</b> this round.</p>
     
-<p>{% next_button %}</p>
+<p><button class="a-btn">Next</button></p>
 
 
 {% endblock %}

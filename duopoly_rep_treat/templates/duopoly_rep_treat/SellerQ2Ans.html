@@ -7,11 +7,11 @@
 
 {% block content %}
 {% if player.quiz_q2 == correct_answer %}
-Correct!
+<p>Correct!</p>
 {% else %}
-The correct answes is: <b> it depends on the prices that I set </b>.  Remeber that you will receive tokens according to the prices you set. In the case of a sale, the higher the price, the more tokens you will receive.
+<p>The correct answes is: <b> it depends on the prices that I set </b>.  Remeber that you will receive tokens according to the prices you set. In the case of a sale, the higher the price, the more tokens you will receive.</p>
 {% endif %}
 
-{% next_button %}
+<button class="a-btn">Next</button>
 
 {% endblock %}

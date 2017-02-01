@@ -5,11 +5,11 @@
 
 {% block content %}
 
-<p>You were {{ player.roledesc }} {{ player.rolenum }}.</p>
-<p>You made {{ player.payoff }}tokens.</p>
+<p>You were <b>{{ player.roledesc }} {{ player.rolenum }}</b>.</p>
+<p>You made <b>{{ player.payoff }}</b>tokens.</p>
 
 <h3>Your Payout Calculation</h3>
-additional text here
+<p>additional text here</p>
 
 <h3>Sellers' Prices</h3>
 
@@ -21,7 +21,7 @@ additional text here
         </tr>
     </thead>
     <tbody>
-  setting up example prices here
+      <p>setting up example prices here</p>
     <tr>
         <td>Total</td>
         <td align="center">
@@ -52,6 +52,6 @@ additional text here
     </tbody>
 </table>
 
-{% next_button %}
+<button class="a-btn">Next</button>
 
 {% endblock %}

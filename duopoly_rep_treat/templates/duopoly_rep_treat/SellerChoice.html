@@ -17,10 +17,10 @@
             Each price must be greater than {{ Constants.minprice }},
             and the sum of all price dimensions must be less than {{ Constants.maxprice }}
         </p>
+        <div class="distribute-btn">
         {% formfield player.ask_total with label="Total price" %}
 
-
-        <input type="button" value="Distribute" id="distribute" class="btn btn-info"
+        <input type="button" value="Distribute" id="distribute" class="a-btn"
                data-subsession-id="{{ subsession.id }}"
                data-group-id="{{ group.id }}"
                data-session-id="{{ session.id}}"
@@ -28,7 +28,7 @@
                data-auto-url="{% url 'autopricedims' %}"
                data-manual-url="{% url 'manualpricedims' %}"
         >
-        </input>
+        </div>
         <table><tbody>
             {% for pd in price_dims %}
                 <tr>
@@ -39,7 +39,7 @@
                     <td>
                         <!--<input type="number" class="pricedim" value="" id="dim_{{ pd.dimnum}}" name="dim_{{ pd.dimnum }}"-->
                                <!--autocomplete="off" required min="0">-->
-                        <input type="number" class="pricedim" value="" id="dim_{{ pd }}" name="dim_{{ pd }}"
+                        <input type="number" class="form-control pricedim" value="" id="dim_{{ pd }}" name="dim_{{ pd }}"
                                autocomplete="off" required min="0">
                         </input>
                     </td>
@@ -54,7 +54,7 @@
         <input type='hidden' id='id_ask_stdev' name='ask_stdev' value="0" />
     {% endif %}
 
-    {% next_button %}
+    <button class="a-btn">Next</button>
 
 {% endblock %}
 
