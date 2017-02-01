@@ -16,8 +16,8 @@
   margin-top: 1em; // TODO: do not hardcode to center align
 }
 
-.distribute-btn > div {
-  display: inline-block;
+.col_container {
+  background: white;
 }
 
 label {
