@@ -16,13 +16,13 @@
             <p>
                 This summary screen shows that in this example you were "Seller 1". You set prices that summed up to {{ s1_ask_total }}.  Buyer 1 bought from you, but buyer 2 bought from the other Seller.  Therefore you made {{ subtotal }} tokens ({{ s1_ask_total }} - {{  Constants.prodcost }}) in this match.
             </p>
+          <button class="a-btn">Next</button>
         </div>
         <div class="col" style="width:60%">
             {% include "duopoly_rep_treat/parts/roundResultPart.html" %}
         </div>
     </div>
 
-    <button class="a-btn">Next</button>
     <style type="text/css">
 
         .col{
