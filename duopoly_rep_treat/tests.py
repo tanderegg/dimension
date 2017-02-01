@@ -11,7 +11,11 @@ class PlayerBot(Bot):
             yield (views.StartWait)
             yield (views.Begin)
             yield (views.PRA)
-        if (self.subsession.round_number - models.Constants.num_rounds_practice) % model.Constants.num_rounds_treatment == 0:
+        if (self.subsession.round_number == 1) | 
+        		(self.subsession.round_number == (models.Constants.num_rounds_practice + 
+        			models.Constants.num_rounds_treatment + 1) |
+        		(self.subsession.round_number == (models.Constants.num_rounds_practice + 
+        			2*models.Constants.num_rounds_treatment + 1)):
 	        yield (views.Introduction)
 	        yield (views.IntroductionPayment)
 	        yield (views.IntroductionRoles)
@@ -33,8 +37,6 @@ class PlayerBot(Bot):
 		# Seller Setting Prices	
         if self.player.roledesc == "Seller":
         	yield (views.SellerChoice, {'player.ask_total' : 400})
-       	
-       	def create_prices(self):
 
         # Buyer Choosing Seller
         if self.player.roledesc == "Buyer":
@@ -42,6 +44,3 @@ class PlayerBot(Bot):
         	yield (views.BuyerChoice, {'contract_seller_rolenum':})
 
         yield (views.RoundResults)
-
-    def validate_play(self):
-    	pass
