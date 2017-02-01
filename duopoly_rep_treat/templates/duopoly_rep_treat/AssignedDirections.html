@@ -1,12 +1,14 @@
 {% extends "global/Base.html" %}
 {% load staticfiles otree_tags %}
-
+{% block title %}
+    Instructions
+{% endblock %}
 {% block content %}
 
-    <p> <b> On the next few pages you will read detailed instructions for sellers and buyers.  There will be new instructions after {{ rounds_per_game }} {% if rounds_per_game > 1 %} rounds{% else %} round{% endif %}.  </b> </p>
+    <p> On the next few pages you will read detailed instructions for sellers and buyers.  There will be new instructions after {{ rounds_per_game }} rounds{{ rounds_per_game | pluralize }}.  </p>
     
 
-<p>{% next_button %}</p>
+<p><button class="a-btn">Next</button></p>
 
 
 

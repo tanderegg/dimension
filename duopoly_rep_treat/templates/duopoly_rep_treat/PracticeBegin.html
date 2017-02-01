@@ -1,0 +1,22 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+	Practice Match
+{% endblock %}
+
+{% block content %}
+	<p>
+		We will now go through {{ Constants.num_rounds_practice }} practice matches. You are not paid for your performance in these matches; they are simply meant to familiarize you with the game before you begin the paid matches.
+    </p>
+<!--First we will do {{ Constants.num_rounds_practice }} practice rounds, half as a buyer and half as a seller.  You will not gain any tokens during these rounds based on your decisions.-->
+
+    <p>You will play the {{ player.roledesc }} role this match.</p>
+    {% if Constants.num_rounds_practice > 1 %}
+        <p>In the second practice match you will play the {{ otherrole }} role.</p>
+    {% endif %}
+    
+{% next_button %}
+
+
+{% endblock %}

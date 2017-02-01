@@ -2,7 +2,11 @@
 {% load staticfiles otree_tags %}
 
 {% block title %}
-    Round {{ subsession.round_number }} of {{ Constants.num_rounds }}
+    {% if subsession.round_number <= Constants.num_rounds_practice %}
+        Practice Match
+    {% else %}
+        Match {{ round }} of {{ Constants.num_rounds_treatment }}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -11,125 +15,95 @@
     <p>
         You are seller number {{ player.rolenum }}
     </p>
+
     {% if subsession.treatment > 1 %}
         <p>Please choose a price for each of the {{ subsession.vars.dims }} price dimensions</p>
         <p>
             Each price must be greater than {{ Constants.minprice }},
             and the sum of all price dimensions must be less than {{ Constants.maxprice }}
         </p>
-        {% formfield player.ask_total with label="Total price" %}
-
-
-        <input type="button" value="Distribute" id="distribute" class="btn btn-info"
-               data-subsession-id="{{ subsession.id }}"
-               data-group-id="{{ group.id }}"
-               data-session-id="{{ session.id}}"
-               data-player-id="{{ player.id_in_group }}"
-               data-auto-url="{% url 'autopricedims' %}"
-               data-manual-url="{% url 'manualpricedims' %}"
-        >
-        </input>
-        <table><tbody>
-            {% for pd in price_dims %}
-                <tr>
-                    <td>
-                        <!--<label for="dim_{{ pd.dimnum }}">{{ pd.dimnum }}</label>-->
-                        <label for="dim_{{ pd }}">{{ pd}}</label>
-                    </td>
-                    <td>
-                        <!--<input type="number" class="pricedim" value="" id="dim_{{ pd.dimnum}}" name="dim_{{ pd.dimnum }}"-->
-                               <!--autocomplete="off" required min="0">-->
-                        <input type="number" class="pricedim" value="" id="dim_{{ pd }}" name="dim_{{ pd }}"
-                               autocomplete="off" required min="0">
-                        </input>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody></table>
-
-        <input type='hidden' id='id_ask_stdev' name='ask_stdev' value="" />
     {% else %}
         <p>Please choose a price.</p>
-        {% formfield player.ask_total with label="Price" %}
-        <input type='hidden' id='id_ask_stdev' name='ask_stdev' value="0" />
     {% endif %}
+    {% include "duopoly_rep_treat/parts/sellerChoicePart.html" with example="False" %}
 
-    {% next_button %}
+    <button class="a-btn">Next</button>
 
 {% endblock %}
 
 {% block scripts %}
     <script type="text/javascript" src="{% static 'duopoly_rep_treat/utils.js' %}"></script>
-    <script type="text/javascript">
+    <script type="text/javascript" src="{% static 'duopoly_rep_treat/seller.js' %}"></script>
+    <!--<script type="text/javascript">-->
 
-        // Update total when fields change
-        $(document).ready(function(){
+        <!--// Update total when fields change-->
+        <!--$(document).ready(function(){-->
 
-            // in utils.js
-            setup_csrf();
+            <!--// in utils.js-->
+            <!--setup_csrf();-->
 
-            var resultHandler = function(result) {
-                // Over-writing user-input to enforce consistency.  The only reason this should ever be different
-                //  is if the user tried to enter a decimal-point
+            <!--var resultHandler = function(result) {-->
+                <!--// Over-writing user-input to enforce consistency.  The only reason this should ever be different-->
+                <!--//  is if the user tried to enter a decimal-point-->
 
-                $.each(result.pricedims, function(i, pd){
-                    $("#dim_" + (i+1)).val(pd);
-                });
+                <!--$.each(result.pricedims, function(i, pd){-->
+                    <!--$("#dim_" + (i+1)).val(pd);-->
+                <!--});-->
 
-                $("#id_ask_total").val(result.ask_total);
-                $("#id_ask_stdev").val(result.ask_stdev);
-            };
+                <!--$("#id_ask_total").val(result.ask_total);-->
+                <!--$("#id_ask_stdev").val(result.ask_stdev);-->
+            <!--};-->
 
-            // When player manually changes a field, we want to send the whole list of fields back as a list
-            $(".pricedim").change(function(){
+            <!--// When player manually changes a field, we want to send the whole list of fields back as a list-->
+            <!--$(".pricedim").change(function(){-->
 
-                var pricedims = [];
-                $(".pricedim").each(function(i, input) {
-                    pricedims.push($(input).val());
-                });
+                <!--var pricedims = [];-->
+                <!--$(".pricedim").each(function(i, input) {-->
+                    <!--pricedims.push($(input).val());-->
+                <!--});-->
 
-                var data = get_metadata($("#distribute"));
-                data.pricedims = pricedims.toString();
+                <!--var data = get_metadata($("#distribute"));-->
+                <!--data.pricedims = pricedims.toString();-->
 
-                $.ajax({
-                    type: "POST",
-                    url: $("#distribute").attr("data-manual-url"),//"/duopoly_rep_treat/manualpricedims/",
-                    data: data,
-                    dataType: "json",
-                    success: resultHandler
-                });
-            });
+                <!--$.ajax({-->
+                    <!--type: "POST",-->
+                    <!--url: $("#distribute").attr("data-manual-url"),//"/duopoly_rep_treat/manualpricedims/",-->
+                    <!--data: data,-->
+                    <!--dataType: "json",-->
+                    <!--success: resultHandler-->
+                <!--});-->
+            <!--});-->
 
-            // When a player clicks the automatic distribute button, we ask the server for the list of price dims
-            $("#distribute").click(function() {
+            <!--// When a player clicks the automatic distribute button, we ask the server for the list of price dims-->
+            <!--$("#distribute").click(function() {-->
 
-                // #Distribute field validation.  Don't send if number not in range.
-                var myForm = $("form");
-                var myVal = $("#id_ask_total").val();
-                if( !myForm[0].checkValidity() && myVal>800 || myVal<0 || myVal=="" ) {
-                    // Leveraging built-in styling for "distribute" validation
-                    // Validation technique taken from
-                    //   http://stackoverflow.com/questions/10092580/stop-form-from-submitting-using-jquery#10092636
-                    // If the form is invalid, submit it. The form won't actually submit;
-                    //   this will just cause the browser to display the native HTML5 error messages.
-                    $("input[type=submit]").click();
-                    return;
-                }
+                <!--// #Distribute field validation.  Don't send if number not in range.-->
+                <!--var myForm = $("form");-->
+                <!--var myVal = $("#id_ask_total").val();-->
+                <!--if( !myForm[0].checkValidity() && myVal>800 || myVal<0 || myVal=="" ) {-->
+                    <!--// Leveraging built-in styling for "distribute" validation-->
+                    <!--// Validation technique taken from-->
+                    <!--//   http://stackoverflow.com/questions/10092580/stop-form-from-submitting-using-jquery#10092636-->
+                    <!--// If the form is invalid, submit it. The form won't actually submit;-->
+                    <!--//   this will just cause the browser to display the native HTML5 error messages.-->
+                    <!--$("input[type=submit]").click();-->
+                    <!--return;-->
+                <!--}-->
 
-                var data = get_metadata($(this));
-                data.ask_total = $("#id_ask_total").val();
-                data.numdims = $("input.pricedim").length;
+                <!--var data = get_metadata($(this));-->
+                <!--data.ask_total = $("#id_ask_total").val();-->
+                <!--data.numdims = $("input.pricedim").length;-->
 
-                $.ajax({
-                    type: "POST",
-                    url: $("#distribute").attr("data-auto-url"),//"/duopoly_rep_treat/autopricedims/",
-                    data: data,
-                    dataType: "json",
-                    success: resultHandler
-                });
-            });
-        });
+                <!--$.ajax({-->
+                    <!--type: "POST",-->
+                    <!--url: $("#distribute").attr("data-auto-url"),//"/duopoly_rep_treat/autopricedims/",-->
+                    <!--data: data,-->
+                    <!--dataType: "json",-->
+                    <!--success: resultHandler-->
+                <!--});-->
+            <!--});-->
+        <!--});-->
 
 
-    </script>
+    <!--</script>-->
 {% endblock %}

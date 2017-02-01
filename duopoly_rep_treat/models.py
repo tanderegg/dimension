@@ -20,10 +20,11 @@ class Constants(BaseConstants):
     sellers_per_group = 2
     buyers_per_group = 2
     treatmentdims = [1, 8, 16]
+    num_treatments = 3
     # treatmentorder = [1, 2, 3] # changes between sessions
     num_rounds_treatment = 1
-    num_rounds_practice = 0
-    num_rounds = num_rounds_treatment * len(treatmentdims) + num_rounds_practice
+    num_rounds_practice = 2
+    num_rounds = num_rounds_treatment * num_treatments + num_rounds_practice
     num_players = 12
     prodcost = 100
     consbenefit = 800
@@ -41,7 +42,7 @@ class Subsession(BaseSubsession):
     treatment = models.IntegerField()
     dims = models.IntegerField()
     num_dims = models.IntegerField()
-    currency_per_point = models.DecimalField(decimal_places = 2, max_digits = 6)
+    # currency_per_point = models.DecimalField(decimal_places = 2, max_digits = 6)
 
     def before_session_starts(self):
 
@@ -67,12 +68,18 @@ class Subsession(BaseSubsession):
 
         self.treatment = self.session.config["treatmentorder"][self.block - 1]
         self.dims = Constants.treatmentdims[self.treatment - 1]
-        self.num_dims = len(self.session.config["treatmentorder"])
-        self.currency_per_point = self.session.config["real_world_currency_per_point"]
 
         # Set player level variables
         # Randomize groups each round.
-        self.group_randomly()
+        if Constants.num_rounds_practice > 1 & self.round_number==2:
+            # need roles to be swapped between rounds one and two
+            matrix = self.get_group_matrix()
+            for group in matrix:
+                # since roles assigned by row position, this should flip roles btween buyer and seller
+                group.reverse()
+            self.set_group_matrix(matrix)
+        else:
+            self.group_randomly()
 
         for p in self.get_players():
             # set player roles
