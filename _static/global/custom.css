@@ -1,22 +1,43 @@
 .box {
-	width:100%;
-	height:100%;
-	background:#F5F5DC; /* biege color */
-	margin:20px auto;
-    padding: 10px 10px 10px 10px;
-}
-.rotate90 {
-    -webkit-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    transform: rotate(-90deg);
-    float: left;
-    margin-top: 1em; // TODO: do not hardcode to center align
+  width:100%;
+  height:100%;
+  background:#F5F5DC; /* biege color */
+  margin:20px auto;
+  padding: 10px 10px 10px 10px;
 }
 
-input {
-    margin-bottom: 2em;
+.rotate90 {
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  float: left;
+  margin-top: 1em; // TODO: do not hardcode to center align
+}
+
+.distribute-btn > div {
+  display: inline-block;
+}
+
+label {
+  font-weight: 400;
+}
+
+table {
+ margin-bottom: 2em;
+}
+
+.control-label {
+  font-size: 1.3em;
+}
+
+input[type=number].pricedim.form-control {
+  width: 100%;
+}
+
+.controls input {
+ margin-right: 4px;
 }
 
 /*==================================================
