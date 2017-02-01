@@ -11,12 +11,12 @@ from otree.models.session import Session
 class Begin(Page):
 
     def is_displayed(self):
-        return self.subsession.round_number == 1 & Constants.show_instructions
+        return self.subsession.round_number == 1 and Constants.show_instructions
 
 class PRA(Page):
 
     def is_displayed(self):
-        return self.subsession.round_number == 1 & Constants.show_instructions
+        return self.subsession.round_number == 1 and Constants.show_instructions
 
 
 class Introduction(Page):
@@ -26,7 +26,7 @@ class Introduction(Page):
         'num_games' : self.subsession.num_dims}
 
     def is_displayed(self):
-        return self.subsession.round_number == 1 & Constants.show_instructions
+        return self.subsession.round_number == 1 and Constants.show_instructions
 
 class IntroductionPayment(Page):
 
@@ -40,7 +40,7 @@ class IntroductionPayment(Page):
         }
 
     def is_displayed(self):
-        return self.subsession.round_number == 1 & Constants.show_instructions
+        return self.subsession.round_number == 1 and Constants.show_instructions
 
 class IntroductionRoles(Page):
 
@@ -50,16 +50,16 @@ class IntroductionRoles(Page):
         }
 
     def is_displayed(self):
-        return self.subsession.round_number == 1 & Constants.show_instructions
+        return self.subsession.round_number == 1 and Constants.show_instructions
 
-class AssignedDirections(Page):
-
-    def vars_for_template(self):
-        return {'rounds_per_game':Constants.num_rounds_treatment,
-        }
-
-    def is_displayed(self):
-        return self.subsession.round_number == 1 & Constants.show_instructions
+# class AssignedDirections(Page):
+#
+#     def vars_for_template(self):
+#         return {'rounds_per_game':Constants.num_rounds_treatment,
+#         }
+#
+#     def is_displayed(self):
+#         return self.subsession.round_number == 1 and Constants.show_instructions
 
 class SellerInstructions(Page):
 
@@ -81,20 +81,19 @@ class SellerInstructionsPrices(Page):
             'price_dims': range(1, self.subsession.dims + 1)
                 }
     def is_displayed(self):
-        return Constants.show_instructions
-
+        return self.subsession.round_number == 1 and Constants.show_instructions
 
 class SellerQ1(Page):
     form_model = models.Player
     form_fields = ['quiz_q1']
 
     def is_displayed(self):
-        return models.Constants.show_instructions
+        return self.subsession.round_number == 1 and Constants.show_instructions
 
 class SellerQ1Ans(Page):
 
     def is_displayed(self):
-        return models.Constants.show_instructions
+        return self.subsession.round_number == 1 and Constants.show_instructions
 
     def vars_for_template(self):
         return {'correct_answer' : '0 tokens'}
@@ -104,12 +103,12 @@ class SellerQ2(Page):
     form_fields = ['quiz_q2']
 
     def is_displayed(self):
-        return models.Constants.show_instructions
+        return self.subsession.round_number == 1 and Constants.show_instructions
 
 class SellerQ2Ans(Page):
 
     def is_displayed(self):
-        return models.Constants.show_instructions
+        return self.subsession.round_number == 1 and Constants.show_instructions
 
     def vars_for_template(self):
         return {'correct_answer' : 'It depends on the prices I set'}
@@ -117,37 +116,19 @@ class SellerQ2Ans(Page):
 class BuyerInstructions(Page):
 
     def is_displayed(self):
-        return models.Constants.show_instructions
+        return self.subsession.round_number == 1 and Constants.show_instructions
 
     def vars_for_template(self):
 
         return{
-            "prices": get_example_prices(self.subsession.dims),
+            "prices": utils.get_example_prices(self.subsession.dims),
         }
-def get_example_prices(dims):
-    """
-        example dims generated through same process as Seller's page.
-        :param dims:
-        :return:
-    """
-    if dims == 8:
-        s1_pd = [57, 65, 3, 1, 40, 40, 37, 82]  # 325
-        s2_pd = [46, 91, 20, 64, 48, 45, 32, 29]  # 375
-    elif dims == 16:
-        s1_pd = [26, 4, 2, 39, 55, 44, 34, 1, 9, 10, 29, 0, 26, 0, 23, 23]  # 325
-        s2_pd = [7, 22, 0, 35, 16, 0, 31, 41, 28, 4, 2, 81, 32, 0, 17, 59]  # 375
-    elif dims == 1:
-        s1_pd = [325]
-        s2_pd = [375]
-    else:
-        raise ValueError('{} dimensions not supported'.format(dims))
 
-    return zip(range(1, dims + 1), s1_pd, s2_pd)
 
 class RoundSummaryExample(Page):
 
     def is_displayed(self):
-        return models.Constants.show_instructions
+        return self.subsession.round_number == 1 and Constants.show_instructions
 
     def vars_for_template(self):
         player = Player(roledesc="Seller", payoff=225, ask_total=325, numsold=1, rolenum=1)
@@ -155,18 +136,34 @@ class RoundSummaryExample(Page):
         return{
             "player": player,
             "subtotal": 225,
-            "prices": get_example_prices(self.subsession.dims),
+            "prices": utils.get_example_prices(self.subsession.dims),
             "s1_ask_total": 325,
             "s2_ask_total": 375,
             "b1_seller": 1,
             "b2_seller": 2,
         }
 
-class Intro(Page):
-    
+
+class PracticeBegin(Page):
+
+    def is_displayed(self):
+        print(self.subsession.round_number)
+        print(Constants.num_rounds_practice)
+        print(self.subsession.round_number==1)
+        print(Constants.num_rounds_practice > 0)
+        print(self.subsession.round_number==1 and Constants.num_rounds_practice > 0)
+        return self.subsession.round_number==1 and Constants.num_rounds_practice > 0
+
     def vars_for_template(self):
-        return {'num_rounds_practice': models.Constants.num_rounds_practice,
-        'roledesc': self.player.roledesc.lower()}
+        otherrole = [role for role in ["Buyer", "Seller"] if role != self.player.roledesc][0]
+        return {
+            "otherrole": otherrole,
+        }
+
+class PracticeEnd(Page):
+    def is_displayed(self):
+        return self.subsession.round_number == Constants.num_rounds_practice + 1
+
 
 class Instructions(Page):
     def is_displayed(self):
@@ -197,7 +194,8 @@ class SellerChoice(Page):
     def vars_for_template(self):
         return{
             #'price_dims': self.player.pricedim_set.all()
-            "price_dims": range(1, self.subsession.dims+1)
+            "price_dims": range(1, self.subsession.dims+1),
+            "round": self.subsession.round_number - Constants.num_rounds_practice
         }
 
     def before_next_page(self):
@@ -261,7 +259,7 @@ class StartWait(WaitPage):
 class WaitSellersForSellers(WaitPage):
     wait_for_all_groups = True
     title_text = "Waiting for Sellers"
-    body_text = "Please wait for the sellers to set prices."
+    body_text = "You are a buyer. Please wait for the sellers to set their prices."
 
     def is_displayed(self):
         return self.player.roledesc == "Buyer"
@@ -270,7 +268,7 @@ class WaitSellersForSellers(WaitPage):
 class WaitBuyersForSellers(WaitPage):
     wait_for_all_groups = True
     title_text = "Waiting for Sellers"
-    body_text = "Please wait for the other sellers to set prices."
+    body_text = "Please wait for the other sellers to set their prices."
 
     def is_displayed(self):
         return self.player.roledesc == "Seller"
@@ -454,8 +452,9 @@ StartWait,
     SellerQ2Ans,
     BuyerInstructions,
     RoundSummaryExample,
-    AssignedDirections,
-    Intro,
+    # AssignedDirections,
+    PracticeBegin,
+    PracticeEnd,
     # Instructions,
     SellerChoice,
     WaitSellersForSellers,  # for buyers while they wait for sellers # split in tow

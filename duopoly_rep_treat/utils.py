@@ -213,3 +213,24 @@ def get_autopricedims(ask_total, numdims):
         'stdev target': stdev,
         'pricedims': dvalues,
     }
+
+
+def get_example_prices(dims):
+    """
+        example dims for instructions generated through same process as Seller's page.
+        :param dims:
+        :return:
+    """
+    if dims == 8:
+        s1_pd = [57, 65, 3, 1, 40, 40, 37, 82]  # 325
+        s2_pd = [46, 91, 20, 64, 48, 45, 32, 29]  # 375
+    elif dims == 16:
+        s1_pd = [26, 4, 2, 39, 55, 44, 34, 1, 9, 10, 29, 0, 26, 0, 23, 23]  # 325
+        s2_pd = [7, 22, 0, 35, 16, 0, 31, 41, 28, 4, 2, 81, 32, 0, 17, 59]  # 375
+    elif dims == 1:
+        s1_pd = [325]
+        s2_pd = [375]
+    else:
+        raise ValueError('{} dimensions not supported'.format(dims))
+
+    return zip(range(1, dims + 1), s1_pd, s2_pd)
