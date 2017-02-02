@@ -53,12 +53,14 @@
             </tr>
     </tbody></table>
 {% endif %}
-<div class="form-group required">
-    <label for="id_contract_seller_rolenum" class="control-label">Choose a Seller:</label>
-    <div class="controls  field-contract_seller_rolenum">
-        <ul>
-	        <li><label for="id_contract_seller_rolenum_1"><input type="radio" required="" name="contract_seller_rolenum" value="1" id="id_contract_seller_rolenum_1"> Seller 1</label></li>
-            <li><label for="id_contract_seller_rolenum_2"><input type="radio" required="" name="contract_seller_rolenum" value="2" id="id_contract_seller_rolenum_2"> Seller 2</label></li>
-        </ul>
+<div id="buyer-choice-radios" class="form-group required">
+    <!--<label for="id_contract_seller_rolenum" class="control-label">Choose a Seller</label>-->
+    <div class="controls field-contract_seller_rolenum">
+        <label for="id_contract_seller_rolenum_1" class="u-w50pct"><input type="radio" required="" name="contract_seller_rolenum" value="1" id="id_contract_seller_rolenum_1">
+            Choose seller 1
+        </label>
+        <label for="id_contract_seller_rolenum_2" class="u-w50pct"><input type="radio" required="" name="contract_seller_rolenum" value="2" id="id_contract_seller_rolenum_2">
+            Choose seller 2
+        </label>
     </div>
 </div>

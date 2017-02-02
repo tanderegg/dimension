@@ -1,0 +1,11 @@
+.quiz_hold{
+    max-width: 800px;
+    margin: 0 auto;
+}
+.control-label{
+    margin: 0 0 10px 0;
+    font-size: 20px;
+}
+.controls > ul{
+    padding-left: 15px;
+}

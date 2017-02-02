@@ -10,19 +10,24 @@
 {% endblock %}
 
 {% block content %}
+    <div class="col_container">
+        <h3>
+            You are buyer {{ player.rolenum }}.
+        </h3>
+        <div class="col_container">
+            <div class="col" style="width:30%;">
+                <p>Please choose a seller to purchase an object from.</p>
+                <p>When you are satisfied with your choice, please press the "Next" button.</p>
+            </div>
+            <div class="col" style="width:70%;">
+                {% include "duopoly_rep_treat/parts/buyerChoicePart.html" %}
+            </div>
+        </div>
+    </div>
 
-    <h4>Buyer Choice</h4>
-    <p>
-        You are buyer number {{ player.rolenum }}
-    </p>
+    <button class="a-btn next">Next</button>
 
-    {% include "duopoly_rep_treat/parts/buyerChoicePart.html" %}
-
-
-
-
-
-
-    <button class="a-btn">Next</button>
-
+{% endblock %}
+{% block app_styles %}
+   <link href="{% static "duopoly_rep_treat/buyer.css" %}" rel="stylesheet">
 {% endblock %}

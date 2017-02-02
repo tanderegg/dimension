@@ -72,7 +72,7 @@ class SellerInstructions(Page):
                 }
 
     def is_displayed(self):
-        return Constants.show_instructions
+        return self.subsession.round_number == 1 and Constants.show_instructions
 
 class SellerInstructionsPrices(Page):
 

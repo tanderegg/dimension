@@ -8,7 +8,7 @@ urlpatterns.append(url(r'^duopoly/autopricedims/$', views.AutoPricedims, name="a
 urlpatterns.append(url(r'^duopoly/manualpricedims/$', views.ManualPricedims, name="manualpricedims"))
 
 # Wait game AJAX
-urlpatterns.append(url(r'^duopoly/gamewaititercorrect/$', views.GameWaitIterCorrect))
+urlpatterns.append(url(r'^duopoly/gamewaititercorrect/$', views.GameWaitIterCorrect, name="waitgame"))
 
 
 # DATA
