@@ -7,38 +7,23 @@
 
 {% block content %}
     <div class="col_container">
-        <div class="col" style="width:40%">
+        <div class="col" style="width:37%">
             <p>At the end of each match you will see a screen that summarizes your earnings in that match as well as the actions of each player in your group during that match.
             </p>
             <p>
                 An example of a summary screen is shown to the right.
             </p>
             <p>
-                This summary screen shows that in this example you were "Seller 1". You set prices that summed up to {{ s1_ask_total }}.  Buyer 1 bought from you, but buyer 2 bought from the other Seller.  Therefore you made {{ subtotal }} tokens ({{ s1_ask_total }} - {{  Constants.prodcost }}) in this match.
+                This summary screen shows that in this example match you were "Seller 1", you set prices that summed up to {{ s1_ask_total }}, and buyer 1 bought from you, while buyer 2 bought from the other seller.  Therefore you made {{ subtotal }} tokens ({{ s1_ask_total }} - {{  Constants.prodcost }}) in this match.
             </p>
-          <button class="a-btn">Next</button>
+          <button class="a-btn next">Next</button>
         </div>
-        <div class="col" style="width:60%">
+        <div class="col" style="width:63%">
             {% include "duopoly_rep_treat/parts/roundResultPart.html" %}
         </div>
     </div>
 
-    <style type="text/css">
-
-        .col{
-            float:left;
-            position: relative;
-            width: 50%;
-            padding: 0 0 0 2.5%
-        }
-        .col:first-child{
-            padding: 0 2.5% 0 0;
-        }
-        .col_container{
-            float:left;
-            position: relative;
-            width: 100%;
-        }
-    </style>
-
+{% endblock %}
+{% block app_styles %}
+   <link href="{% static "duopoly_rep_treat/results.css" %}" rel="stylesheet">
 {% endblock %}

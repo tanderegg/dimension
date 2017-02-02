@@ -7,9 +7,12 @@
 
 {% block content %}
 
-<p>
-{% formfield player.quiz_q1 %} 
-</p>
-<button class="a-btn">Next</button>
+	<div class="quiz_hold">
+	    {% formfield player.quiz_q1 %}
+    </div>
+	<button class="a-btn next">Next</button>
 
+{% endblock %}
+{% block app_styles %}
+   <link href="{% static "duopoly_rep_treat/quiz.css" %}" rel="stylesheet">
 {% endblock %}

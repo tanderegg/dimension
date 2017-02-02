@@ -1,17 +1,23 @@
 {% extends "global/Base.html" %}
 {% load staticfiles otree_tags %}
 
-
-
-{% block title %}Results{% endblock %}
+{% block title %}
+    {% if subsession.round_number <= Constants.num_rounds_practice %}
+        Practice Match
+    {% else %}
+        Match Results
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 
     {% include "duopoly_rep_treat/parts/roundResultPart.html" %}
 
+    <button class="a-btn next">Next</button>
 
-<button class="a-btn">Next</button>
-
+{% endblock %}
+{% block app_styles %}
+   <link href="{% static "duopoly_rep_treat/results.css" %}" rel="stylesheet">
 {% endblock %}
 
 

@@ -43,18 +43,18 @@ p {
 }
 /* style for each square in the puzzle */
 #puzzle .puzzleSquare {
-  height: 30px;
-  width: 30px;
+  height: 40px;
+  width: 40px;
   text-transform: uppercase;
   background-color: white;
   border: 0;
-  font: 1em sans-serif;
+  font: 1.5em sans-serif;
   display:inline;
   float:left;
   position:relative;
   cursor: pointer;
   text-align: center;
-  padding: 6px 0 0;
+  padding: 12px 0 0;
 }
 
 #puzzle .puzzleSquare:focus {
@@ -114,13 +114,13 @@ button::-moz-focus-inner {
 
 #words ul {
   list-style-type: none;
-  height: 417px;
+  height: 580px;
   padding: 32px 0 0 30px;
 }
 
 #words li {
-  padding: 3px 0;
-  font: 1em sans-serif;
+  padding: 6px 0;
+  font: 1.3em sans-serif;
 }
 
 /* indicates that the word has been found */

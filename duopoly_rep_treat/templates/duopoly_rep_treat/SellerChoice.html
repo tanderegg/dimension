@@ -11,26 +11,32 @@
 
 {% block content %}
 
-    <h4>Seller Choice</h4>
-    <p>
-        You are seller number {{ player.rolenum }}
-    </p>
-
-    {% if subsession.treatment > 1 %}
-        <p>Please choose a price for each of the {{ subsession.vars.dims }} price dimensions</p>
-        <p>
-            Each price must be greater than {{ Constants.minprice }},
-            and the sum of all price dimensions must be less than {{ Constants.maxprice }}
-        </p>
-    {% else %}
-        <p>Please choose a price.</p>
-    {% endif %}
-    {% include "duopoly_rep_treat/parts/sellerChoicePart.html" with example="False" %}
-
-    <button class="a-btn">Next</button>
+    <div class="col_container">
+        <h3>
+            You are seller {{ player.rolenum }}.
+        </h3>
+        <div class="col_container">
+            <div class="col">
+                {% if subsession.treatment > 1 %}
+                    <p>Please choose a price for each of the {{ subsession.dims }} prices</p>
+                    <p>
+                        Each price must be greater than {{ Constants.minprice }},
+                        and the sum of all {{ subsession.dims }} prices must be less than or equal to {{ Constants.maxprice }}.
+                    </p>
+                {% else %}
+                    <p>Please choose a price.</p>
+                {% endif %}
+            </div><div class="col">
+                {% include "duopoly_rep_treat/parts/sellerChoicePart.html" with example="False" %}
+            </div>
+        </div>
+    </div>
+    <button class="a-btn next">Next</button>
 
 {% endblock %}
-
+{% block app_styles %}
+   <link href="{% static "duopoly_rep_treat/seller.css" %}" rel="stylesheet">
+{% endblock %}
 {% block scripts %}
     <script type="text/javascript" src="{% static 'duopoly_rep_treat/utils.js' %}"></script>
     <script type="text/javascript" src="{% static 'duopoly_rep_treat/seller.js' %}"></script>

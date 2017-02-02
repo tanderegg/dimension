@@ -73,11 +73,14 @@ class Subsession(BaseSubsession):
         # Randomize groups each round.
         if Constants.num_rounds_practice > 1 & self.round_number==2:
             # need roles to be swapped between rounds one and two
+            print("reversing")
             matrix = self.get_group_matrix()
+            print(matrix)
             for group in matrix:
                 # since roles assigned by row position, this should flip roles btween buyer and seller
                 group.reverse()
             self.set_group_matrix(matrix)
+            print(self.get_group_matrix())
         else:
             self.group_randomly()
 

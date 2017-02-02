@@ -19,11 +19,10 @@
             </ol>
             <p>Remember, when you set prices in the real game, <i>buyers will not see the sum of the prices</i>.  They will only the {{ subsession.dims }} price{{ subsession.dims |pluralize }} themselves.</p>
             <p>Now please try to set some prices in the example to right.  When you are done, press the "Next" button to continue.</p>
-        <button class="a-btn">Next</button>
+            <button class="a-btn next">Next</button>
         </div>
         <div class="col" >
             {% include "duopoly_rep_treat/parts/sellerChoicePart.html" with example="True" %}
-
         </div>
     </div>
 {% endblock %}
@@ -34,20 +33,5 @@
 
 {% endblock %}
 {% block app_styles %}
-    <style type="text/css">
-        .col{
-            float:left;
-            position: relative;
-            width: 50%;
-            padding: 0 0 0 2.5%
-        }
-        .col:first-child{
-            padding: 0 2.5% 0 0;
-        }
-        .col_container{
-            float:left;
-            position: relative;
-            width: 100%;
-        }
-    </style>
+   <link href="{% static "duopoly_rep_treat/seller.css" %}" rel="stylesheet">
 {% endblock %}

@@ -12,10 +12,13 @@
     <input id='nextpuzzle' class="btn btn-primary btn-large btn-primary next-button" type="button" value="New Puzzle"></input>
 
     <input type="text" name="gamewait_numcorrect" id="id_gamewait_numcorrect" value="0" required hidden
-            data-subsession-id="{{ subsession.id }}"
-           data-group-id="{{ group.id }}"
-           data-session-id="{{ session.id}}"
-           data-player-id="{{ player.id_in_group }}">
+             data-subsession-id="{{ subsession.id }}"
+             data-group-id="{{ group.id }}"
+             data-session-id="{{ session.id}}"
+             data-player-id="{{ player.id_in_group }}"
+             data-url="{% url 'waitgame' %}"
+             data-example="False"
+    >
     </input>
 
 {% endblock %}
@@ -67,10 +70,11 @@
             // When player manually changes a field, we want to send the whole list of fields back as a list
             var ajaxPOST = function(){
 
-                var data = get_metadata($("#id_gamewait_numcorrect"));
+                var data_holder = $("#id_gamewait_numcorrect");
+                var data = get_metadata(data_holder);
                 $.ajax({
                     type: "POST",
-                    url: "/duopoly_rep_treat/gamewaititercorrect/",
+                    url: data_holder.attr("data-url"),
                     data: data,
                     dataType: "json",
                     success: resultHandler
