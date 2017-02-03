@@ -3,54 +3,57 @@
 
 
 <div class="col_container">
-    <div class="col">
-        <h3>{{ player.roledesc }} {{ player.rolenum }}'s Earnings</h3>
-        {% if player.roledesc == "Buyer" %}
-        <table class="earnings"><tbody>
-            <tr>
-                <td>Benefit</td><td>{{ Constants.consbenefit }}</td>
-            </tr><tr>
-                <td>Cost</td><td>-{{ player.bid_total }}</td>
-            </tr><tr class="total">
-                <td>Total </td><td>{{ player.payoff }}</td>
-            </tr>
-        </tbody></table>
-        {% else %}
-        <table class="earnings"><tbody>
-            <tr>
-                <td>Benefit</td><td>{{ player.ask_total }}</td>
-            </tr><tr>
-                <td>Cost</td><td>-{{ Constants.prodcost }}</td>
-            </tr><tr class="total">
-                <td>Subtotal</td><td>{{ subtotal }} tokens</td>
-            </tr><tr>
-                <td># Sold</td><td> x {{ player.numsold }}</td>
-            </tr><tr class="total">
-                <td>Total</td><td>{{ player.payoff }}tokens</td>
-            </tr>
-        </tbody></table>
-        {% endif %}
-        <h3>Buyers' Choices</h3>
-        <table>
-            <thead><tr>
-                <th></th><th>Seller 1</th><th>Seller 2</th>
-            </tr></thead>
-            <tbody>
+    <div class="col" style="width:{{width1}}">
+        <div class="table_container">
+            <h3>{{ player.roledesc }} {{ player.rolenum }}'s Earnings</h3>
+            {% if player.roledesc == "Buyer" %}
+            <table class="earnings"><tbody>
                 <tr>
-                    <td>Buyer 1</td>
-                    <td align="center">{% if b1_seller == 1 %}X{% endif %}</td>
-                    <td align="center">{% if b1_seller == 2 %}X{% endif %}</td>
+                    <td>Benefit</td><td>{{ Constants.consbenefit }}</td>
+                </tr><tr>
+                    <td>Cost</td><td>-{{ player.bid_total }}</td>
+                </tr><tr class="total">
+                    <td>Total </td><td>{{ player.payoff }}tokens</td>
                 </tr>
+            </tbody></table>
+            {% else %}
+            <table class="earnings"><tbody>
                 <tr>
-                    <td>Buyer 2</td>
-                    <td align="center">{% if b2_seller == 1 %}X{% endif %}</td>
-                    <td align="center">{% if b2_seller == 2 %}X{% endif %}</td>
+                    <td>Benefit</td><td>{{ player.ask_total }}</td>
+                </tr><tr>
+                    <td>Cost</td><td>-{{ Constants.prodcost }}</td>
+                </tr><tr class="total">
+                    <td>Subtotal</td><td>{{ subtotal }} tokens</td>
+                </tr><tr>
+                    <td># Sold</td><td> x {{ player.numsold }}</td>
+                </tr><tr class="total">
+                    <td>Total</td><td>{{ player.payoff }}tokens</td>
                 </tr>
-            </tbody>
-        </table>
+            </tbody></table>
+            {% endif %}
+        </div>
+        <div class="table_container">
+            <h3>Buyers' Choices</h3>
+            <table>
+                <thead><tr>
+                    <th></th><th>Seller 1</th><th>Seller 2</th>
+                </tr></thead>
+                <tbody>
+                    <tr>
+                        <td>Buyer 1</td>
+                        <td align="center">{% if b1_seller == 1 %}X{% endif %}</td>
+                        <td align="center">{% if b1_seller == 2 %}X{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Buyer 2</td>
+                        <td align="center">{% if b2_seller == 1 %}X{% endif %}</td>
+                        <td align="center">{% if b2_seller == 2 %}X{% endif %}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="col">
-
+    <div class="col" style="width:{{width2}}">
         <h3>Sellers' Prices</h3>
         <table>
             <thead>
@@ -81,7 +84,7 @@
             {% endif %}
             <tr>
                 {% if subsession.dims > 1 %}
-                    <td>Total</td>
+                    <td>Sum</td>
                 {% else %}
                     <td>Price</td>
                 {% endif %}

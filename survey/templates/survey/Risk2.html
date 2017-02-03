@@ -7,12 +7,15 @@
 
 {% block content %}
 
-    <p>
-        Please answer the following questions.
-    </p>
+    <!--<p>-->
+        <!--Please answer the following questions.-->
+    <!--</p>-->
 
     {% formfield player.q_risk2 %}
 
-    <button class="a-btn">Next</button>
+    <button class="a-btn next">Next</button>
 
+{% endblock %}
+{% block app_styles %}
+   <link href="{% static "duopoly_rep_treat/quiz.css" %}" rel="stylesheet">
 {% endblock %}

@@ -14,6 +14,9 @@
     {% formfield player.q_subjNum7 %}
     {% formfield player.q_subjNum8 %}
 
-    <button class="a-btn">Next</button>
+    <button class="a-btn next">Next</button>
 
+{% endblock %}
+{% block app_styles %}
+   <link href="{% static "duopoly_rep_treat/quiz.css" %}" rel="stylesheet">
 {% endblock %}

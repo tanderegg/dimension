@@ -12,7 +12,7 @@
 	</p>
 
 	<p>
-		Your subject number is [subject number].
+		Your subject number is {{ participant.id }}.
 	</p>
 
 	<p>
@@ -20,4 +20,7 @@
     </p>
 
 
+{% endblock %}
+{% block app_styles %}
+   <link href="{% static "duopoly_rep_treat/quiz.css" %}" rel="stylesheet">
 {% endblock %}

@@ -1,4 +1,4 @@
-.quiz_hold{
+.quiz_hold, table.table{
     max-width: 800px;
     margin: 0 auto;
 }
@@ -8,4 +8,10 @@
 }
 .controls > ul{
     padding-left: 15px;
+    margin-bottom: 20px;
+}
+.form-group{
+    max-width: 800px;
+    margin-right: auto;
+    margin-left: auto;
 }

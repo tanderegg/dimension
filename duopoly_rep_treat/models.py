@@ -71,7 +71,7 @@ class Subsession(BaseSubsession):
 
         # Set player level variables
         # Randomize groups each round.
-        if Constants.num_rounds_practice > 1 & self.round_number==2:
+        if Constants.num_rounds_practice > 1 and self.round_number==2:
             # need roles to be swapped between rounds one and two
             print("reversing")
             matrix = self.get_group_matrix()

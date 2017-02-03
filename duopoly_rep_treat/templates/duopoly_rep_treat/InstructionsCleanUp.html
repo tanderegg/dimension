@@ -1,0 +1,15 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+{% block title %}
+    Instructions
+{% endblock %}
+{% block content %}
+
+    <h3>This concludes the description of a match.</h3>
+    <p>At the end of a match, groups are randomly reshuffled and roles are randomly re-assigned.</p>
+    <p>There {{ Constants.num_rounds_treatment|pluralize:"is,are" }} {{ Constants.num_rounds_treatment }} match{{ Constants.num_rounds_treatment|pluralize:"es" }} in this part of the experiment, and each proceeds in exactly the same way.</p>
+    <p>There are additional parts of the experiment that are nearly identical to the part just described. The differences will be explained when you come to those parts of the experiment.</p>
+
+    <button class="a-btn next">Next</button>
+
+{% endblock %}

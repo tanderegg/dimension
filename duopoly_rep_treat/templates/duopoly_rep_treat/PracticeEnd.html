@@ -6,14 +6,16 @@
 {% endblock %}
 
 {% block content %}
-	<p>
-        If you have any questions before we continue to the paid matches, please raise your hand now and someone will come assist you.
-    </p>
+	<h3>We will now begin the paid matches.</h3>
     <p>
-        We will now continue to the paid matches. If you have any questions during the paid matches, please raise your hand and someone will assist you in private.
+        If you have any questions at this time, please raise your hand now.
+    </p>
+<p>You will play <b>{{ Constants.num_rounds_treatment }} match{{Constants.num_rounds_treatment|pluralize:"es"}}</b> of this game.  After these matches, you will receive additional instructions.</p>
+    <p>
+        If you have any questions during the paid matches, please raise your hand and someone will assist you in private.
 	</p>
 
-<p><button class="a-btn">Next</button></p>
+    <p><button class="a-btn next">Next</button></p>
 
 
 {% endblock %}

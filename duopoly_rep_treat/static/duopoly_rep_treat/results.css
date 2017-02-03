@@ -9,6 +9,9 @@ td label{
 td{
     padding: .5em .625em;
 }
+.earnings{
+    min-width: 185px;
+}
 .earnings tr{
     border:none;
 }
@@ -23,4 +26,12 @@ td{
 }
 .earnings .total{
     border-top: 1px solid #888;
+}
+.table_container{
+    float:left;
+    position:relative;
+}
+.table_container:first-child{
+    margin-right: 65px;
+    margin-bottom: 33px;
 }

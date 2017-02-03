@@ -124,7 +124,6 @@ class BuyerInstructions(Page):
             "prices": utils.get_example_prices(self.subsession.dims),
         }
 
-
 class RoundSummaryExample(Page):
 
     def is_displayed(self):
@@ -143,15 +142,14 @@ class RoundSummaryExample(Page):
             "b2_seller": 2,
         }
 
+class InstructionsCleanUp(Page):
+
+    def is_displayed(self):
+        return self.subsession.round_number == 1 and Constants.show_instructions
 
 class PracticeBegin(Page):
 
     def is_displayed(self):
-        print(self.subsession.round_number)
-        print(Constants.num_rounds_practice)
-        print(self.subsession.round_number==1)
-        print(Constants.num_rounds_practice > 0)
-        print(self.subsession.round_number==1 and Constants.num_rounds_practice > 0)
         return self.subsession.round_number==1 and Constants.num_rounds_practice > 0
 
     def vars_for_template(self):
@@ -192,10 +190,12 @@ class SellerChoice(Page):
         return self.player.roledesc == "Seller"
 
     def vars_for_template(self):
+        round_temp = (self.subsession.round_number - Constants.num_rounds_practice) % Constants.num_rounds_treatment
+        round = round_temp if round_temp > 0 else Constants.num_rounds_treatment
         return{
             #'price_dims': self.player.pricedim_set.all()
             "price_dims": range(1, self.subsession.dims+1),
-            "round": self.subsession.round_number - Constants.num_rounds_practice
+            "round": round
         }
 
     def before_next_page(self):
@@ -222,6 +222,8 @@ class BuyerChoice(Page):
         return self.player.roledesc == "Buyer"
 
     def vars_for_template(self):
+        round_temp = (self.subsession.round_number - Constants.num_rounds_practice) % Constants.num_rounds_treatment
+        round = round_temp if round_temp > 0 else Constants.num_rounds_treatment
         # if self.subsession.dims > 1:
         prices = zip(range(1, self.subsession.dims + 1),
             [pd.value for pd in self.group.get_player_by_role("S1").get_ask().pricedim_set.all()],
@@ -230,6 +232,7 @@ class BuyerChoice(Page):
         #     prices = [[self.group.get_player_by_role("S1").ask_total, self.group.get_player_by_role("S2").ask_total]]
         return {
             "prices": prices,
+            "round": round
         }
 
     def before_next_page(self):
@@ -252,8 +255,15 @@ class BuyerChoice(Page):
 class StartWait(WaitPage):
     # This makes sures everyone has cleared the results page before the next round begins
     wait_for_all_groups = True
-    title_text = "Waiting for Other Players"
-    body_text = "Please wait while your group is created."
+    title_text = "Waiting for Other Participants"
+    body_text = "Please wait for other participants."
+
+
+class StartMatchWait(WaitPage):
+    # This makes sures everyone has cleared the instructions pages before the next round begins
+    wait_for_all_groups = True
+    title_text = "Waiting for Other Participants"
+    body_text = "Please wait for other participants."
 
 
 class WaitSellersForSellers(WaitPage):
@@ -275,8 +285,8 @@ class WaitBuyersForSellers(WaitPage):
 
     def after_all_players_arrive(self):
         # When here, sellers have all entered their prices
-        self.group.set_marketvars_seller()
-
+        # self.group.set_marketvars_seller()
+        pass
 
 class WaitGame(WaitPage):
     template_name = 'duopoly_rep_treat/GameWait.html'
@@ -356,18 +366,15 @@ def ManualPricedims(request):
 
 
 
-
 # Wait Page Game
 def GameWaitIterCorrect(request):
 
     player = utils.get_player_from_request(request)
-
     player.gamewait_numcorrect += 1
     player.save()
-    print(player.gamewait_numcorrect)
-
 
     return JsonResponse({"gamewait_numcorrect": player.gamewait_numcorrect})
+
 
 
 # Data Views
@@ -437,8 +444,7 @@ def CombinedDataDownload(request):
 
 
 page_sequence = [
-StartWait,
-    # Instructions
+    StartWait,
     Begin,
     PRA,
     Introduction,
@@ -452,6 +458,8 @@ StartWait,
     SellerQ2Ans,
     BuyerInstructions,
     RoundSummaryExample,
+    InstructionsCleanUp,
+    StartMatchWait,
     # AssignedDirections,
     PracticeBegin,
     PracticeEnd,
