@@ -22,7 +22,7 @@ class Constants(BaseConstants):
     treatmentdims = [1, 8, 16]
     num_treatments = 3
     # treatmentorder = [1, 2, 3] # changes between sessions
-    num_rounds_treatment = 1
+    num_rounds_treatment = 2 # must be greater than 1 for block math
     num_rounds_practice = 2
     num_rounds = num_rounds_treatment * num_treatments + num_rounds_practice
     num_players = 12
@@ -42,7 +42,9 @@ class Subsession(BaseSubsession):
     treatment = models.IntegerField()
     dims = models.IntegerField()
     num_dims = models.IntegerField()
-    # currency_per_point = models.DecimalField(decimal_places = 2, max_digits = 6)
+    block_new = models.BooleanField(default=False)
+    treatment_first_singular = models.BooleanField(default=False)
+    treatment_first_multiple = models.BooleanField(default=False)
 
     def before_session_starts(self):
 
@@ -56,31 +58,49 @@ class Subsession(BaseSubsession):
             self.practiceround = False
             self.realround = True
 
-        # Assign treatment status and block
-        if self.round_number <= Constants.num_rounds_treatment + Constants.num_rounds_practice:
-            self.block = 1
-        elif self.round_number <= 2 * Constants.num_rounds_treatment + Constants.num_rounds_practice:
-            self.block = 2
+        # Determine if this is the first round of a new block. This is also used to display new instructions
+        if self.round_number == 1:
+            self.block_new = True
+        elif self.round_number <= 1 + Constants.num_rounds_practice:
+            self.block_new = False
+        elif (self.round_number - Constants.num_rounds_practice) % Constants.num_rounds_treatment == 1:
+            self.block_new = True
         else:
-            self.block = 3
+            self.block_new = False
 
-        print(self.block)
+
+        print(self.block_new)
+        if self.round_number == 1:
+            self.block = 1
+        elif self.block_new:
+            print(self.in_round(self.round_number - 1).block)
+            self.block = self.in_round(self.round_number - 1).block + 1
+        else:
+            self.block = self.in_round(self.round_number - 1).block
 
         self.treatment = self.session.config["treatmentorder"][self.block - 1]
         self.dims = Constants.treatmentdims[self.treatment - 1]
+
+        # Flag if this is the first round with either a multiple-dim treatment or a single-dim treatment
+        #   this is used for instructions logic.
+        prev_treatments = self.session.config["treatmentorder"][: (self.block - 1)]
+        prev_dims = [Constants.treatmentdims[treatment - 1] for treatment in prev_treatments]
+        if self.round_number > 1 and self.dims == 1 and min([99] + prev_dims) > 1:
+            self.treatment_first_singular = True
+        elif self.round_number > 1 and self.dims > 1 and max([0] + prev_dims) == 1:
+            self.treatment_first_multiple = True
+
+
 
         # Set player level variables
         # Randomize groups each round.
         if Constants.num_rounds_practice > 1 and self.round_number==2:
             # need roles to be swapped between rounds one and two
-            print("reversing")
             matrix = self.get_group_matrix()
-            print(matrix)
             for group in matrix:
                 # since roles assigned by row position, this should flip roles btween buyer and seller
                 group.reverse()
             self.set_group_matrix(matrix)
-            print(self.get_group_matrix())
         else:
             self.group_randomly()
 
@@ -88,8 +108,6 @@ class Subsession(BaseSubsession):
             # set player roles
             p.set_role() 
 
-            # create player price dims
-            # p.generate_pricedims()
 
 
 class Group(BaseGroup):
@@ -110,11 +128,8 @@ class Group(BaseGroup):
         # buyers = Player.objects.filter(group=self, roledesc="Buyer")
 
         contracts = Contract.objects.filter(group=self)
-
-        print("contracts")
-        print(contracts)
-        print("ask totals")
-        print([c.ask.total for c in contracts])
+        asks = [p.ask_total for p in [self.get_player_by_role("S1"), self.get_player_by_role("S2")]]
+        stdevs = [p.ask_stdev for p in [self.get_player_by_role("S1"), self.get_player_by_role("S2")]]
 
         # Player data
         for contract in contracts:
@@ -130,11 +145,13 @@ class Group(BaseGroup):
             player.payoff_interim = player.payoff + player.participant.payoff
 
         # Market data
-        self.mkt_ask_min = min([c.ask.total for c in contracts])
-        self.mkt_ask_max = max([c.ask.total for c in contracts])
+        # self.mkt_ask_min = min([c.ask.total for c in contracts])
+        # self.mkt_ask_max = max([c.ask.total for c in contracts])
+        self.mkt_ask_min = min(asks)
+        self.mkt_ask_max = max(asks)
         self.mkt_ask_spread = self.mkt_ask_max - self.mkt_ask_min
         self.mkt_bid_avg = float(sum([c.bid.total for c in contracts])) / len(contracts)
-        self.mkt_ask_stdev_min = min([c.ask.stdev for c in contracts])
+        self.mkt_ask_stdev_min = min(stdevs)
 
 
 

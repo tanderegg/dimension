@@ -52,14 +52,10 @@ class IntroductionRoles(Page):
     def is_displayed(self):
         return self.subsession.round_number == 1 and Constants.show_instructions
 
-# class AssignedDirections(Page):
-#
-#     def vars_for_template(self):
-#         return {'rounds_per_game':Constants.num_rounds_treatment,
-#         }
-#
-#     def is_displayed(self):
-#         return self.subsession.round_number == 1 and Constants.show_instructions
+class NewTreatmentInstructions(Page):
+
+    def is_displayed(self):
+        return not self.subsession.round_number == 1 and self.subsession.block_new and Constants.show_instructions
 
 class SellerInstructions(Page):
 
@@ -72,7 +68,10 @@ class SellerInstructions(Page):
                 }
 
     def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
+        # want to display these instructions to people on their first round or if its the first time they see either
+        # a 1 dim case or a multiple dim case (so, basically, a complex way of saying "BLOCK 2").
+        first = self.subsession.treatment_first_multiple or self.subsession.treatment_first_singular
+        return Constants.show_instructions and (self.subsession.round_number==1 or (self.subsession.block_new and first ))
 
 class SellerInstructionsPrices(Page):
 
@@ -81,7 +80,10 @@ class SellerInstructionsPrices(Page):
             'price_dims': range(1, self.subsession.dims + 1)
                 }
     def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
+        # want to display these instructions to people on their first round or if its the first time they see either
+        # a 1 dim case or a multiple dim case (so, basically, a complex way of saying "BLOCK 2").
+        first = self.subsession.treatment_first_multiple or self.subsession.treatment_first_singular
+        return Constants.show_instructions and (self.subsession.round_number == 1 or (self.subsession.block_new and first))
 
 class SellerQ1(Page):
     form_model = models.Player
@@ -116,7 +118,11 @@ class SellerQ2Ans(Page):
 class BuyerInstructions(Page):
 
     def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
+        # want to display these instructions to people on their first round or if its the first time they see either
+        # a 1 dim case or a multiple dim case (so, basically, a complex way of saying "BLOCK 2").
+        first = self.subsession.treatment_first_multiple or self.subsession.treatment_first_singular
+        return Constants.show_instructions and (
+            self.subsession.round_number == 1 or (self.subsession.block_new and first))
 
     def vars_for_template(self):
 
@@ -142,6 +148,10 @@ class RoundSummaryExample(Page):
             "b2_seller": 2,
         }
 
+class WaitGameExample(Page):
+    def is_displayed(self):
+        return self.subsession.round_number == 1 and Constants.show_instructions
+
 class InstructionsCleanUp(Page):
 
     def is_displayed(self):
@@ -160,7 +170,11 @@ class PracticeBegin(Page):
 
 class PracticeEnd(Page):
     def is_displayed(self):
-        return self.subsession.round_number == Constants.num_rounds_practice + 1
+        # return self.subsession.round_number == Constants.num_rounds_practice + 1
+        # want to display these instructions to people on their first PAID round or if its the first round in a new block
+        # first = self.subsession.treatment_first_multiple or self.subsession.treatment_first_singular
+        return self.subsession.round_number == Constants.num_rounds_practice + 1 or \
+               (self.subsession.block_new and not self.subsession.round_number == 1)
 
 
 class Instructions(Page):
@@ -450,6 +464,7 @@ page_sequence = [
     Introduction,
     IntroductionPayment,
     IntroductionRoles,
+    NewTreatmentInstructions,
     SellerInstructions,
     SellerInstructionsPrices,
     SellerQ1,
@@ -458,6 +473,7 @@ page_sequence = [
     SellerQ2Ans,
     BuyerInstructions,
     RoundSummaryExample,
+    WaitGameExample,
     InstructionsCleanUp,
     StartMatchWait,
     # AssignedDirections,

@@ -38,9 +38,11 @@ td{
     cursor: pointer;
     font-size:20px;
     margin: 0;
+    background-color: #DBEDD4;
 }
 .field-contract_seller_rolenum label:hover{
-    background-color: #ccc;
+    /*background-color: #ccc;*/
+    background-color: #ADDC91;
 }
 .field-contract_seller_rolenum label:first-child{
     border:none;

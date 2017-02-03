@@ -10,21 +10,38 @@
     <div class="col">
         <h3>Imagine that you are playing as a buyer.</h3>
         <p>You will buy one object per match.</p>
-        <!--<p>You will be placed into a group with {{ Constants.sellers_per_group }} sellers and {{ Constants.buyers_per_group|add:-1 }} other buyer{{ Constants.buyers_per_group|add:-1 | pluralize }}.-->
+
         </p>
-        <p>First, you will see the {{ subsession.dims }} price{{ subsession.dims |pluralize }} that the sellers set for their objects, and be asked which of the {{ Constants.sellers_per_group }} sellers you want to buy from. You will then pay the seller you chose the sum of the {{ subsession.dims }} price{{ subsession.dims |pluralize }} that the seller set for their object.
+        <p>First, you will see the
+            {% if subsession.dims > 1 %}
+                {{ subsession.dims }}
+            {% endif %}
+            prices that the sellers set for their objects, and be asked which of the {{ Constants.sellers_per_group }} sellers you want to buy from. You will then pay the seller you chose
+            {% if subsession.dims > 1 %}
+                the sum of their {{ subsession.dims }} prices.
+            {% else %}
+                their price.
+            {% endif %}
         </p>
-        <p>  The objects sold by the two sellers are identical.  The only differences are the prices. No matter which seller you choose, you will be awarded {{ Constants.consbenefit }} tokens in exchange for your object at the end of the match. The sum of each seller's prices will always be less than or equal to {{ Constants.maxprice }} tokens.
+        <p>  The objects sold by the two sellers are identical.  The only differences are the prices. No matter which seller you choose, you will be awarded {{ Constants.consbenefit }} tokens in exchange for your object at the end of the match.
+            {% if subsession.dims > 1 %}
+                The sum of each seller's prices
+            {% else %}
+                Each seller's price
+            {% endif %}
+            will always be less than or equal to {{ Constants.maxprice }} tokens.
         </p>
         <p></p>
-        <p>An example of how you choose between sellers is shown in the table to the right. Note, that as the buyer you do not see the sum of the prices. You only see the {{ subsession.dims }} price{{ subsession.dims |pluralize }} themselves.
+        <p>
+            An example of how you choose between sellers is shown in the table to the right.
+            {% if subsession.dims > 1 %}
+                <i>Note, that as the buyer you do not see the sum of the prices.</i> You only see the {{ subsession.dims }} price{{ subsession.dims |pluralize }} themselves.
+            {% endif %}
         </p>
         <p>Please choose a seller in the example table.  When you are done, press the "Next" button to continue.</p>
 
-        <!--<p>Each round, you will buy an object from one of the two sellers in your group.  Both sellers are selling an identical object.  However, they may have chosen different prices for that object. </p>-->
 
-        <!--<p> When you buy an object, you will receive {{ Constants.maxprice }} tokens minus the total price, which is equal to the sum of the prices set by the seller.  For example ... </p>-->
-        <p><button class="a-btn next">Next</button></p>
+        <button class="a-btn next">Next</button>
     </div>
     <div class="col">
         {% include "duopoly_rep_treat/parts/buyerChoicePart.html" %}

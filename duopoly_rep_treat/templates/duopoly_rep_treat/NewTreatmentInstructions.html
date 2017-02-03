@@ -1,0 +1,26 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+{% block title %}
+    New Game Instructions
+{% endblock %}
+{% block content %}
+    <!-- This page only visited in second treatment and after -->
+    <p>Will will now begin a new part of the experiment.</p>
+
+    <p>The next part of the experiment is the same as the previous part of the experiment but with one difference.</p>
+
+    <p>
+        In this part of the experiment <b>each object has {{ subsession.dims |pluralize:"only," }} {{ subsession.dims }} price{{ subsession.dims |pluralize }}</b>.
+    </p>
+
+    {% if subsession.treatment_first_singular = True or treatment_first_multiple = True %}
+        <p>Because this is an important change, we will now go through the instructions for Sellers and Buyers one more time.</p>
+
+    {% endif %}
+
+
+
+
+<button class="a-btn next">Next</button>
+
+{% endblock %}

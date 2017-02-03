@@ -21,8 +21,9 @@
                     <p>Please choose a price for each of the {{ subsession.dims }} prices</p>
                     <p>
                         Each price must be greater than {{ Constants.minprice }},
-                        and the sum of all {{ subsession.dims }} prices must be less than or equal to {{ Constants.maxprice }}.
+                        and the sum of all {{ subsession.dims }} prices must be less than or equal to {{ Constants.maxprice }} tokens.
                     </p>
+                    <p>Your production cost is {{ Constants.prodcost }} tokens.</p>
                     <p>When you are satisfied with your prices, please press the "Next" button.</p>
 
                 {% else %}
