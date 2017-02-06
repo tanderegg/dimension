@@ -46,6 +46,9 @@ class Subsession(BaseSubsession):
     treatment_first_singular = models.BooleanField(default=False)
     treatment_first_multiple = models.BooleanField(default=False)
 
+    def vars_for_admin_report(self):
+        return {"session_code": self.session.code,
+                }
     def before_session_starts(self):
 
         # set treatment-level variables

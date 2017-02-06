@@ -7,34 +7,35 @@ from statistics import pstdev
 from django.shortcuts import render
 from . import utils, export
 from otree.models.session import Session
+from django.contrib.auth.decorators import login_required
 
-class Begin(Page):
-
-    def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
-
-class PRA(Page):
+class IntroductionSplash(Page):
 
     def is_displayed(self):
         return self.subsession.round_number == 1 and Constants.show_instructions
 
+class IntroductionPRA(Page):
 
-class Introduction(Page):
+    def is_displayed(self):
+        return self.subsession.round_number == 1 and Constants.show_instructions
+
+
+class InstructionsBasics(Page):
+
+    # def vars_for_template(self):
+    #     return {'num_rounds': Constants.num_rounds_treatment,
+    #     'num_games' : self.subsession.num_dims}
+
+    def is_displayed(self):
+        return self.subsession.round_number == 1 and Constants.show_instructions
+
+class InstructionsPayment(Page):
 
     def vars_for_template(self):
-        return {'num_rounds': Constants.num_rounds_treatment,
-        'num_games' : self.subsession.num_dims}
-
-    def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
-
-class IntroductionPayment(Page):
-
-    def vars_for_template(self):
-        return {'redeem_value': Constants.consbenefit,
-            'cents_per_token': self.session.config["real_world_currency_per_point"],#self.subsession.currency_per_point,
+        return {#'redeem_value': Constants.consbenefit,
+            # 'cents_per_token': self.session.config["real_world_currency_per_point"],#self.subsession.currency_per_point,
             'tokens_per_dollar': int(100./float(self.session.config["real_world_currency_per_point"])),
-            'starting_tokens' : Constants.starting_tokens,
+            # 'starting_tokens' : Constants.starting_tokens,
             'total_rounds': Constants.num_treatments*Constants.num_rounds_treatment + Constants.num_rounds_practice,
             'showup': self.session.config['participation_fee'],
         }
@@ -42,7 +43,7 @@ class IntroductionPayment(Page):
     def is_displayed(self):
         return self.subsession.round_number == 1 and Constants.show_instructions
 
-class IntroductionRoles(Page):
+class InstructionsRoles(Page):
 
     def vars_for_template(self):
         return {#'redeem_value': Constants.consbenefit,
@@ -52,12 +53,12 @@ class IntroductionRoles(Page):
     def is_displayed(self):
         return self.subsession.round_number == 1 and Constants.show_instructions
 
-class NewTreatmentInstructions(Page):
+class InstructionsNewTreatment(Page):
 
     def is_displayed(self):
         return not self.subsession.round_number == 1 and self.subsession.block_new and Constants.show_instructions
 
-class SellerInstructions(Page):
+class InstructionsSeller(Page):
 
     def vars_for_template(self):
         return {'buyers_per_group': Constants.buyers_per_group,
@@ -73,7 +74,7 @@ class SellerInstructions(Page):
         first = self.subsession.treatment_first_multiple or self.subsession.treatment_first_singular
         return Constants.show_instructions and (self.subsession.round_number==1 or (self.subsession.block_new and first ))
 
-class SellerInstructionsPrices(Page):
+class InstructionsSellerPrices(Page):
 
     def vars_for_template(self):
         return {
@@ -85,14 +86,14 @@ class SellerInstructionsPrices(Page):
         first = self.subsession.treatment_first_multiple or self.subsession.treatment_first_singular
         return Constants.show_instructions and (self.subsession.round_number == 1 or (self.subsession.block_new and first))
 
-class SellerQ1(Page):
+class InstructionsSellerQ1(Page):
     form_model = models.Player
     form_fields = ['quiz_q1']
 
     def is_displayed(self):
         return self.subsession.round_number == 1 and Constants.show_instructions
 
-class SellerQ1Ans(Page):
+class InstructionsSellerQ1Ans(Page):
 
     def is_displayed(self):
         return self.subsession.round_number == 1 and Constants.show_instructions
@@ -100,14 +101,14 @@ class SellerQ1Ans(Page):
     def vars_for_template(self):
         return {'correct_answer' : '0 tokens'}
 
-class SellerQ2(Page):
+class InstructionsSellerQ2(Page):
     form_model = models.Player
     form_fields = ['quiz_q2']
 
     def is_displayed(self):
         return self.subsession.round_number == 1 and Constants.show_instructions
 
-class SellerQ2Ans(Page):
+class InstructionsSellerQ2Ans(Page):
 
     def is_displayed(self):
         return self.subsession.round_number == 1 and Constants.show_instructions
@@ -115,7 +116,7 @@ class SellerQ2Ans(Page):
     def vars_for_template(self):
         return {'correct_answer' : 'It depends on the prices I set'}
 
-class BuyerInstructions(Page):
+class InstructionsBuyer(Page):
 
     def is_displayed(self):
         # want to display these instructions to people on their first round or if its the first time they see either
@@ -130,7 +131,7 @@ class BuyerInstructions(Page):
             "prices": utils.get_example_prices(self.subsession.dims),
         }
 
-class RoundSummaryExample(Page):
+class InstructionsRoundResults(Page):
 
     def is_displayed(self):
         return self.subsession.round_number == 1 and Constants.show_instructions
@@ -148,7 +149,7 @@ class RoundSummaryExample(Page):
             "b2_seller": 2,
         }
 
-class WaitGameExample(Page):
+class InstructionsWaitGame(Page):
     def is_displayed(self):
         return self.subsession.round_number == 1 and Constants.show_instructions
 
@@ -177,24 +178,24 @@ class PracticeEnd(Page):
                (self.subsession.block_new and not self.subsession.round_number == 1)
 
 
-class Instructions(Page):
-    def is_displayed(self):
-        # want to display instructions before the first practice round, and before the first real round in all OTHER
-        #   treatments
-        if self.round_number == 1:
-            return True
-        elif self.round_number <= Constants.num_rounds_practice + 1:
-            # don't want instructions appearing after the practice rounds
-            return False
-        elif (self.round_number - Constants.num_rounds_practice) % Constants.num_rounds_treatment == 1:
-            return True
-        else:
-            return False
+# class Instructions(Page):
+#     def is_displayed(self):
+#         # want to display instructions before the first practice round, and before the first real round in all OTHER
+#         #   treatments
+#         if self.round_number == 1:
+#             return True
+#         elif self.round_number <= Constants.num_rounds_practice + 1:
+#             # don't want instructions appearing after the practice rounds
+#             return False
+#         elif (self.round_number - Constants.num_rounds_practice) % Constants.num_rounds_treatment == 1:
+#             return True
+#         else:
+#             return False
 
 
 # SELLER PAGE
 
-class SellerChoice(Page):
+class ChoiceSeller(Page):
 
     form_model = models.Player
     form_fields = ['ask_total', 'ask_stdev']
@@ -227,7 +228,7 @@ class SellerChoice(Page):
 
 # BUYER PAGE
 
-class BuyerChoice(Page):
+class ChoiceBuyer(Page):
 
     form_model = models.Player
     form_fields = ['contract_seller_rolenum']
@@ -266,14 +267,14 @@ class BuyerChoice(Page):
 
 # WAIT PAGES
 
-class StartWait(WaitPage):
+class WaitStartInstructions(WaitPage):
     # This makes sures everyone has cleared the results page before the next round begins
     wait_for_all_groups = True
     title_text = "Waiting for Other Participants"
     body_text = "Please wait for other participants."
 
 
-class StartMatchWait(WaitPage):
+class WaitStartMatch(WaitPage):
     # This makes sures everyone has cleared the instructions pages before the next round begins
     wait_for_all_groups = True
     title_text = "Waiting for Other Participants"
@@ -303,7 +304,7 @@ class WaitBuyersForSellers(WaitPage):
         pass
 
 class WaitGame(WaitPage):
-    template_name = 'duopoly_rep_treat/GameWait.html'
+    template_name = 'duopoly_rep_treat/WaitGame.html'
     wait_for_all_groups = True
 
     form_model = models.Player
@@ -392,65 +393,69 @@ def GameWaitIterCorrect(request):
 
 
 # Data Views
-
+@login_required
 def ViewData(request):
-    return render(request, 'duopoly_rep_treat/data.html', {"session_code": Session.objects.last().code})
+    return render(request, 'duopoly_rep_treat/adminData.html', {"session_code": Session.objects.last().code})
 
-
+@login_required
 def AskDataView(request):
     (headers, body) = export.export_asks()
 
     context = {"title": "Seller Ask Data", "headers": headers, "body": body}
-    return render(request, 'duopoly_rep_treat/DataView.html', context)
+    return render(request, 'duopoly_rep_treat/AdminDataView.html', context)
 
+@login_required
 def AskDataDownload(request):
 
     headers, body = export.export_asks()
     return export.export_csv("AskData", headers, body)
 
-
+@login_required
 def ContractDataView(request):
     (headers, body) = export.export_contracts()
 
     context = {"title": "Contracts Data", "headers": headers, "body": body}
-    return render(request, 'duopoly_rep_treat/DataView.html', context)
+    return render(request, 'duopoly_rep_treat/AdminDataView.html', context)
 
+@login_required
 def ContractDataDownload(request):
-
     headers, body = export.export_contracts()
     return export.export_csv("ContractData", headers, body)
 
-
+@login_required
 def MarketDataView(request):
     headers, body = export.export_marketdata()
     context = {"title": "Market Data", "headers": headers, "body": body}
 
-    return render(request, 'duopoly_rep_treat/DataView.html', context)
+    return render(request, 'duopoly_rep_treat/AdminDataView.html', context)
 
+@login_required
 def MarketDataDownload(request):
 
     headers, body = export.export_marketdata()
     return export.export_csv("MarketData", headers, body)
 
-
+@login_required
 def SurveyDataView(request):
     headers, body = export.export_surveydata()
     context = {"title": "Survey Data", "headers": headers, "body": body}
 
-    return render(request, 'duopoly_rep_treat/DataView.html', context)
+    return render(request, 'duopoly_rep_treat/AdminDataView.html', context)
 
+@login_required
 def SurveyDataDownload(request):
 
     headers, body = export.export_surveydata()
     return export.export_csv("SurveyData", headers, body)
 
-
+@login_required
 def CombinedDataView(request):
     headers, body = export.export_combineddata()
     context = {"title": "Combined Data", "headers": headers, "body": body}
 
-    return render(request, 'duopoly_rep_treat/DataView.html', context)
+    return render(request, 'duopoly_rep_treat/AdminDataView.html', context)
 
+@login_required
 def CombinedDataDownload(request):
 
     headers, body = export.export_combineddata()
@@ -458,32 +463,30 @@ def CombinedDataDownload(request):
 
 
 page_sequence = [
-    StartWait,
-    Begin,
-    PRA,
-    Introduction,
-    IntroductionPayment,
-    IntroductionRoles,
-    NewTreatmentInstructions,
-    SellerInstructions,
-    SellerInstructionsPrices,
-    SellerQ1,
-    SellerQ1Ans,
-    SellerQ2,
-    SellerQ2Ans,
-    BuyerInstructions,
-    RoundSummaryExample,
-    WaitGameExample,
+    WaitStartInstructions,
+    IntroductionSplash,
+    IntroductionPRA,
+    InstructionsBasics,
+    InstructionsPayment,
+    InstructionsRoles,
+    InstructionsNewTreatment,
+    InstructionsSeller,
+    InstructionsSellerPrices,
+    InstructionsSellerQ1,
+    InstructionsSellerQ1Ans,
+    InstructionsSellerQ2,
+    InstructionsSellerQ2Ans,
+    InstructionsBuyer,
+    InstructionsRoundResults,
+    InstructionsWaitGame,
     InstructionsCleanUp,
-    StartMatchWait,
-    # AssignedDirections,
+    WaitStartMatch,
     PracticeBegin,
     PracticeEnd,
-    # Instructions,
-    SellerChoice,
+    ChoiceSeller,
     WaitSellersForSellers,  # for buyers while they wait for sellers # split in tow
     WaitBuyersForSellers,  # for buyers while they wait for sellers # split in tow
-    BuyerChoice,
+    ChoiceBuyer,
     WaitGame, # both buyers and sellers go here while waiting for buyers
     WaitRoundResults,
     RoundResults

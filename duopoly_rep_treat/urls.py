@@ -13,12 +13,16 @@ urlpatterns.append(url(r'^duopoly/gamewaititercorrect/$', views.GameWaitIterCorr
 
 # DATA
 urlpatterns.append(url(r'^duopoly/data/$', views.ViewData, name="data"))
+
 urlpatterns.append(url(r'^duopoly/data/ask/download$', views.AskDataDownload, name="ask_data_download"))
-urlpatterns.append(url(r'^duopoly/data/contract', views.ContractDataView, name="contract_data_view"))
-urlpatterns.append(url(r'^duopoly/data/contract/download$', views.ContractDataDownload, name="contract_data_download"))
 urlpatterns.append(url(r'^duopoly/data/ask$', views.AskDataView, name="ask_data_view"))
+
+urlpatterns.append(url(r'^duopoly/data/contract/download$', views.ContractDataDownload, name="contract_data_download"))
+urlpatterns.append(url(r'^duopoly/data/contract', views.ContractDataView, name="contract_data_view"))
+
 urlpatterns.append(url(r'^duopoly/data/market/download$', views.MarketDataDownload, name="market_data_download"))
 urlpatterns.append(url(r'^duopoly/data/market$', views.MarketDataView, name="market_data_view"))
+
 urlpatterns.append(url(r'^duopoly/data/combined/download$', views.CombinedDataDownload, name="combined_data_download"))
 urlpatterns.append(url(r'^duopoly/data/combined', views.CombinedDataView, name="combined_data_view"))
 
