@@ -49,6 +49,15 @@ p{
 
 }
 
+a.btn-info:visited{
+    color: white;
+    border-color:#46b8da;
+}
+
+td h3, td h5{
+    margin: 0;
+}
+
 /*CF over-rides*/
 input.form-control[type="number"]{
     width: 100%;
@@ -120,3 +129,4 @@ form button.next{
          -o-transform:skew(8deg) rotate(3deg);
             transform:skew(8deg) rotate(3deg);
 }
+

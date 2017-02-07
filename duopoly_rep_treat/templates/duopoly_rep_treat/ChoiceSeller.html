@@ -18,14 +18,21 @@
         <div class="col_container">
             <div class="col">
                 {% if subsession.treatment > 1 %}
-                    <p>Please choose a price for each of the {{ subsession.dims }} prices</p>
-                    <p>
-                        Each price must be greater than {{ Constants.minprice }},
-                        and the sum of all {{ subsession.dims }} prices must be less than or equal to {{ Constants.maxprice }} tokens.
-                    </p>
-                    <p>Your production cost is {{ Constants.prodcost }} tokens.</p>
-                    <p>When you are satisfied with your prices, please press the "Next" button.</p>
-
+                    <p>Please choose your {{ subsession.dims }} prices.</p>
+                    <ul>
+                        <li>
+                            Each price must be greater than or equal to {{ Constants.minprice }} tokens.
+                        </li>
+                        <li>
+                            The sum of all {{ subsession.dims }} prices must be less than or equal to {{ Constants.maxprice }} tokens.
+                        </li>
+                        <li>Your production cost is {{ Constants.prodcost }} tokens.</li>
+                        <li>You can choose a "Sum of Prices" and then press "Distribute" to choose the {{ subsession.dims }} prices randomly.</li>
+                        <li>You can press "Distribute" as many times as you like.</li>
+                        <li>You can manually set each price.</li>
+                        <li>You can manually change prices even if you already pressed "Distribute".</li>
+                    </ul>
+                <p>When you are satisfied with your prices, please press the "Next" button.</p>
                 {% else %}
                     <p>Please choose a price and then press the "Next" button.</p>
                 {% endif %}

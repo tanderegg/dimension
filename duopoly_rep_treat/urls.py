@@ -28,3 +28,6 @@ urlpatterns.append(url(r'^duopoly/data/combined', views.CombinedDataView, name="
 
 urlpatterns.append(url(r'^duopoly/data/survey/download$', views.SurveyDataDownload, name="survey_data_download"))
 urlpatterns.append(url(r'^duopoly/data/survey', views.SurveyDataView, name="survey_data_view"))
+
+# urlpatterns.append(url(r'^duopoly/data/codebook/download/(?P<code>[a-z0-9]+)/$', views.CodebookDownload, name="codebook_download"))
+urlpatterns.append(url(r'^duopoly/data/codebook/download/(?P<app_label>[\w.]+)/$', views.CodebookDownload, name="codebook_download"))

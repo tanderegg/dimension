@@ -21,7 +21,6 @@ class Constants(BaseConstants):
     buyers_per_group = 2
     treatmentdims = [1, 8, 16]
     num_treatments = 3
-    # treatmentorder = [1, 2, 3] # changes between sessions
     num_rounds_treatment = 2 # must be greater than 1 for block math
     num_rounds_practice = 2
     num_rounds = num_rounds_treatment * num_treatments + num_rounds_practice
@@ -36,20 +35,22 @@ class Constants(BaseConstants):
 
 
 class Subsession(BaseSubsession):
-    practiceround = models.BooleanField()
-    realround = models.BooleanField()
-    block = models.IntegerField()
-    treatment = models.IntegerField()
-    dims = models.IntegerField()
-    num_dims = models.IntegerField()
-    block_new = models.BooleanField(default=False)
-    treatment_first_singular = models.BooleanField(default=False)
-    treatment_first_multiple = models.BooleanField(default=False)
+    practiceround = models.BooleanField(doc="True if subsession is a practice round")
+    realround = models.BooleanField(doc="True if subsession is not a practice round")
+    block = models.IntegerField(doc="The order in which the treatment was played in the session")
+    treatment = models.IntegerField(doc="The number of the treatment. 1=1, 2=8, 3=16")
+    dims = models.IntegerField(doc="The number of price dimensions in the treatment.")
+    block_new = models.BooleanField(default=False, doc="True if round is the first in a new treatment block")
+    treatment_first_singular = models.BooleanField(default=False, doc="True if block>1 and treatment==1")
+    treatment_first_multiple = models.BooleanField(default=False, doc="True if block==2 and block1 treatment==1 ")
 
     def vars_for_admin_report(self):
         return {"session_code": self.session.code,
                 }
     def before_session_starts(self):
+
+        # take the string inputted by the experimenter and change it to a list
+        treatmentorder = [int(t) for t in self.session.config["treatmentorder"].split(",")]
 
         # set treatment-level variables
         if self.round_number <= Constants.num_rounds_practice:
@@ -72,21 +73,19 @@ class Subsession(BaseSubsession):
             self.block_new = False
 
 
-        print(self.block_new)
         if self.round_number == 1:
             self.block = 1
         elif self.block_new:
-            print(self.in_round(self.round_number - 1).block)
             self.block = self.in_round(self.round_number - 1).block + 1
         else:
             self.block = self.in_round(self.round_number - 1).block
 
-        self.treatment = self.session.config["treatmentorder"][self.block - 1]
+        self.treatment = treatmentorder[self.block - 1]
         self.dims = Constants.treatmentdims[self.treatment - 1]
 
         # Flag if this is the first round with either a multiple-dim treatment or a single-dim treatment
         #   this is used for instructions logic.
-        prev_treatments = self.session.config["treatmentorder"][: (self.block - 1)]
+        prev_treatments = treatmentorder[: (self.block - 1)]
         prev_dims = [Constants.treatmentdims[treatment - 1] for treatment in prev_treatments]
         if self.round_number > 1 and self.dims == 1 and min([99] + prev_dims) > 1:
             self.treatment_first_singular = True
@@ -115,11 +114,11 @@ class Subsession(BaseSubsession):
 
 class Group(BaseGroup):
     # The group class is used to store market-level data
-    mkt_bid_avg = models.FloatField()
-    mkt_ask_min = models.IntegerField()
-    mkt_ask_max = models.IntegerField()
-    mkt_ask_spread = models.IntegerField()
-    mkt_ask_stdev_min = models.FloatField()
+    mkt_bid_avg = models.FloatField(doc="Average of all bids in a single group/market.")
+    mkt_ask_min = models.IntegerField(doc="Minimum of all asks in a single group/market")
+    mkt_ask_max = models.IntegerField(doc="Maximum of all asks in a single group/market")
+    mkt_ask_spread = models.IntegerField(doc="Difference between the max and min asks in a single group/market")
+    mkt_ask_stdev_min = models.FloatField(doc="Minimum of all asks standard deviations in a single group/market")
 
     def create_contract(self, bid, ask):
         contract = Contract(bid=bid, ask=ask, group=self)
@@ -163,8 +162,8 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     # Both
-    rolenum = models.IntegerField()
-    roledesc = models.CharField()
+    rolenum = models.IntegerField(doc="The player's role number")
+    roledesc = models.CharField(doc="The player's role description. E.g., 'Seller' or 'Buyer'")
 
     # Instruction Questions
     quiz_q1 = models.CharField(
@@ -181,28 +180,29 @@ class Player(BasePlayer):
     
     # profit = models.IntegerField(default=0) # use built-in payoff field
     # profit_interim = models.IntegerField(default=0)
-    payoff_interim = models.CurrencyField(default=0)
-    buyer_bool = models.BooleanField()
-    seller_bool = models.BooleanField()
+    payoff_interim = models.CurrencyField(default=0, doc="Player's earnings up to and including this round")
+    buyer_bool = models.BooleanField(doc="True iff this player is a buyer in this round")
+    seller_bool = models.BooleanField(doc="True iff this player is a seller in this round")
 
     # Seller
-    ask_total = models.IntegerField(min=Constants.minprice, max=Constants.maxprice)
-    ask_stdev = models.FloatField()
-    numsold = models.IntegerField(default=0)
+    ask_total = models.IntegerField(min=Constants.minprice, max=Constants.maxprice, doc="If a seller, ask total/sum")
+    ask_stdev = models.FloatField(doc="If a seller, player's ask standard deviation")
+    numsold = models.IntegerField(default=0, doc="If a seller, number of objects the player sold that round")
 
     # Buyer
-    bid_total = models.IntegerField(min=Constants.minprice, max=Constants.maxprice)
+    bid_total = models.IntegerField(min=Constants.minprice, max=Constants.maxprice, doc="If a buyer, bid total/sum")
     contract_seller_rolenum = models.IntegerField(
         choices=[(1, "Seller 1"), (2, "Seller 2")],
-        widget=widgets.RadioSelect()
+        widget=widgets.RadioSelect(),
+        doc="If a buyer, the role number of the seller from whom the buyer purchased"
     )
-    mistake_bool = models.IntegerField()
-    mistake_size = models.IntegerField(default=0)
-    other_seller_ask_total = models.IntegerField()
-    other_seller_ask_stdev = models.FloatField()
+    mistake_bool = models.IntegerField(doc="If a buyer, True if the buyer bought from the higher priced seller")
+    mistake_size = models.IntegerField(default=0, doc="If a buyer, the size of the buyer's mistake")
+    other_seller_ask_total = models.IntegerField(doc="If a buyer, the ask total of the seller from whom did not buy")
+    other_seller_ask_stdev = models.FloatField(doc="If a buyer, the ask stdev of the seller from whom did not buy")
 
     # wait page game
-    gamewait_numcorrect = models.IntegerField(default=0)# , widget=widgets.HiddenInput()# TextInput()) # attrs={"type":"hidden"}
+    gamewait_numcorrect = models.IntegerField(default=0, doc="The number of words found by player in the word search")
 
     def create_bid(self, bid_total, pricedims):
         """ Creates a bid row associated with the buyer after the buyer makes his/her choice """
@@ -301,10 +301,10 @@ class Player(BasePlayer):
 
 class Ask(Model):
     """ Stores details of a seller's ask """
-    total = models.IntegerField(min=Constants.minprice, max=Constants.maxprice)
-    stdev = models.FloatField(min=0)
-    auto = models.BooleanField() # true if this ask was created automatically, else false
-    manual = models.BooleanField() # true if this ask was created via maually changing a field, else false
+    total = models.IntegerField(min=Constants.minprice, max=Constants.maxprice, doc="Total price across all dims")
+    stdev = models.FloatField(min=0, doc="Standard deviation of price dimensions")
+    auto = models.BooleanField(doc="True if ask was generated automatically by the 'distribute' button")
+    manual = models.BooleanField(doc="True if ask was generated by seller manually adjusting a single price dim")
     player = ForeignKey(Player)
 
     # def generate_pricedims(self):
@@ -326,7 +326,7 @@ class Bid(Model):
     """ Stores details of a buyer's bid. Not super useful at the moment given buyer's limited action space, but
         future-proofs the code somewhat. It also just gives a nice symmetry for how we deal with the two roles.
     """
-    total = models.IntegerField(min=Constants.minprice, max=Constants.maxprice)
+    total = models.IntegerField(min=Constants.minprice, max=Constants.maxprice, doc="Total price across all dims")
     player = ForeignKey(Player)
 
     def set_pricedims(self, pricedims):
@@ -338,15 +338,15 @@ class Bid(Model):
 
 class Contract(Model):
     """ Relates a bid and an ask in a successful exchange """
-    ask = ForeignKey(Ask)
+    ask = ForeignKey(Ask, blank=True, null=True)
     bid = ForeignKey(Bid, blank=True, null=True)
     group = ForeignKey(Group)
 
 
 class PriceDim(Model):   # our custom model inherits from Django's base class "Model"
 
-    value = models.IntegerField()
-    dimnum = models.IntegerField()
+    value = models.IntegerField(doc="The value of this price dim")
+    dimnum = models.IntegerField(doc="The number of the dimension of this price dim")
 
     # in reality, there will be either, but not both, an ask or a bid associated with each pricedim
     ask = ForeignKey(Ask, blank=True, null=True)    # creates 1:m relation -> this decision was made by a certain seller

@@ -22,10 +22,6 @@ class IntroductionPRA(Page):
 
 class InstructionsBasics(Page):
 
-    # def vars_for_template(self):
-    #     return {'num_rounds': Constants.num_rounds_treatment,
-    #     'num_games' : self.subsession.num_dims}
-
     def is_displayed(self):
         return self.subsession.round_number == 1 and Constants.show_instructions
 
@@ -460,6 +456,11 @@ def CombinedDataDownload(request):
 
     headers, body = export.export_combineddata()
     return export.export_csv("CombinedData", headers, body)
+
+def CodebookDownload(request, app_label):
+
+    headers, body = export.export_docs(app_label)
+    return export.export_csv("Codebook", headers, body)
 
 
 page_sequence = [
