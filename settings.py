@@ -19,7 +19,8 @@ else:
 ADMIN_USERNAME = 'admin'
 
 # for security, best to set admin password in an environment variable
-ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
+# ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
+ADMIN_PASSWORD = "cfpbrules"
 
 # don't share this with anybody.
 SECRET_KEY = '6+2i60rc+__hp-ov1@%t0z^!yo#&x^!+=ta0ndmiaj8=tp49&#'
@@ -119,16 +120,24 @@ SESSION_CONFIG_DEFAULTS = {
     'mturk_hit_settings': mturk_hit_settings,
 }
 
+ROOMS=[
+    {
+        'name': 'Gettysburg',
+        'display_name': 'Gettysburg Econ Lab',
+        'participant_label_file': 'duopoly_rep_treat/participant_labels.txt',
+        'use_secure_urls': True,
+    }
+]
 
 SESSION_CONFIGS = [
-    {
-        'name': 'dimension',
-        'display_name': "Dimension",
-        'num_demo_participants': 12,
-        'app_sequence': [
-            'dimension',
-        ],
-    },
+    # {
+    #     'name': 'dimension',
+    #     'display_name': "Dimension",
+    #     'num_demo_participants': 12,
+    #     'app_sequence': [
+    #         'dimension',
+    #     ],
+    # },
     {
         'name': 'survey',
         'display_name': "Survey",
@@ -145,7 +154,7 @@ SESSION_CONFIGS = [
             'duopoly_rep_treat',
             'survey'
         ],
-        'treatmentorder': [3,1,2],
+        'treatmentorder': "3,1,2",
         'participation_fee': 5,
         'real_world_currency_per_point': .01,
         'date': "20170130",

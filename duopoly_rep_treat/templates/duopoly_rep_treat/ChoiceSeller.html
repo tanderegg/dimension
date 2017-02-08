@@ -1,0 +1,125 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    {% if subsession.round_number <= Constants.num_rounds_practice %}
+        Practice Match
+    {% else %}
+        Match {{ round }} of {{ Constants.num_rounds_treatment }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="col_container">
+        <h3>
+            You are seller {{ player.rolenum }}.
+        </h3>
+        <div class="col_container">
+            <div class="col">
+                {% if subsession.treatment > 1 %}
+                    <p>Please choose your {{ subsession.dims }} prices.</p>
+                    <ul>
+                        <li>
+                            Each price must be greater than or equal to {{ Constants.minprice }} tokens.
+                        </li>
+                        <li>
+                            The sum of all {{ subsession.dims }} prices must be less than or equal to {{ Constants.maxprice }} tokens.
+                        </li>
+                        <li>Your production cost is {{ Constants.prodcost }} tokens.</li>
+                        <li>You can choose a "Sum of Prices" and then press "Distribute" to choose the {{ subsession.dims }} prices randomly.</li>
+                        <li>You can press "Distribute" as many times as you like.</li>
+                        <li>You can manually set each price.</li>
+                        <li>You can manually change prices even if you already pressed "Distribute".</li>
+                    </ul>
+                <p>When you are satisfied with your prices, please press the "Next" button.</p>
+                {% else %}
+                    <p>Please choose a price and then press the "Next" button.</p>
+                {% endif %}
+            </div><div class="col">
+                {% include "duopoly_rep_treat/parts/sellerChoicePart.html" with example="False" %}
+            </div>
+        </div>
+    </div>
+    <button class="a-btn next">Next</button>
+
+{% endblock %}
+{% block app_styles %}
+   <link href="{% static "duopoly_rep_treat/seller.css" %}" rel="stylesheet">
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'duopoly_rep_treat/utils.js' %}"></script>
+    <script type="text/javascript" src="{% static 'duopoly_rep_treat/seller.js' %}"></script>
+    <!--<script type="text/javascript">-->
+
+        <!--// Update total when fields change-->
+        <!--$(document).ready(function(){-->
+
+            <!--// in utils.js-->
+            <!--setup_csrf();-->
+
+            <!--var resultHandler = function(result) {-->
+                <!--// Over-writing user-input to enforce consistency.  The only reason this should ever be different-->
+                <!--//  is if the user tried to enter a decimal-point-->
+
+                <!--$.each(result.pricedims, function(i, pd){-->
+                    <!--$("#dim_" + (i+1)).val(pd);-->
+                <!--});-->
+
+                <!--$("#id_ask_total").val(result.ask_total);-->
+                <!--$("#id_ask_stdev").val(result.ask_stdev);-->
+            <!--};-->
+
+            <!--// When player manually changes a field, we want to send the whole list of fields back as a list-->
+            <!--$(".pricedim").change(function(){-->
+
+                <!--var pricedims = [];-->
+                <!--$(".pricedim").each(function(i, input) {-->
+                    <!--pricedims.push($(input).val());-->
+                <!--});-->
+
+                <!--var data = get_metadata($("#distribute"));-->
+                <!--data.pricedims = pricedims.toString();-->
+
+                <!--$.ajax({-->
+                    <!--type: "POST",-->
+                    <!--url: $("#distribute").attr("data-manual-url"),//"/duopoly_rep_treat/manualpricedims/",-->
+                    <!--data: data,-->
+                    <!--dataType: "json",-->
+                    <!--success: resultHandler-->
+                <!--});-->
+            <!--});-->
+
+            <!--// When a player clicks the automatic distribute button, we ask the server for the list of price dims-->
+            <!--$("#distribute").click(function() {-->
+
+                <!--// #Distribute field validation.  Don't send if number not in range.-->
+                <!--var myForm = $("form");-->
+                <!--var myVal = $("#id_ask_total").val();-->
+                <!--if( !myForm[0].checkValidity() && myVal>800 || myVal<0 || myVal=="" ) {-->
+                    <!--// Leveraging built-in styling for "distribute" validation-->
+                    <!--// Validation technique taken from-->
+                    <!--//   http://stackoverflow.com/questions/10092580/stop-form-from-submitting-using-jquery#10092636-->
+                    <!--// If the form is invalid, submit it. The form won't actually submit;-->
+                    <!--//   this will just cause the browser to display the native HTML5 error messages.-->
+                    <!--$("input[type=submit]").click();-->
+                    <!--return;-->
+                <!--}-->
+
+                <!--var data = get_metadata($(this));-->
+                <!--data.ask_total = $("#id_ask_total").val();-->
+                <!--data.numdims = $("input.pricedim").length;-->
+
+                <!--$.ajax({-->
+                    <!--type: "POST",-->
+                    <!--url: $("#distribute").attr("data-auto-url"),//"/duopoly_rep_treat/autopricedims/",-->
+                    <!--data: data,-->
+                    <!--dataType: "json",-->
+                    <!--success: resultHandler-->
+                <!--});-->
+            <!--});-->
+        <!--});-->
+
+
+    <!--</script>-->
+{% endblock %}

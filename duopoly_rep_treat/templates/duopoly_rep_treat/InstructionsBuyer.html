@@ -1,0 +1,55 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Buyer Instructions
+{% endblock %}
+
+{% block content %}
+<div class="col_container">
+    <div class="col">
+        <h3>Imagine that you are playing as a buyer.</h3>
+        <p>You will buy one object per match.</p>
+
+        </p>
+        <p>First, you will see the
+            {% if subsession.dims > 1 %}
+                {{ subsession.dims }}
+            {% endif %}
+            prices that the sellers set for their objects, and be asked which of the {{ Constants.sellers_per_group }} sellers you want to buy from. You will then pay the seller you chose
+            {% if subsession.dims > 1 %}
+                the sum of their {{ subsession.dims }} prices.
+            {% else %}
+                their price.
+            {% endif %}
+        </p>
+        <p>  The objects sold by the two sellers are identical.  The only differences are the prices. No matter which seller you choose, you will be awarded {{ Constants.consbenefit }} tokens in exchange for your object at the end of the match.
+            {% if subsession.dims > 1 %}
+                The sum of each seller's prices
+            {% else %}
+                Each seller's price
+            {% endif %}
+            will always be less than or equal to {{ Constants.maxprice }} tokens.
+        </p>
+        <p></p>
+        <p>
+            An example of how you choose between sellers is shown in the table to the right.
+            {% if subsession.dims > 1 %}
+                <i>Note, that as the buyer you do not see the sum of the prices.</i> You only see the {{ subsession.dims }} price{{ subsession.dims |pluralize }} themselves.
+            {% endif %}
+        </p>
+        <p>Please choose a seller in the example table.  When you are done, press the "Next" button to continue.</p>
+
+
+        <button class="a-btn next">Next</button>
+    </div>
+    <div class="col">
+        {% include "duopoly_rep_treat/parts/buyerChoicePart.html" %}
+    </div>
+</div>
+
+
+{% endblock %}
+{% block app_styles %}
+   <link href="{% static "duopoly_rep_treat/buyer.css" %}" rel="stylesheet">
+{% endblock %}

@@ -2,11 +2,17 @@ from .models import Constants, Subsession, Player, Group
 from survey.models import Subsession as SubsessionSurvey
 from survey.models import Player as PlayerSurvey
 from otree.models.session import Session
+from otree.models.participant import Participant
+
 from . import models
-from otree.export import get_field_names_for_csv
+from otree.export import get_field_names_for_csv, inspect_field_names
 from django.http import HttpResponse
 import datetime
 import csv
+import inspect
+import six
+from otree.common_internal import get_models_module, app_name_format
+from collections import OrderedDict
 
 
 # HELPER METHODS
@@ -43,7 +49,7 @@ def get_headers_simple():
     session_fns_display = ['session_' + fn for fn in session_fns]
     group_fns = ['id_in_subsession']
     group_fns_display = ['group_id']
-    participant_fns = ['code', 'id_in_session']
+    participant_fns = ['code', 'label', 'id_in_session']
     participant_fns_display = ['participant_' + fn for fn in participant_fns]
 
     return session_fns, session_fns_display, group_fns, group_fns_display, participant_fns, participant_fns_display
@@ -332,3 +338,133 @@ def export_combineddata():
                                 participant_list + player_list + pricedim_list + survey_list)
 
     return headers, body
+
+
+def export_docs(app_name):
+    """
+        Taken and adapted from the otree core: https://github.com/oTree-org/otree-core/blob/master/otree/export.py
+        Adapting to export to csv and to add non-standard models
+    """
+
+    # generate doct_dict
+    models_module = get_models_module(app_name)
+
+    model_names = ["Participant", "Player", "Group", "Subsession", "Session", "Ask", "Bid", "Contract", "PriceDim"]
+    line_break = '\r\n'
+
+    def choices_readable(choices):
+        lines = []
+        for value, name in choices:
+            # unicode() call is for lazy translation strings
+            lines.append(u'{}: {}'.format(value, six.text_type(name)))
+        return lines
+
+    def generate_doc_dict():
+        doc_dict = OrderedDict()
+
+        data_types_readable = {
+            'PositiveIntegerField': 'positive integer',
+            'IntegerField': 'integer',
+            'BooleanField': 'boolean',
+            'CharField': 'text',
+            'TextField': 'text',
+            'FloatField': 'decimal',
+            'DecimalField': 'decimal',
+            'CurrencyField': 'currency'}
+
+        for model_name in model_names:
+            if model_name == 'Participant':
+                Model = Participant
+            elif model_name == 'Session':
+                Model = Session
+            else:
+                Model = getattr(models_module, model_name)
+            print(model_name)
+
+            field_names = set(field.name for field in Model._meta.fields)
+
+            members = get_field_names_for_csv(Model)
+            if not members:
+                members = [f for f in inspect_field_names(Model)]
+            doc_dict[model_name] = OrderedDict()
+
+            for member_name in members:
+                member = getattr(Model, member_name, None)
+                doc_dict[model_name][member_name] = OrderedDict()
+                if member_name == 'id':
+                    doc_dict[model_name][member_name]['type'] = ['positive integer']
+                    doc_dict[model_name][member_name]['doc'] = ['Unique ID']
+                elif member_name in field_names:
+                    member = Model._meta.get_field_by_name(member_name)[0]
+
+                    internal_type = member.get_internal_type()
+                    data_type = data_types_readable.get(internal_type, internal_type)
+
+                    doc_dict[model_name][member_name]['type'] = [data_type]
+
+                    # flag error if the model doesn't have a doc attribute,
+                    # which it should unless the field is a 3rd party field
+                    doc = getattr(member, 'doc', '[error]') or ''
+                    doc_dict[model_name][member_name]['doc'] = [
+                        line.strip() for line in doc.splitlines() if line.strip()]
+
+                    choices = getattr(member, 'choices', None)
+                    if choices:
+                        doc_dict[model_name][member_name]['choices'] = (choices_readable(choices))
+                elif isinstance(member, collections.Callable):
+                    doc_dict[model_name][member_name]['doc'] = [inspect.getdoc(member)]
+        return doc_dict
+
+    def docs_as_lists(doc_dict):
+        header = ["Model", "Field", "Type", "Description"]
+        body = [['{}: Documentation'.format(app_name_format(app_name))], ['*' * 15],
+                ['Accessed: {}'.format(datetime.date.today().isoformat())], ['']]
+
+        app_doc = getattr(models_module, 'doc', '')
+        if app_doc:
+            body += [app_doc, '']
+
+        for model_name in doc_dict:
+            for member in doc_dict[model_name]:
+                # lines.append('\t{}'.format(member))
+                for info_type in doc_dict[model_name][member]:
+                    # lines.append('\t\t{}'.format(info_type))
+                    for info_line in doc_dict[model_name][member][info_type]:
+                        # lines.append(u'{}{}'.format('\t' * 3, info_line))
+                        body += [[model_name, member, info_type, info_line]]
+
+        return header, body
+
+        # output = u'\n'.join(lines)
+        # return output.replace('\n', line_break).replace('\t', '    ')
+
+    # def docs_as_string(doc_dict):
+    #
+    #     first_line = '{}: Documentation'.format(app_name_format(app_name))
+    #     second_line = '*' * len(first_line)
+    #
+    #     lines = [
+    #         first_line, second_line, '',
+    #         'Accessed: {}'.format(datetime.date.today().isoformat()), '']
+    #
+    #     app_doc = getattr(models_module, 'doc', '')
+    #     if app_doc:
+    #         lines += [app_doc, '']
+    #
+    #     for model_name in doc_dict:
+    #         lines.append(model_name)
+    #
+    #         for member in doc_dict[model_name]:
+    #             lines.append('\t{}'.format(member))
+    #             for info_type in doc_dict[model_name][member]:
+    #                 lines.append('\t\t{}'.format(info_type))
+    #                 for info_line in doc_dict[model_name][member][info_type]:
+    #                     lines.append(u'{}{}'.format('\t' * 3, info_line))
+
+        # output = u'\n'.join(lines)
+        # return output.replace('\n', line_break).replace('\t', '    ')
+
+    doc_dict = generate_doc_dict()
+    return docs_as_lists(doc_dict)
+    # doc = docs_as_string(doc_dict)
+    # fp.write(doc)

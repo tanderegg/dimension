@@ -1,0 +1,23 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Wait Game Example
+{% endblock %}
+
+{% block content %}
+    <div class="col_container">
+        <div class="col" >
+            <h3>During the course of the game you may have to wait for other players.</h3>
+            <p>During some of these wait times you may see a word search game like the example one at the right.</p>
+            <p>This word search game is provided for your enjoyment while you wait.  It is not part of the experiment and you are not required to play the word search game.</p>
+            <p><i>Your performance playing the word search game does not affect any other aspect of your experience in this experiment</i>, including your earnings.</p>
+            <button class="a-btn next">Next</button>
+        </div>
+        <div class="col" >
+            <img src="{% static 'duopoly_rep_treat/img/wordsearch_example.png' %}"></img>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+{% block title %}
+    Seller Instructions
+{% endblock %}
+{% block content %}
+
+        <h3>Imagine that you are playing as a <i>seller</i>.</h3>
+        <p>Each match, you will be placed into a group with {{ Constants.buyers_per_group }} buyers and {{ Constants.sellers_per_group|add:-1 }} other seller{{ Constants.sellers_per_group|add:-1 | pluralize }}.
+        </p>
+
+			<p>
+                You can produce and sell objects to earn tokens.  You do not value owning objects themselves, but you can sell objects to buyers.  As a seller, you first choose the price{{ subsession.dims |pluralize }} at which you will sell objects in the market.
+                {% if subsession.dims > 1 %}
+                    In this game, <b>each object has {{ subsession.dims }} price{{ subsession.dims |pluralize }}</b>. All {{ subsession.dims }} price{{ subsession.dims |pluralize }} are for a single object, and each object you sell will earn you the sum of the {{ subsession.dims }} price{{ subsession.dims |pluralize }}.
+                {% endif %}
+            </p>
+
+        <p>After you set your price{{ subsession.dims |pluralize }}, the buyers will decide if they want to buy from you or from the other seller.  You will then automatically produce the number of objects you sold in the market.
+        </p>
+        <p>Your cost of production is {{ Constants.prodcost }} tokens per objects.  So,</p>
+        <ul>
+            <li>If you sell zero objects, you make 0 tokens and spend 0 tokens.</li>
+            <li>If you sell one object, you make
+                {% if subsession.dims > 1 %}
+                    the sum of your {{ subsession.dims }} prices
+                {% else %}
+                    your price
+                {% endif %}
+                and spend {{ Constants.prodcost }} tokens.
+            </li>
+            <li>
+                If you sell two objects, you make <i>two times</i>
+                {% if subsession.dims > 1 %}
+                    the sum of your {{ subsession.dims }} prices
+                {% else %}
+                    your price
+                {% endif %}
+                and spend {{ Constants.prodcost|add:Constants.prodcost }} tokens.
+            </li>
+        </ul>
+
+
+
+<p><button class="a-btn next">Next</button></p>
+
+{% endblock %}

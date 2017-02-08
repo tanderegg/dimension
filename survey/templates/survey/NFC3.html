@@ -14,7 +14,10 @@
     {% formfield player.q_nfc7 %}
     {% formfield player.q_nfc8 %}
 
-	<button class="a-btn">Next</button>
+	<button class="a-btn next">Next</button>
     
 
+{% endblock %}
+{% block app_styles %}
+   <link href="{% static "duopoly_rep_treat/quiz.css" %}" rel="stylesheet">
 {% endblock %}
