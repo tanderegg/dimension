@@ -51,7 +51,7 @@ $(document).ready(function() {
             //   http://stackoverflow.com/questions/10092580/stop-form-from-submitting-using-jquery#10092636
             // If the form is invalid, submit it. The form won't actually submit;
             //   this will just cause the browser to display the native HTML5 error messages.
-            $("input[type=submit]").click();
+            $("button").click();
             return;
         }
 
