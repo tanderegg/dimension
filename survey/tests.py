@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
-
 import random
-
 from otree.common import Currency as c, currency_range
-
+from otree.api import Submission
 from . import views
 from ._builtin import Bot
 from .models import Constants
@@ -46,7 +44,7 @@ class PlayerBot(Bot):
         yield(views.Demographics1, {'q_experience' : '0', 'q_gender' : "Male", 'q_english' : "Yes", 'q_age' : 21})
         yield(views.Demographics2, {'q_course_micro' : True, 'q_course_mkt' : True, 'q_course_law' : True})
         yield(views.FutureStudies, {"q_futureStudies" : 'Yes, I would like to be contacted for future studies'})
-        #yield(views.Splash)
+        yield Submission(views.Splash, check_html = False)
 
 
 
