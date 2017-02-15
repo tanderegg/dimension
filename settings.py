@@ -142,6 +142,7 @@ SESSION_CONFIGS = [
         'name': 'survey',
         'display_name': "Survey",
         'num_demo_participants': 4,
+        'use_browser_bots' : False,
         'app_sequence': [
             'survey',
         ],
@@ -150,6 +151,7 @@ SESSION_CONFIGS = [
         'name': 'duopoly_rep_treat',
         'display_name': "Duopoly",
         'num_demo_participants': 4,
+        'use_browser_bots' : False,
         'app_sequence': [
             'duopoly_rep_treat',
             'survey'
