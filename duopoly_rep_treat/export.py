@@ -234,7 +234,7 @@ def get_market_row(group, dims, maxdim):
 
     for role in ("B1", "B2"):
         buyer = group.get_player_by_role(role)
-        market_list += [buyer.participant.id_in_session, seller.participant.code,
+        market_list += [buyer.participant.id_in_session, buyer.participant.code,
                         buyer.payoff, buyer.bid_total, buyer.contract_seller_rolenum]
 
     return market_list
@@ -324,11 +324,7 @@ def export_combineddata():
                     participant = player.participant
                     participant_list = list_from_obj(participant_fns, participant)
                     player_list = list_from_obj(player_fns, player)
-                    # TODO price dims
                     pricedim_list = get_pd_list(player.get_pricedims(), subsession.dims, maxdim)
-
-                    # subsession_survey = SubsessionSurvey.objects.get(session=session)
-                    # players_survey = subsession_survey.get_players()
 
                     player_survey = PlayerSurvey.objects.get(session=session, participant__code=participant.code)
                     survey_list = list_from_obj(survey_fns, player_survey)
