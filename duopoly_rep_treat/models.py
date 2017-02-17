@@ -21,7 +21,7 @@ class Constants(BaseConstants):
     buyers_per_group = 2
     treatmentdims = [1, 8, 16]
     num_treatments = 3
-    num_rounds_treatment = 2 # must be greater than 1 for block math
+    num_rounds_treatment = 4 # must be greater than 1 for block math
     num_rounds_practice = 2
     num_rounds = num_rounds_treatment * num_treatments + num_rounds_practice
     num_players = 12
