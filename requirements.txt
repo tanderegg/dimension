@@ -1,4 +1,4 @@
-appdirs==1.4.0
+appdirs==1.4.3
 asgi-redis==0.14.1
 asgiref==0.14.0
 autobahn==0.16.0
@@ -39,6 +39,7 @@ redis==2.10.5
 requests==2.11.1
 schema==0.6.2
 six==1.10.0
+sqlite3
 Twisted==16.2.0
 txaio==2.5.1
 unicodecsv==0.14.1
