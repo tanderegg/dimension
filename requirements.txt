@@ -1,4 +1,4 @@
-appdirs==1.4.3
+#appdirs==1.4.3
 asgi-redis==0.14.1
 asgiref==0.14.0
 autobahn==0.16.0
