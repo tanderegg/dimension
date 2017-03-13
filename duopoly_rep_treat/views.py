@@ -9,50 +9,58 @@ from . import utils, export
 from otree.models.session import Session
 from django.contrib.auth.decorators import login_required
 
+
+# SPLASH PAGE AND PRA
 class IntroductionSplash(Page):
 
     def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
+        return self.subsession.show_instructions_base
 
 class IntroductionPRA(Page):
 
     def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
+        return self.subsession.show_instructions_base
 
 
+# INSTRUCTIONS PAGES
 class InstructionsBasics(Page):
 
     def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
-
-class InstructionsPayment(Page):
+        return self.subsession.show_instructions_base
 
     def vars_for_template(self):
-        return {#'redeem_value': Constants.consbenefit,
-            # 'cents_per_token': self.session.config["real_world_currency_per_point"],#self.subsession.currency_per_point,
+        return {
             'tokens_per_dollar': int(100./float(self.session.config["real_world_currency_per_point"])),
-            # 'starting_tokens' : Constants.starting_tokens,
-            'total_rounds': Constants.num_treatments*Constants.num_rounds_treatment + Constants.num_rounds_practice,
             'showup': self.session.config['participation_fee'],
         }
 
+class InstructionsBasicsQuiz(Page):
+
     def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
+        return self.subsession.show_instructions_base
+
+    def vars_for_template(self):
+        return {
+            'tokens_per_dollar': int(100. / float(self.session.config["real_world_currency_per_point"])),
+        }
+
 
 class InstructionsRoles(Page):
 
-    def vars_for_template(self):
-        return {#'redeem_value': Constants.consbenefit,
-                'num_groups': int(Constants.num_players/Constants.players_per_group),
-        }
+    def is_displayed(self):
+        return self.subsession.show_instructions_base
+
+class InstructionsRolesQuiz(Page):
 
     def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
+        return self.subsession.show_instructions_base
+
 
 class InstructionsNewTreatment(Page):
 
     def is_displayed(self):
-        return not self.subsession.round_number == 1 and self.subsession.block_new and Constants.show_instructions
+        return self.subsession.show_instructions_block and not self.subsession.show_instructions_base
+
 
 class InstructionsSeller(Page):
 
@@ -65,72 +73,34 @@ class InstructionsSeller(Page):
                 }
 
     def is_displayed(self):
-        # want to display these instructions to people on their first round or if its the first time they see either
-        # a 1 dim case or a multiple dim case (so, basically, a complex way of saying "BLOCK 2").
-        first = self.subsession.treatment_first_multiple or self.subsession.treatment_first_singular
-        return Constants.show_instructions and (self.subsession.round_number==1 or (self.subsession.block_new and first ))
+        return self.subsession.show_instructions_roles
 
-class InstructionsSellerPrices(Page):
-
-    def vars_for_template(self):
-        return {
-            'price_dims': range(1, self.subsession.dims + 1)
-                }
-    def is_displayed(self):
-        # want to display these instructions to people on their first round or if its the first time they see either
-        # a 1 dim case or a multiple dim case (so, basically, a complex way of saying "BLOCK 2").
-        first = self.subsession.treatment_first_multiple or self.subsession.treatment_first_singular
-        return Constants.show_instructions and (self.subsession.round_number == 1 or (self.subsession.block_new and first))
-
-class InstructionsSellerQ1(Page):
-    form_model = models.Player
-    form_fields = ['quiz_q1']
+class InstructionsSellerQuiz(Page):
 
     def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
+        return self.subsession.show_instructions_roles
 
-class InstructionsSellerQ1Ans(Page):
-
-    def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
-
-    def vars_for_template(self):
-        return {'correct_answer' : '0 tokens'}
-
-class InstructionsSellerQ2(Page):
-    form_model = models.Player
-    form_fields = ['quiz_q2']
-
-    def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
-
-class InstructionsSellerQ2Ans(Page):
-
-    def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
-
-    def vars_for_template(self):
-        return {'correct_answer' : 'It depends on the prices I set'}
 
 class InstructionsBuyer(Page):
 
     def is_displayed(self):
-        # want to display these instructions to people on their first round or if its the first time they see either
-        # a 1 dim case or a multiple dim case (so, basically, a complex way of saying "BLOCK 2").
-        first = self.subsession.treatment_first_multiple or self.subsession.treatment_first_singular
-        return Constants.show_instructions and (
-            self.subsession.round_number == 1 or (self.subsession.block_new and first))
+        return self.subsession.show_instructions_roles
 
     def vars_for_template(self):
-
         return{
             "prices": utils.get_example_prices(self.subsession.dims),
         }
 
+class InstructionsBuyerQuiz(Page):
+
+    def is_displayed(self):
+        return self.subsession.show_instructions_roles
+
+
 class InstructionsRoundResults(Page):
 
     def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
+        return self.subsession.show_instructions_base
 
     def vars_for_template(self):
         player = Player(roledesc="Seller", payoff=225, ask_total=325, numsold=1, rolenum=1)
@@ -143,21 +113,19 @@ class InstructionsRoundResults(Page):
             "s2_ask_total": 375,
             "b1_seller": 1,
             "b2_seller": 2,
+            "prodcost": 100,
         }
 
 class InstructionsWaitGame(Page):
-    def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
-
-class InstructionsCleanUp(Page):
 
     def is_displayed(self):
-        return self.subsession.round_number == 1 and Constants.show_instructions
+        return self.subsession.show_instructions_base
+
 
 class PracticeBegin(Page):
 
     def is_displayed(self):
-        return self.subsession.round_number==1 and Constants.num_rounds_practice > 0
+        return self.subsession.show_instructions_practice
 
     def vars_for_template(self):
         otherrole = [role for role in ["Buyer", "Seller"] if role != self.player.roledesc][0]
@@ -166,27 +134,11 @@ class PracticeBegin(Page):
         }
 
 class PracticeEnd(Page):
+
     def is_displayed(self):
-        # return self.subsession.round_number == Constants.num_rounds_practice + 1
-        # want to display these instructions to people on their first PAID round or if its the first round in a new block
-        # first = self.subsession.treatment_first_multiple or self.subsession.treatment_first_singular
-        return self.subsession.round_number == Constants.num_rounds_practice + 1 or \
-               (self.subsession.block_new and not self.subsession.round_number == 1)
+        return self.subsession.show_instructions_real
 
 
-# class Instructions(Page):
-#     def is_displayed(self):
-#         # want to display instructions before the first practice round, and before the first real round in all OTHER
-#         #   treatments
-#         if self.round_number == 1:
-#             return True
-#         elif self.round_number <= Constants.num_rounds_practice + 1:
-#             # don't want instructions appearing after the practice rounds
-#             return False
-#         elif (self.round_number - Constants.num_rounds_practice) % Constants.num_rounds_treatment == 1:
-#             return True
-#         else:
-#             return False
 
 
 # SELLER PAGE
@@ -265,6 +217,8 @@ class ChoiceBuyer(Page):
 
 class WaitStartInstructions(WaitPage):
     # This makes sures everyone has cleared the results page before the next round begins
+    template_name = 'global/WaitCustom.html'
+
     wait_for_all_groups = True
     title_text = "Waiting for Other Participants"
     body_text = "Please wait for other participants."
@@ -272,12 +226,16 @@ class WaitStartInstructions(WaitPage):
 
 class WaitStartMatch(WaitPage):
     # This makes sures everyone has cleared the instructions pages before the next round begins
+    template_name = 'global/WaitCustom.html'
+
     wait_for_all_groups = True
     title_text = "Waiting for Other Participants"
-    body_text = "Please wait for other participants."
+    body_text = ""
 
 
 class WaitSellersForSellers(WaitPage):
+    template_name = 'global/WaitCustom.html'
+
     wait_for_all_groups = True
     title_text = "Waiting for Sellers"
     body_text = "You are a buyer. Please wait for the sellers to set their prices."
@@ -287,6 +245,8 @@ class WaitSellersForSellers(WaitPage):
 
 
 class WaitBuyersForSellers(WaitPage):
+    template_name = 'global/WaitCustom.html'
+
     wait_for_all_groups = True
     title_text = "Waiting for Sellers"
     body_text = "Please wait for the other sellers to set their prices."
@@ -301,6 +261,7 @@ class WaitBuyersForSellers(WaitPage):
 
 class WaitGame(WaitPage):
     template_name = 'duopoly_rep_treat/WaitGame.html'
+
     wait_for_all_groups = True
 
     form_model = models.Player
@@ -312,6 +273,7 @@ class WaitGame(WaitPage):
 
 class WaitRoundResults(WaitPage):
     # This is just a trigger to calculate the payoffs and market variables before the results page
+    template_name = 'global/WaitCustom.html'
 
     def after_all_players_arrive(self):
         # When here, buyers and sellers have made their choices
@@ -322,6 +284,7 @@ class WaitRoundResults(WaitPage):
 
 class RoundResults(Page):
     def vars_for_template(self):
+        prodcost = Constants.prodcost * self.player.numsold
         return {
             "prices": zip(range(1, self.subsession.dims + 1),
                              [pd.value for pd in self.group.get_player_by_role("S1").get_ask().pricedim_set.all() ],
@@ -330,7 +293,9 @@ class RoundResults(Page):
             "s2_ask_total": self.group.get_player_by_role("S2").ask_total,
             "b1_seller": self.group.get_player_by_role("B1").contract_seller_rolenum,
             "b2_seller": self.group.get_player_by_role("B2").contract_seller_rolenum,
-            "subtotal": self.player.ask_total - Constants.prodcost if self.player.ask_total != None else 0
+            "subtotal": self.player.ask_total - Constants.prodcost if self.player.ask_total != None else 0,
+            "prodcost": prodcost,
+            "benefit": self.player.ask_total * self.player.numsold if self.player.ask_total != None else 0,
         }
 
 
@@ -372,8 +337,6 @@ def ManualPricedims(request):
     else:
         # If here, this is an example request from the instructions screen
         return JsonResponse({"pricedims": pricedims, "ask_total": total, "ask_stdev": 0})
-
-
 
 
 
@@ -468,19 +431,23 @@ page_sequence = [
     IntroductionSplash,
     IntroductionPRA,
     InstructionsBasics,
-    InstructionsPayment,
+    InstructionsBasicsQuiz,
+    # InstructionsPayment,
     InstructionsRoles,
+    InstructionsRolesQuiz,
     InstructionsNewTreatment,
     InstructionsSeller,
-    InstructionsSellerPrices,
-    InstructionsSellerQ1,
-    InstructionsSellerQ1Ans,
-    InstructionsSellerQ2,
-    InstructionsSellerQ2Ans,
+    InstructionsSellerQuiz,
+    # InstructionsSellerPrices,
+    # InstructionsSellerQ1,
+    # InstructionsSellerQ1Ans,
+    # InstructionsSellerQ2,
+    # InstructionsSellerQ2Ans,
     InstructionsBuyer,
+    InstructionsBuyerQuiz,
     InstructionsRoundResults,
     InstructionsWaitGame,
-    InstructionsCleanUp,
+    # InstructionsCleanUp,
     WaitStartMatch,
     PracticeBegin,
     PracticeEnd,

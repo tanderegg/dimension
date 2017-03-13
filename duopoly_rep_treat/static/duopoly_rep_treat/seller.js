@@ -1,8 +1,12 @@
 
 
+var resultHandlerManual = function(result) {
+    // Do NOT over-write the sub-price fields as this causes unwanted behavior if there is network latency
 
-
-var resultHandler = function(result) {
+    $("#id_ask_total").val(result.ask_total);
+    $("#id_ask_stdev").val(result.ask_stdev);
+};
+var resultHandlerAuto = function(result) {
     // Over-writing user-input to enforce consistency.  The only reason this should ever be different
     //  is if the user tried to enter a decimal-point
 
@@ -33,10 +37,10 @@ $(document).ready(function() {
 
         $.ajax({
             type: "POST",
-            url: $("#distribute").attr("data-manual-url"),//"/duopoly_rep_treat/manualpricedims/",
+            url: $("#distribute").attr("data-manual-url"),
             data: data,
             dataType: "json",
-            success: resultHandler
+            success: resultHandlerManual
         });
     });
 
@@ -51,7 +55,7 @@ $(document).ready(function() {
             //   http://stackoverflow.com/questions/10092580/stop-form-from-submitting-using-jquery#10092636
             // If the form is invalid, submit it. The form won't actually submit;
             //   this will just cause the browser to display the native HTML5 error messages.
-            $("button").click();
+            $(".seller_widget input[type='submit']")[0].click();
             return;
         }
 
@@ -61,10 +65,10 @@ $(document).ready(function() {
 
         $.ajax({
             type: "POST",
-            url: $("#distribute").attr("data-auto-url"),//"/duopoly_rep_treat/autopricedims/",
+            url: $("#distribute").attr("data-auto-url"),
             data: data,
             dataType: "json",
-            success: resultHandler
+            success: resultHandlerAuto
         });
     });
 

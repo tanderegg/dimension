@@ -6,47 +6,55 @@
 {% endblock %}
 
 {% block content %}
-<div class="col_container">
-    <div class="col">
-        <h3>Imagine that you are playing as a buyer.</h3>
-        <p>You will buy one object per match.</p>
+    <div class="col_container">
+        <div class="col">
+            <section>
+                <p>
+                    Buyers earn tokens by buying objects from sellers and then exchanging them for tokens.
+                </p><p>
+                    When you are a buyer, your only task is to choose the seller you want to buy from.
+                </p>
+                {% if subsession.dims == 1 %}
+                    <p>
+                        After a buyer chooses a seller, the buyer pays the seller the seller's price.
+                    </p>
+                {% endif %}
+                <p>
+                    To the right is an example buyer interface. Feel free to experiment with choosing a seller there.
+                </p>
 
-        </p>
-        <p>First, you will see the
+            </section>
             {% if subsession.dims > 1 %}
-                {{ subsession.dims }}
+                <section>
+                    <p>
+                        As you can see, buyers do not see the sellers’ total prices, but they do see their sub-prices.
+                    </p>
+                    <p>
+                        After a buyer chooses a seller, the buyer pays the seller the sum of the seller’s sub-prices (the total price).
+                    </p>
+                </section>
             {% endif %}
-            prices that the sellers set for their objects, and be asked which of the {{ Constants.sellers_per_group }} sellers you want to buy from. You will then pay the seller you chose
-            {% if subsession.dims > 1 %}
-                the sum of their {{ subsession.dims }} prices.
-            {% else %}
-                their price.
-            {% endif %}
-        </p>
-        <p>  The objects sold by the two sellers are identical.  The only differences are the prices. No matter which seller you choose, you will be awarded {{ Constants.consbenefit }} tokens in exchange for your object at the end of the match.
-            {% if subsession.dims > 1 %}
-                The sum of each seller's prices
-            {% else %}
-                Each seller's price
-            {% endif %}
-            will always be less than or equal to {{ Constants.maxprice }} tokens.
-        </p>
-        <p></p>
-        <p>
-            An example of how you choose between sellers is shown in the table to the right.
-            {% if subsession.dims > 1 %}
-                <i>Note, that as the buyer you do not see the sum of the prices.</i> You only see the {{ subsession.dims }} price{{ subsession.dims |pluralize }} themselves.
-            {% endif %}
-        </p>
-        <p>Please choose a seller in the example table.  When you are done, press the "Next" button to continue.</p>
+            <section>
+                <p>
+                    After the buyer buys an object, the buyer will automatically exchange the object with the experimenter for 800 tokens.
+                </p><p>
+                    Other than the price, it does not matter which seller the buyers buy from – they will always get 800 tokens at the end of the round.
+                </p><p>
+                    Before continuing, please choose a seller in the example interface to the right.
+                </p>
+            </section>
 
 
-        <button class="a-btn next">Next</button>
+            <nav>
+                <input type="button" class="a-btn next" value="Next"></input>
+                <input type="button" class="a-btn prev" value="Previous" disabled="disabled"></input>
+                <input type="submit"></input>
+            </nav>
+        </div>
+        <div class="col">
+            {% include "duopoly_rep_treat/parts/buyerChoicePart.html" %}
+        </div>
     </div>
-    <div class="col">
-        {% include "duopoly_rep_treat/parts/buyerChoicePart.html" %}
-    </div>
-</div>
 
 
 {% endblock %}

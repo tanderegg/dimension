@@ -5,27 +5,45 @@
 {% endblock %}
 {% block content %}
 
-    <h3>Thank you for participating in this experiment.</h3>
+    <section>
+        <p>Thank you for participating in this experiment.</p>
 
-    <p>During the experiment we require your complete, un-distracted attention, so we ask that you follow these instructions carefully. Please do not use the computer except as specifically instructed, and do not chat with other students or engage in activities such as using your cell phone or headphones or reading books. </p>
+        <p>
+            During the experiment we require your complete attention. Please do not speak to other participants or engage in other distracting activities such as using your cell phone.  Please do not use the computer except as instructed.
+            <!--, so we ask that you follow these instructions carefully. Please do not use the computer except as specifically instructed, and do not chat with other students or engage in activities such as using your cell phone or headphones or reading books.-->
+        </p>
 
-    <p>For your participation, you will be paid in cash at the end of the experiment. Different participants may earn different amounts, and what you earn depends partly on your decisions, partly on the decisions of others, and partly on chance. It is therefore important that you follow the instructions carefully and fully understand the instructions before the experiment begins.</p>
+        <p>
+            You will be paid in cash at the end of the experiment, and the amount you earn depends on the choices you make. It is therefore important that you follow along carefully and fully understand the instructions before the experiment begins.
+            <!--For your participation, you will be paid in cash at the end of the experiment. Different participants may earn different amounts, and what you earn depends partly on your decisions, partly on the decisions of others, and partly on chance. It is therefore important that you follow the instructions carefully and fully understand the instructions before the experiment begins.-->
+        </p>
+    </section>
 
-    <p>The entire experiment will take place through computer terminals, and all interaction between participants will take place through the computers. It is important that you not talk or in any way try to communicate with other participants during the experiment except according to the rules described in the instructions.</p>
-
-    <p>If you have a question at any time during these instructions or during the experiment, please raise your hand and someone will come to your computer terminal to assist you.</p>
-
-    <!--<p> Welcome to your research study. </p>&ndash;&gt;
-
-    &lt;!&ndash;<p> In this study you will be playing {% if num_rounds < 2 %} {{ num_rounds }} round {% else %} {{num_rounds}} rounds {% endif %} of a game.  Each round, you and the other participants will be assigned one of two roles: a buyer or a seller.  You will be randomly reassigned to being a buyer or seller each round.  </p>&ndash;&gt;
-
-    &lt;!&ndash;<p> <b> Sellers will decide on prices for an object they are trying to sell, keeping in mind you are competing with another seller for each buyer's selection. </b> <p>&ndash;&gt;
-
-    &lt;!&ndash;<p> <b> Buyers will decide which of the two seller's object they want to buy. </b> </p>&ndash;&gt;
-
-    &lt;!&ndash;<p> The game is divided into {{ num_games }} parts.  There are different rules for each part.  We will provide more instructions about each of the parts as we reach them. </p>-->
-    
-
-<p><button class="a-btn next">Next</button></p>
+    <section>
+        <p>
+            The experiment will be conducted through the lab computers. All interactions between you and other participants will therefore take place through the computers.  Please do not try to speak to other participants or to observe their screens.
+        </p><p>
+        If you have a question at any time during these instructions or during the experiment, please raise your hand and someone will come to your computer to assist you.
+        </p>
+    </section>
+<section>
+    <p>
+        In this experiment you will earn "tokens" that you can exchange for cash.  For every {{ tokens_per_dollar }} tokens you earn, you will be paid $1.00.  We will give you 800 tokens to start the experiment.  In addition to what you earn, you will be give {{ showup }} just for showing up today.
+    </p>
+    <p>
+        You will be paid in cash in private at the end of the experiment.
+        <!--At the end of the experiment, you will be paid what you earned in all matches, plus the show-up fee of <b>{{ showup }}</b>. Everyone will be paid in private and you are under no obligation to tell others how much you earned. Your earnings during the experiment are denominated in tokens. At the end of the experiment you will be paid $1.00 for every <b>{{ tokens_per_dollar }}</b> tokens you earned.-->
+    </p>
+</section>
+<section>
+    <p>
+        Throughout these instructions, we will ask you questions about what you read.  These are simply meant to ensure that you understand the instructions, and your responses will not affect the rest of the experiment or the amount you will earn.  Here comes a question now...
+    </p>
+</section>
+<nav>
+    <input type="button" class="a-btn next" value="Next"></input>
+    <input type="button" class="a-btn prev" value="Previous" disabled="disabled"></input>
+    <input type="submit"></input>
+</nav>
 
 {% endblock %}

@@ -1,15 +1,16 @@
-{% extends 'otree/WaitPage.html' %}
+{% extends 'global/WaitCustom.html' %}
 {% load staticfiles otree_tags %}
 
 
 
-{% block title %} Please enjoy this game while you wait for buyers to make their choices {% endblock %}
+{% block title %} Please enjoy this game while you wait for buyers to make their choices. {% endblock %}
 
 {% block content %}
     {% csrf_token %}
+    <p class="body_text">This game is optional and will not affect your earnings.</p>
     <div id='puzzle'></div>
     <div id='words'></div>
-    <input id='nextpuzzle' class="btn btn-primary btn-large btn-primary next-button" type="button" value="New Puzzle"></input>
+    <input id='nextpuzzle' class="btn btn-info btn-large btn-primary next-button" type="button" value="New Puzzle"></input>
 
     <input type="text" name="gamewait_numcorrect" id="id_gamewait_numcorrect" value="0" required hidden
              data-subsession-id="{{ subsession.id }}"
@@ -29,7 +30,6 @@
 <style type="text/css">
     .progress{
         width: 100%;
-
     }
 </style>
 {% endblock %}
@@ -89,13 +89,13 @@
                 ajaxPOST();
             };
 
-            var gamePuzzle = wordfindgame.create(getRandomSubarray(words, 8), '#puzzle', '#words', wordFind);
+            var numWords = 5;
+            var gamePuzzle = wordfindgame.create(getRandomSubarray(words, numWords), '#puzzle', '#words', wordFind);
 
             $("#nextpuzzle").click(function(){
                 $(this).fadeOut();
-                wordfindgame.create(getRandomSubarray(words, 8), "#puzzle", "#words", wordFind);
+                wordfindgame.create(getRandomSubarray(words, numWords), "#puzzle", "#words", wordFind);
             });
-//
 
 
 

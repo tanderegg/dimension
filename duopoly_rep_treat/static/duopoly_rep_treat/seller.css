@@ -1,36 +1,67 @@
+/* Instructions Specific */
+
+table.seller_outcomes{
+    margin-top:35px;
+}
+.seller_widget.example{
+    display: none;
+}
+form.selected_section_2 .seller_widget.example, form.selected_section_3 .seller_widget.example, form.selected_section_4 .seller_widget.example{
+    display: inline;
+}
+section{
+    min-height: 350px;
+}
+
+/* Seller Page Specific */
+
+/* General Seller */
+
 .seller_widget{
     float:left;
     position:relative;
-    width: 200px;
+    width: 196px;
+    margin: 0 0 0 90px;
 }
 .seller_widget table{
     border-top: 1px solid #aaa;
     margin-top: 9px;
     width: 190px;
 }
-tbody tr{
+
+.seller_widget tbody tr{
     border-bottom:none;
 }
-td{
+.seller_widget td{
     padding: 7px 0 0;
     vertical-align: middle;
+    text-align: center;
 }
-td label{
+
+.seller_widget td label{
     color: #888;
     font-size: 14px;
     font-weight: normal;
-    margin: 0 10px 0 0;
-    min-width: 16px;
-    text-align: right;
+}
+.seller_widget th{
+    padding: 6px 0 3px 3px;
+    font-size: 12px;
+    font-weight: normal;
+    border-bottom: 1px solid #ccc;
+}
+.seller_widget th:first-child{
+    padding-left: 5px;
+    width: 63px;
 }
 #distribute{
     width: 190px;
     height: 40px;
     margin: 8px 0 4px;
-    padding:0.5em 0.875em;
+    padding: 6px 0.875em 0;
     border-radius: .25em;
     border: none;
     background-color: #DBEDD4;
+    font-size: 18px
 }
 #distribute:hover{
     background-color: #ADDC91;
@@ -41,17 +72,17 @@ td label{
     height: 41px;
     margin-right: 4px;
     padding: 6px 12px 0;
-    width: 121px;
+    width: 97px;
 }
 .control-label{
     float: left;
     font-size: 16px;
     margin: 0 15px 0 0;
     text-align: right;
-    width: 53px;
+    width: 79px;
     line-height: 1.2;
     height: 43px;
-    padding: 2px 0 0;
+    padding: 11px 0 0;
 }
 .pricedim{
     font-size: 18px;
@@ -61,7 +92,7 @@ td label{
 .col{
     float:left;
     position: relative;
-    padding: 0 0 0 9%;
+    padding: 0 0 0 0;
     /*width: 300px;*/
 }
 .col:first-child{

@@ -1,3 +1,22 @@
+
+.quiz_js {
+    float: left;
+    position: relative;
+    display: none;
+    min-height: 205px
+}
+.quiz_js.selected{
+    display: inline;
+}
+.quiz_js .answer{
+    display: none;
+}
+
+.answer h2{
+    display: none;
+}
+
+/* Old Stuff */
 .quiz_hold, table.table{
     max-width: 800px;
     margin: 0 auto;

@@ -1,5 +1,23 @@
+/* Instructions Specific */
+section{
+    min-height: 327px;
+}
+/* Buyer Page Specific */
+
+/* General Buyer */
 table{
-    margin-left: 60px;
+    margin-left: 56px;
+    width: 265px;
+}
+table th{
+    white-space:nowrap;
+}
+table th:first-child{
+    white-space:normal;
+}
+
+.col:last-child{
+    margin-right: -60px;
 }
 td label{
     color: #888;

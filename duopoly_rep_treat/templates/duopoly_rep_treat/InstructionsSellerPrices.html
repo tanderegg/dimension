@@ -7,15 +7,16 @@
 
 {% block content %}
 
-    <div class="col_container">
-        <div class="col" >
-            <p>Sellers must choose a price greater than or equal to {{ Constants.minprice }}
-                {% if subsession.dims > 1 %}
-                    for each of the {{ subsession.dims }} price{{ subsession.dims |pluralize }}.  The sum of all the prices must also be less than or equal to {{ Constants.maxprice }} tokens.
-                {% else %}
-                    and less than or equal to {{ Constants.maxprice }} tokens.
-                {% endif %}
-            </p>
+    <section>
+        <p>
+            Sellers must choose a price greater than or equal to {{ Constants.minprice }}
+            {% if subsession.dims > 1 %}
+                for each of the {{ subsession.dims }} price{{ subsession.dims |pluralize }}.  The sum of all the prices must also be less than or equal to {{ Constants.maxprice }} tokens.
+            {% else %}
+                and less than or equal to {{ Constants.maxprice }} tokens.
+            {% endif %}
+        </p>
+    </section>
             <p>
                 An example of how you set your price{{ subsession.dims |pluralize }} as a seller is shown
                 {% if subsession.dims > 1 %}
@@ -41,12 +42,15 @@
                     a price
                 {% endif %}
                 in the example to right.  When you are done, press the "Next" button to continue.</p>
-            <button class="a-btn next">Next</button>
         </div>
-        <div class="col" >
+        <div class="col">
             {% include "duopoly_rep_treat/parts/sellerChoicePart.html" with example="True" %}
         </div>
-    </div>
+<nav>
+    <input type="button" class="a-btn next" value="Next"></input>
+    <input type="button" class="a-btn prev" value="Previous" disabled="disabled"></input>
+</nav>
+
 {% endblock %}
 
 {% block scripts %}

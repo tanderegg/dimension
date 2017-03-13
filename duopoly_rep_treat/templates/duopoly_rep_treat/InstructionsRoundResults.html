@@ -2,26 +2,34 @@
 {% load staticfiles otree_tags %}
 
 {% block title %}
-    Match Summary Example
+    Round Summary Example
 {% endblock %}
 
 {% block content %}
-    <div class="col_container">
-        <div class="col" style="width:37%">
-            <p>At the end of each match you will see a screen that summarizes your earnings in that match as well as the actions of each player in your group during that match.
-            </p>
-            <p>
-                An example of a match summary screen is shown to the right.
-            </p>
-            <p>
-                In this example, the match summary screen shows that you were "Seller 1", you set prices that summed up to {{ s1_ask_total }}, and buyer 1 bought from you, while buyer 2 bought from the other seller.  Therefore you made {{ subtotal }} tokens ({{ s1_ask_total }} - {{  Constants.prodcost }}) in this match.
-            </p>
-          <button class="a-btn next">Next</button>
-        </div>
-        <div class="col" style="width:63%">
-            {% include "duopoly_rep_treat/parts/roundResultPart.html" with width1="50%" width2="50%" %}
-        </div>
-    </div>
+    <div class="col_container"><div class="col">
+        <p>
+            At the end of each round you will see a screen that summarizes the round.
+        </p>
+        <p>
+            An example of a round summary screen is shown below.
+        </p>
+        <p>
+            In this example, you were "Seller 1", you set
+            {% if subsession.dims == 1 %}
+                 a price of
+            {% else %}
+                sub-prices that summed up to
+            {% endif %}
+            {{ s1_ask_total }} tokens, and Buyer 1 bought from you.  Therefore you made {{ subtotal }} tokens in this round.
+        </p>
+
+    </div></div>
+    <hr />
+    {% include "duopoly_rep_treat/parts/roundResultPart.html"%}
+    <nav>
+        <button class="a-btn next">Next</button>
+        <input type="submit"></input>
+    </nav>
 
 {% endblock %}
 {% block app_styles %}

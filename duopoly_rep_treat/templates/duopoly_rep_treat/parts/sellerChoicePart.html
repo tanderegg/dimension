@@ -1,9 +1,10 @@
 {% load staticfiles otree_tags %}
 
-<div class="seller_widget">
+<div class="seller_widget {% if example == "True" %}example {% endif %}">
+    <input type="submit" style="display:none"></input>
     {% if subsession.treatment > 1 %}
         <div class="form-group required">
-            <label for="id_ask_total" class="control-label">Sum of prices:</label>
+            <label for="id_ask_total" class="control-label">Total price:</label>
             <div class="controls  field-ask_total">
                 <input type="number" class="form-control" id="id_ask_total" max="800" min="0" required name="ask_total"></input>
             </div>
@@ -19,7 +20,18 @@
                data-example="{{ example }}"
         >
         </input>
-        <table><tbody>
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        Sub- price
+                    </th>
+                    <th>
+                        Value
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
             {% for pd in price_dims %}
                 <tr>
                     <td>

@@ -2,21 +2,75 @@
 {% load staticfiles otree_tags %}
 
 {% block title %}
-    Instructions
+    Game Basics
 {% endblock %}
 {% block content %}
 
-    <h3>This is an experiment studying buyer and seller behavior in a simple market.</h3>
-    <p>In each match, the computer will randomly match you into a groups of {{ Constants.players_per_group }} participants.  Since there are {{ Constants.num_players }} participants in todays experiment, this will result in {{ num_groups }} groups.  You are not told the identity of the other participants in your group.</p>
+<section>
+    <p>
+        This is an experiment studying behavior in a simple game called a “market”.
+        In this game you will play the role of either a “buyer” or a “seller”.
+    </p>
+</section>
+<section>
+    <p>
+        If you are a seller, you earn tokens by producing objects and selling them to buyers.
+    </p>
+    <p>
+        If you a buyer, you earn tokens by buying objects from sellers and then giving them to the experimenter in exchange for tokens.
+    </p>
+</section>
+<section>
+    <p>
+        You will play this game many times. Each time you play the game, we call this a “round”.
+    </p>
+    <p>
+        Each round, you will be grouped with 3 other participants.  Two of you will be sellers.  The other two will be buyers.
+    </p>
+    <p>
+        Who is in your group and what role you play are determined randomly by the computer at the start of each round.
+    </p>
+</section>
+<section>
+    <p>
+        Each round works like this:
+    </p>
+    <ol>
+        <li>
+            The two sellers set the prices (in tokens) of their objects
+        </li>
+        <li>
+            The two buyers see the sellers’ prices
+        </li>
+        <li>
+            Each buyer chooses a seller they want to buy from
+        </li>
+        <li>
+            Each seller produces the number of objects that they sold
+        </li>
+        <li>
+            Each buyer pays the price of the object they bought to the appropriate seller
+        </li>
+        <li>
+            Buyers give the object they bought to the experimenter in exchange for tokens
+        </li>
+    </ol>
+</section>
+    <!--<h3>This is an experiment studying buyer and seller behavior in a simple market.</h3>-->
+    <!--<p>In each match, the computer will randomly match you into a groups of {{ Constants.players_per_group }} participants.  Since there are {{ Constants.num_players }} participants in todays experiment, this will result in {{ num_groups }} groups.  You are not told the identity of the other participants in your group.</p>-->
 
-    <p>Next, the computer randomly assigns a role to each member of the group: {{ Constants.sellers_per_group }} members will be “sellers” and {{ Constants.buyers_per_group }} members will be “buyers”.</p>
+    <!--<p>Next, the computer randomly assigns a role to each member of the group: {{ Constants.sellers_per_group }} members will be “sellers” and {{ Constants.buyers_per_group }} members will be “buyers”.</p>-->
 
-    <p>Sellers act first.  Whenever you act as a seller, you can produce and sell objects to buyers.  You will choose the prices for these objects.</p>
+    <!--<p>Sellers act first.  Whenever you act as a seller, you can produce and sell objects to buyers.  You will choose the prices for these objects.</p>-->
 
-    <p>Buyers act second. Whevever you act as a buyer, you will see the prices the two sellers set, and then choose which seller you wish to purchase from.  You will pay the seller you choose the price that the seller set.</p>
+    <!--<p>Buyers act second. Whevever you act as a buyer, you will see the prices the two sellers set, and then choose which seller you wish to purchase from.  You will pay the seller you choose the price that the seller set.</p>-->
     
 
-<p><button class="a-btn next">Next</button></p>
+<nav>
+    <input type="button" class="a-btn next" value="Next"></input>
+    <input type="button" class="a-btn prev" value="Previous" disabled="disabled"></input>
+    <input type="submit"></input>
+</nav>
 
 
 {% endblock %}

@@ -1,3 +1,32 @@
+.col_container{
+    margin-bottom: 45px;
+}
+.col_container:last-child{
+    margin-bottom: 0px;
+}
+.results .col{
+    width: 45%;
+}
+.results .col:first-child{
+    width: 55%;
+}
+
+.col p{
+    font-size: 17px;
+    clear: left;
+}
+h2{
+    margin: 10px 0 15px;
+}
+hr{
+    float: left;
+    margin: 0 10% 20px;
+    position: relative;
+    width: 80%;
+    border-color: #aaa;
+
+}
+
 td label{
     color: #888;
     font-size: 14px;
@@ -18,20 +47,16 @@ td{
 .earnings td{
     padding-top: 1px;
     padding-bottom: 9px;
+    text-align: right;
 }
-.earnings td:first-child{
-    text-transform: uppercase;
-    font-size: 13px;
-    padding-bottom: 6px;
+.earnings th{
+    white-space: nowrap;
 }
+
 .earnings .total{
     border-top: 1px solid #888;
 }
 .table_container{
     float:left;
     position:relative;
-}
-.table_container:first-child{
-    margin-right: 65px;
-    margin-bottom: 33px;
 }

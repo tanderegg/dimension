@@ -1,11 +1,30 @@
 {% load staticfiles otree_tags %}
 
 
-
+<div class="results">
 <div class="col_container">
-    <div class="col" style="width:{{width1}}">
+    <div class="col">
+        <p>
+            This round you were {{ player.roledesc }} {{ player.rolenum }} and earned {{ player.payoff }} tokens.
+        </p>
+        {% if player.roledesc == "Buyer" %}
+            <p>
+                You purchased an object from Seller {{ player.contract_seller_rolenum }} for {{ player.bid_total }} tokens, and you exchanged your object for {{ Constants.consbenefit }} tokens.
+            </p>
+        {% else %}
+            <p>
+                You sold {{ player.numsold }} object{{ player.numsold | pluralize }} for {{ player.ask_total }} tokens each.
+            </p><p>
+                Your total production cost was {{ prodcost }} tokens.
+            </p>
+        {% endif %}
+        <p>
+            Your earnings are itemized in the table to the right.
+        </p>
+    </div>
+    <div class="col">
         <div class="table_container">
-            <h3>{{ player.roledesc }} {{ player.rolenum }}'s Earnings</h3>
+            <h2>Your Earnings</h2>
             {% if player.roledesc == "Buyer" %}
             <table class="earnings"><tbody>
                 <tr>
@@ -17,23 +36,40 @@
                 </tr>
             </tbody></table>
             {% else %}
-            <table class="earnings"><tbody>
-                <tr>
-                    <td>Benefit</td><td>{{ player.ask_total }}</td>
-                </tr><tr>
-                    <td>Cost</td><td>-{{ Constants.prodcost }}</td>
-                </tr><tr class="total">
-                    <td>Subtotal</td><td>{{ subtotal }} tokens</td>
-                </tr><tr>
-                    <td># Sold</td><td> x {{ player.numsold }}</td>
-                </tr><tr class="total">
-                    <td>Total</td><td>{{ player.payoff }}tokens</td>
-                </tr>
+            <table class="earnings">
+                <thead><tr>
+                    <th></th>
+                    <th>Value</th>
+                    <th># sold</th>
+                    <th>Totals</th>
+                </tr></thead>
+                <tbody>
+                    <tr>
+                        <td>Benefit</td><td>{{ player.ask_total }}</td>
+                        <td>x {{ player.numsold }}</td>
+                        <td> {{ benefit }}</td>
+                    </tr>
+                    <tr>
+                        <td>Cost</td><td>-{{ Constants.prodcost }}</td>
+                        <td> x {{ player.numsold }}</td>
+                        <td> -{{ prodcost }} </td>
+                    </tr>
+
+                    <tr class="total">
+                        <td>Total</td>
+                        <td>{{ subtotal }}</td>
+                        <td> x {{ player.numsold }}</td>
+                        <td>{{ player.payoff }}tokens</td>
+                    </tr>
             </tbody></table>
             {% endif %}
         </div>
+    </div>
+</div>
+<div class="col_container">
+    <div class="col">
         <div class="table_container">
-            <h3>Buyers' Choices</h3>
+            <h2>Buyers' Choices</h2>
             <table>
                 <thead><tr>
                     <th></th><th>Seller 1</th><th>Seller 2</th>
@@ -53,12 +89,13 @@
             </table>
         </div>
     </div>
-    <div class="col" style="width:{{width2}}">
-        <h3>Sellers' Prices</h3>
+
+    <div class="col">
+        <h2>Sellers' Prices</h2>
         <table>
             <thead>
                 <tr>
-                    <th></th>
+                    <th>{{ subsession.dims | pluralize:",Sub-price" }}</th>
                     <th>Seller 1</th><th>Seller 2</th>
                 </tr>
             </thead>
@@ -84,18 +121,18 @@
             {% endif %}
             <tr>
                 {% if subsession.dims > 1 %}
-                    <td>Sum</td>
+                    <td>Total Price</td>
                 {% else %}
                     <td>Price</td>
                 {% endif %}
                 <td>
-                    {{ s1_ask_total }}
+                    {{ s1_ask_total }} tokens
                 </td>
                 <td>
-                    {{ s2_ask_total }}
+                    {{ s2_ask_total }} tokens
                 </td>
             </tr>
         </tbody></table>
     </div>
 </div>
-
+</div>

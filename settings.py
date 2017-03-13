@@ -161,6 +161,7 @@ SESSION_CONFIGS = [
         'real_world_currency_per_point': .01,
         'date': "20170130",
         'time': "1430",
+        'experimenter_present': True, # set false to show "Next" button on ALL pages.
     },
     # {
     #     'name': '...',

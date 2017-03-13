@@ -20,10 +20,11 @@ class Constants(BaseConstants):
     sellers_per_group = 2
     buyers_per_group = 2
     treatmentdims = [1, 8, 16]
+    practicerounds = [True, True, True]
     num_treatments = 3
-    num_rounds_treatment = 4 # must be greater than 1 for block math
+    num_rounds_treatment = 1
     num_rounds_practice = 2
-    num_rounds = num_rounds_treatment * num_treatments + num_rounds_practice
+    num_rounds = num_rounds_treatment * num_treatments + num_rounds_practice * sum([ 1 if x else 0 for x in practicerounds ])
     num_players = 12
     prodcost = 100
     consbenefit = 800
@@ -31,7 +32,7 @@ class Constants(BaseConstants):
     minprice = 0
     starting_tokens = maxprice
     # For convenience of testing the experience of players
-    show_instructions = True
+    show_instructions_admin = True # set false to not show any instructions whatsoever
 
 
 class Subsession(BaseSubsession):
@@ -44,6 +45,12 @@ class Subsession(BaseSubsession):
     treatment_first_singular = models.BooleanField(default=False, doc="True if block>1 and treatment==1")
     treatment_first_multiple = models.BooleanField(default=False, doc="True if block==2 and block1 treatment==1 ")
 
+    show_instructions_base = models.BooleanField(doc="True if basic instructions are to be shown this round.")
+    show_instructions_block = models.BooleanField(doc="True if new-block instructions are to be shown this round.")
+    show_instructions_roles = models.BooleanField(doc="True if role-specific instructions are to be shown this round.")
+    show_instructions_practice = models.BooleanField(doc="True if practice round specific instructions are to be shwn.")
+    show_instructions_real = models.BooleanField(doc="True if real round specific instructions are to be shown.")
+
     def vars_for_admin_report(self):
         return {"session_code": self.session.code,
                 }
@@ -52,34 +59,58 @@ class Subsession(BaseSubsession):
         # take the string inputted by the experimenter and change it to a list
         treatmentorder = [int(t) for t in self.session.config["treatmentorder"].split(",")]
 
+        def numpracticerounds(treat):
+            """
+                Helper function to determine treatment block variables.
+                :param treat: treatment number (1,2)
+                :return: the number of practice rounds that occured before treat
+            """
+            nums = [Constants.num_rounds_practice if x else 0 for x in Constants.practicerounds[: treat]]
+            return sum(nums)
+
+        # new treatment rounds
+        new_block_rounds = [1]
+        for i in [1, 2]:
+            new_block_rounds.append(Constants.num_rounds_treatment * i + numpracticerounds(i) + 1)
+
+        print(new_block_rounds)
+
+        # practice rounds
+        practice_rounds = []
+        for r in new_block_rounds:
+            for i in range(r, r + Constants.num_rounds_practice):
+               practice_rounds.append(i)
+
         # set treatment-level variables
-        if self.round_number <= Constants.num_rounds_practice:
-            # self.vars["practiceround"] = True
+        # Determine if this is the first round of a new block. This is also used to display new instructions
+        if self.round_number in new_block_rounds:
+            self.block_new = True
+            self.block = new_block_rounds.index(self.round_number) + 1
+        else:
+            self.block_new = False
+            # finds the block in which this round resides. seems like there must be an easier way...
+            self.block = new_block_rounds.index(
+                min(new_block_rounds, key=lambda x: abs(self.round_number - x) if x <= self.round_number else 999)) + 1
+
+        # print(self.round_number)
+        # print(self.block)
+
+        # Is this a practice round?
+        if self.round_number in practice_rounds:
             self.practiceround = True
             self.realround = False
         else:
-            # self.vars["practiceround"] = False
             self.practiceround = False
             self.realround = True
 
-        # Determine if this is the first round of a new block. This is also used to display new instructions
-        if self.round_number == 1:
-            self.block_new = True
-        elif self.round_number <= 1 + Constants.num_rounds_practice:
-            self.block_new = False
-        elif (self.round_number - Constants.num_rounds_practice) % Constants.num_rounds_treatment == 1:
-            self.block_new = True
-        else:
-            self.block_new = False
+        # if self.round_number == 1:
+        #     self.block = 1
+        # elif self.block_new:
+        #     self.block = self.in_round(self.round_number - 1).block + 1
+        # else:
+        #     self.block = self.in_round(self.round_number - 1).block
 
-
-        if self.round_number == 1:
-            self.block = 1
-        elif self.block_new:
-            self.block = self.in_round(self.round_number - 1).block + 1
-        else:
-            self.block = self.in_round(self.round_number - 1).block
-
+        # store treatment number and dims
         self.treatment = treatmentorder[self.block - 1]
         self.dims = Constants.treatmentdims[self.treatment - 1]
 
@@ -87,17 +118,29 @@ class Subsession(BaseSubsession):
         #   this is used for instructions logic.
         prev_treatments = treatmentorder[: (self.block - 1)]
         prev_dims = [Constants.treatmentdims[treatment - 1] for treatment in prev_treatments]
-        if self.round_number > 1 and self.dims == 1 and min([99] + prev_dims) > 1:
+        if self.block_new and self.round_number > 1 and self.dims == 1 and min([99] + prev_dims) > 1:
             self.treatment_first_singular = True
-        elif self.round_number > 1 and self.dims > 1 and max([0] + prev_dims) == 1:
+        elif self.block_new and self.round_number > 1 and self.dims > 1 and max([0] + prev_dims) == 1:
             self.treatment_first_multiple = True
 
-
+        # Instructions control variables
+        #   Show_instructions are instructions shown whenever a new block happens
+        #   ..._roles are role specific instructions shown a subset of the time
+        #   ..._practice are practice round specifc instructions show a subset of the time
+        self.show_instructions_base = True if self.round_number == 1 and Constants.show_instructions_admin else False
+        self.show_instructions_block = True if self.block_new and Constants.show_instructions_admin else False
+        self.show_instructions_roles = True if \
+            (self.round_number == 1 or self.treatment_first_singular or self.treatment_first_multiple) and \
+            Constants.show_instructions_admin else False
+        self.show_instructions_practice = True if (self.practiceround and not self.round_number-1 in practice_rounds) \
+            and Constants.show_instructions_admin else False
+        self.show_instructions_real = True if (self.realround and self.round_number - 1 in practice_rounds) \
+                                                  and Constants.show_instructions_admin else False
 
         # Set player level variables
         # Randomize groups each round.
-        if Constants.num_rounds_practice > 1 and self.round_number==2:
-            # need roles to be swapped between rounds one and two
+        # If previous round was a practice round, play opposite role this round
+        if self.round_number-1 in practice_rounds:
             matrix = self.get_group_matrix()
             for group in matrix:
                 # since roles assigned by row position, this should flip roles btween buyer and seller
@@ -105,6 +148,16 @@ class Subsession(BaseSubsession):
             self.set_group_matrix(matrix)
         else:
             self.group_randomly()
+
+        # if Constants.num_rounds_practice > 1 and self.round_number==2:
+        #     # need roles to be swapped between rounds one and two
+        #     matrix = self.get_group_matrix()
+        #     for group in matrix:
+        #         # since roles assigned by row position, this should flip roles btween buyer and seller
+        #         group.reverse()
+        #     self.set_group_matrix(matrix)
+        # else:
+        #     self.group_randomly()
 
         for p in self.get_players():
             # set player roles
@@ -154,8 +207,6 @@ class Group(BaseGroup):
         self.mkt_ask_spread = self.mkt_ask_max - self.mkt_ask_min
         self.mkt_bid_avg = float(sum([c.bid.total for c in contracts])) / len(contracts)
         self.mkt_ask_stdev_min = min(stdevs)
-
-
 
 
 

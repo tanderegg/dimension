@@ -4,44 +4,124 @@
     Seller Instructions
 {% endblock %}
 {% block content %}
+    <div class="col_container">
+        <div class="col">
+            <section>
+                <p>
+                    Sellers earn tokens by producing objects and selling them to buyers.  When you are a seller your only task is to set your {{ subsession.dims | pluralize:"price, sub-prices" }}.
+                </p>
+                <p>
+                    After buyers choose, you will automatically produce the number of objects that you sell.  Since there are two buyers, you can produce and sell between 0 and 2 objects each round.
+                </p>
+            </section>
+            <section>
+                <p>
+                    When you are a seller, each object you sell will cost you 100 tokens in production costs.  It is important to consider this when choosing your price{{ subsession.dims | pluralize }} since production costs will be subtracted from what you receive from buyers.
+                    The below chart summarizes the three possible outcomes for a seller.
+                </p>
+                <table class="seller_outcomes">
+                    <thead><tr>
+                        <th># Sold</th>
+                        <th>Received from Buyers</th>
+                        <th>Production Cost</th>
+                        <th>Total Earned</th>
+                    </tr></thead>
+                    <tbody>
+                        <tr>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr><tr>
+                            <td>1</td>
+                            {% if subsession.dims > 1 %}
+                                <td>Sum of sub-prices ("Total price")</td>
+                            {% else %}
+                                <td>Price</td>
+                            {% endif %}
+                            <td>100</td>
+                            {% if subsession.dims > 1 %}
+                                <td>"Total price" - 100</td>
+                            {% else %}
+                                <td>Price - 100</td>
+                            {% endif %}
+                        </tr><tr>
+                            <td>2</td>
+                            {% if subsession.dims > 1 %}
+                                <td>2 x "Total price"</td>
+                            {% else %}
+                                <td>2 x Price</td>
+                            {% endif %}
+                            <td>200</td>
+                            {% if subsession.dims > 1 %}
+                                <td>2 x "Total price" - 200</td>
+                            {% else %}
+                                <td>2 x Price</td>
+                            {% endif %}
+                        </tr>
+                </tbody></table>
+            </section>
+            <section>
+                <p>
+                    Now we will go over how sellers set {{ subsession.dims | pluralize:"prices,sub-prices" }}. To the right, you see an example of the seller interface. Feel free to experiment with entering prices there.
+                </p>
+                <p>
+                    There are a few things to keep in mind:
+                </p>
 
-        <h3>Imagine that you are playing as a <i>seller</i>.</h3>
-        <p>Each match, you will be placed into a group with {{ Constants.buyers_per_group }} buyers and {{ Constants.sellers_per_group|add:-1 }} other seller{{ Constants.sellers_per_group|add:-1 | pluralize }}.
-        </p>
+                <ol>
+                    <li>{{ subsession.dims | pluralize:"Prices,Sub-prices" }} must be whole numbers (no decimals).</li>
+                    <li>{{ subsession.dims | pluralize:"Prices,Sub-prices" }} cannot be negative.</li>
+                    <li>{{ subsession.dims | pluralize:"Prices,The total price (sum of sub-prices)" }} cannot exceed 800 tokens.</li>
+                    {% if subsession.dims > 1 %}
+                        <li>You must enter values for all sub-prices.</li>
+                    {% endif %}
+                </ol>
 
-			<p>
-                You can produce and sell objects to earn tokens.  You do not value owning objects themselves, but you can sell objects to buyers.  As a seller, you first choose the price{{ subsession.dims |pluralize }} at which you will sell objects in the market.
-                {% if subsession.dims > 1 %}
-                    In this game, <b>each object has {{ subsession.dims }} price{{ subsession.dims |pluralize }}</b>. All {{ subsession.dims }} price{{ subsession.dims |pluralize }} are for a single object, and each object you sell will earn you the sum of the {{ subsession.dims }} price{{ subsession.dims |pluralize }}.
-                {% endif %}
-            </p>
+            </section>
+            {% if subsession.dims > 1 %}
+                <section>
+                    <p>
+                        There are 2 ways to set sub-prices:
+                    </p>
+                    <ol>
+                        <li>Enter a total price in the “Total price” box and then press the “Distribute” button.  This will enter random sub-prices that sum to your total price.</li>
+                        <li>Type values for each sub-price.</li>
 
-        <p>After you set your price{{ subsession.dims |pluralize }}, the buyers will decide if they want to buy from you or from the other seller.  You will then automatically produce the number of objects you sold in the market.
-        </p>
-        <p>Your cost of production is {{ Constants.prodcost }} tokens per objects.  So,</p>
-        <ul>
-            <li>If you sell zero objects, you make 0 tokens and spend 0 tokens.</li>
-            <li>If you sell one object, you make
-                {% if subsession.dims > 1 %}
-                    the sum of your {{ subsession.dims }} prices
-                {% else %}
-                    your price
-                {% endif %}
-                and spend {{ Constants.prodcost }} tokens.
-            </li>
-            <li>
-                If you sell two objects, you make <i>two times</i>
-                {% if subsession.dims > 1 %}
-                    the sum of your {{ subsession.dims }} prices
-                {% else %}
-                    your price
-                {% endif %}
-                and spend {{ Constants.prodcost|add:Constants.prodcost }} tokens.
-            </li>
-        </ul>
+                    </ol>
+                    <p>
+                        You can press the distribute button as many times as you like.
+                    </p>
+
+                    <p>
+                        You change edit individual sub-prices even if you already pressed the distribute button.
+                    </p>
 
 
+                </section>
+            {% endif %}
+            <section>
+                <p>
+                    Before continuing, please try to set the {{ subsession.dims | pluralize:"price,sub-prices" }} in the example interface to the right.
+                </p>
+            </section>
+            <nav>
+                <input type="button" class="a-btn next" value="Next"></input>
+                <input type="submit"></input>
+                <input type="button" class="a-btn prev" value="Previous" disabled="disabled"></input>
+            </nav>
+        </div>
+        <div class="col">
+            {% include "duopoly_rep_treat/parts/sellerChoicePart.html" with example="True" %}
+        </div>
+    </div>
 
-<p><button class="a-btn next">Next</button></p>
+{% endblock %}
+{% block app_styles %}
+   <link href="{% static "duopoly_rep_treat/seller.css" %}" rel="stylesheet">
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'duopoly_rep_treat/utils.js' %}"></script>
+    <script type="text/javascript" src="{% static 'duopoly_rep_treat/seller.js' %}"></script>
 
 {% endblock %}

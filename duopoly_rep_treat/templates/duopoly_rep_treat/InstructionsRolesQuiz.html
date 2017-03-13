@@ -1,0 +1,78 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+	Game Basics
+{% endblock %}
+
+{% block content %}
+
+	<div class="quiz_js">
+        <div class="question">
+            <h3>True or False: Buyers earn fewer tokens if they pay a higher price.</h3>
+            <div class="controls">
+                <ul>
+                    <li>
+                        <label for="q1_1">
+                            <input type="radio" name="q1" value="True" id="q1_1" data-correct="true">
+                            True
+                        </label>
+                    </li>
+                    <li>
+                        <label for="q1_2"><input type="radio" name="q1" value="False" id="q1_2">
+                            False
+                        </label>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="answer">
+            <h2 class="correct">Correct!</h2>
+            <h2 class="incorrect">The correct answer is: True.</h2>
+            <p>Buyers will always earn more tokens if they pay a lower price.</p>
+        </div>
+    </div>
+    <div class="quiz_js">
+        <div class="question">
+            <h3>True or False: Sellers earn more tokens if they set a higher price.</h3>
+            <div class="controls">
+                <ul>
+                    <li>
+                        <label for="q2_1">
+                            <input type="radio" name="q2" value="True" id="q2_1">
+                            True
+                        </label>
+                    </li>
+                    <li>
+                        <label for="q2_2"><input type="radio" name="q2" value="False" id="q2_2">
+                            False
+                        </label>
+                    </li>
+                    <li>
+                        <label for="q2_3"><input type="radio" name="q2" value="It depends" id="q2_3" data-correct="true">
+                            It depends
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="answer">
+            <h2 class="correct">Correct!</h2>
+            <h2 class="incorrect">The correct answer is: It depends.</h2>
+            <p>Since there are two sellers in each group, there is no guarantee that a seller will sell an object &mdash; a higher price may lead a buyer to choose from the other seller.</p>
+            <p>However, if a seller does sell an object, then a higher price will earn more tokens.</p>
+        </div>
+    </div>
+	<nav>
+        <input type="button" class="a-btn next" value="Next"></input>
+        <input type="submit"></input>
+    </nav>
+
+{% endblock %}
+{% block app_styles %}
+   <link href="{% static "duopoly_rep_treat/quiz.css" %}" rel="stylesheet">
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'duopoly_rep_treat/quiz.js' %}"></script>
+{% endblock %}

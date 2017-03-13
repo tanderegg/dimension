@@ -2,26 +2,31 @@
 {% load staticfiles otree_tags %}
 
 {% block title %}
-	Paid Matches
+	Paid Rounds
 {% endblock %}
 
 {% block content %}
     {% if subsession.block = 1 %}
-	    <h3>We will now begin the paid matches.</h3>
+	    <p>We will now begin the paid rounds for this game.</p>
     {% endif %}
     <p>
-        If you have any questions at this time, please raise your hand now.
+        If you have any questions at this time, please raise your hand.
     </p>
-    <p>You will play <b>{{ Constants.num_rounds_treatment }} match{{Constants.num_rounds_treatment|pluralize:"es"}}</b> of this game.
+    <p>You will play {{ Constants.num_rounds_treatment }} paid round{{Constants.num_rounds_treatment|pluralize}} of this game.
         {% if subsession.block < Constants.num_treatments %}
-            After these matches, you will receive additional instructions.
+            After this, you will receive additional instructions.
         {% endif %}
     </p>
     <p>
-        If you have any questions during theses matches, please raise your hand and someone will assist you in private.
+        If you have any questions during the paid rounds, please raise your hand and someone will assist you in private.
 	</p>
 
-    <!--<p><button class="a-btn next">Next</button></p>-->
+    {% if session.config.experimenter_present == False %}
+        <nav>
+            <button class="a-btn next">Next</button>
+            <input type="submit"></input>
+        </nav>
+    {% endif %}
 
 
 {% endblock %}
