@@ -3,8 +3,9 @@
 var resultHandlerManual = function(result) {
     // Do NOT over-write the sub-price fields as this causes unwanted behavior if there is network latency
 
-    $("#id_ask_total").val(result.ask_total);
-    $("#id_ask_stdev").val(result.ask_stdev);
+    // Updating via JS instead to avoid race conditions
+    //$("#id_ask_total").val(result.ask_total); // updating via js first
+    //$("#id_ask_stdev").val(result.ask_stdev);
 };
 var resultHandlerAuto = function(result) {
     // Over-writing user-input to enforce consistency.  The only reason this should ever be different
@@ -28,9 +29,22 @@ $(document).ready(function() {
     $(".pricedim").change(function () {
 
         var pricedims = [];
+        var sum = 0;
         $(".pricedim").each(function (i, input) {
-            pricedims.push($(input).val());
+            var val = parseInt($(input).val()) ? parseInt($(input).val()) : 0;
+            pricedims.push(val);
+            sum += val;
         });
+        var avg = sum/pricedims.length;
+        var std = 0;
+        $(pricedims).each(function (i, val) {
+            std += Math.pow(val - avg, 2) / pricedims.length;
+        });
+        std = Math.pow(std, 0.5) ;
+
+        // Set totals variables via js
+        $("#id_ask_total").val(sum);
+        $("#id_ask_stdev").val(std);
 
         var data = get_metadata($("#distribute"));
         data.pricedims = pricedims.toString();

@@ -10,7 +10,11 @@ $(document).ready(function() {
     var enablePrev = function(){
         $("nav .prev").removeAttr("disabled");
     }
-
+    var submitForm = function(){
+        // This method is better than form.submit() bc it enables the browser's native field validation
+        // Every page should have this element, and invisible submit input.
+        $("nav input[type='submit']").click();
+    }
 
     var sections = $("section");
     var quiz = $("div.quiz_js");
@@ -33,9 +37,12 @@ $(document).ready(function() {
         var selectSection = function(selected, i){
             // form, dots, and sections are in scope
             if(i == sections.length){
-                // this is better than form.submit bc it gets the browsers field validation
-                $("nav input[type='submit']").click();
-                // in case submit fails due to field validation
+                // setting a brief timeout to let race conditions resolve.
+                //  In particular, when manually editing sub-prices manually,
+                //  we need to allow total price to update.
+                //setTimeout(submitForm, 100);
+                submitForm();
+                // return valid in case submit fails due to field validation
                 return selected;
             }
             sections.eq(selected).removeClass("selected");
@@ -83,10 +90,7 @@ $(document).ready(function() {
         disablePrev();
         // $("nav .next").attr("type", "submit");
         $("nav .next").click(function(){
-            // Every page should have this element, and invisible submit input.
-            // It would be easier to make the next button into a "submit" type, but this methodolody matches
-            //  the methodology for multiple navigation pages
-            $("nav input[type='submit']").click();
+            submitForm();
         });
     }
 
