@@ -69,10 +69,13 @@
             </section>
             <section>
                 <p>
-                    Now we will go over how sellers set {{ subsession.dims | pluralize:"prices,sub-prices" }}. To the right is an example of a seller's interface. Feel free to enter prices there to see how it works.
+                    {% if subsession.round_number == 1 %}
+                        Now we will go over how sellers set {{ subsession.dims | pluralize:"prices,sub-prices" }}.
+                    {% endif %}
+                    To the right is an example of a seller's interface. Feel free to enter prices there to see how it works.
                 </p>
                 <p>
-                    There are a few things to keep in mind:
+                    Things to keep in mind when setting prices:
                 </p>
 
                 <ol>

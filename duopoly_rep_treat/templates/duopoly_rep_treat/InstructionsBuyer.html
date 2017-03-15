@@ -9,17 +9,19 @@
     <div class="col_container">
         <div class="col">
             <section>
-                <p>
-                    A buyer earns tokens by buying an object from a seller and then giving it to the experimenter.
-                </p>
-                <p>
-                    The experimenter gives {{ Constants.consbenefit }} tokens for an object.
-                </p><p>
-                    When you are a buyer, your only job is to choose whether you want to buy an object from Seller 1 or Seller 2.
-                </p>
+                {% if subsession.round_number == 1 %}
+                    <p>
+                        A buyer earns tokens by buying an object from a seller and then giving it to the experimenter.
+                    </p>
+                    <p>
+                        The experimenter gives {{ Constants.consbenefit }} tokens for an object.
+                    </p><p>
+                        When you are a buyer, your only job is to choose whether you want to buy an object from Seller 1 or Seller 2.
+                    </p>
+                {% endif %}
                 {% if subsession.dims == 1 %}
                     <p>
-                        After a buyer chooses a seller, the buyer pays the seller the seller's price.
+                        As a buyer, after you choose a seller, you will pay the seller the seller's price.
                     </p>
                 {% endif %}
                 <p>
@@ -37,13 +39,15 @@
                     </p>
                 </section>
             {% endif %}
-            <section>
-                <p>
-                    After you buy an object, you will automatically give the object to the experimenter and get {{ Constants.consbenefit }} tokens.
-                </p><p>
-                    Other than the price, it does not matter which seller you choose &mdash; the sellers' objects are the same in every way.
-                </p>
-            </section>
+            {% if subsession.round_number == 1 %}
+                <section>
+                    <p>
+                        After you buy an object, you will automatically give the object to the experimenter and get {{ Constants.consbenefit }} tokens.
+                    </p><p>
+                        Other than the price, it does not matter which seller you choose &mdash; the sellers' objects are the same in every way.
+                    </p>
+                </section>
+            {% endif %}
             <section>
                 <p>
                     Therefore, accounting for everything, within a given round, you will gain {{ Constants.consbenefit }} tokens and lose the {{ subsession.dims | pluralize:"price,total price" }} you pay for the object.

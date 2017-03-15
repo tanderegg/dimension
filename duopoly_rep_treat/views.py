@@ -79,7 +79,7 @@ class InstructionsSeller(Page):
 class InstructionsSellerQuiz(Page):
 
     def is_displayed(self):
-        return self.subsession.show_instructions_roles
+        return self.subsession.show_instructions_base or self.subsession.treatment_first_multiple
 
 
 class InstructionsBuyer(Page):
@@ -95,7 +95,7 @@ class InstructionsBuyer(Page):
 class InstructionsBuyerQuiz(Page):
 
     def is_displayed(self):
-        return self.subsession.show_instructions_roles
+        return self.subsession.show_instructions_base
 
 
 class InstructionsRoundResults(Page):
