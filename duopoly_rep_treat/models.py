@@ -90,8 +90,6 @@ class Subsession(BaseSubsession):
             self.block = new_block_rounds.index(
                 min(new_block_rounds, key=lambda x: abs(self.round_number - x) if x <= self.round_number else 999)) + 1
 
-        # print(self.round_number)
-        # print(self.block)
 
         # Is this a practice round?
         if self.round_number in practice_rounds:
@@ -139,6 +137,7 @@ class Subsession(BaseSubsession):
         # Randomize groups each round.
         # If previous round was a practice round, play opposite role this round
         if self.round_number in practice_rounds and self.round_number-1 in practice_rounds:
+            self.group_like_round(self.round_number - 1)
             matrix = self.get_group_matrix()
             for group in matrix:
                 # since roles assigned by row position, this should flip roles btween buyer and seller
@@ -146,6 +145,7 @@ class Subsession(BaseSubsession):
             self.set_group_matrix(matrix)
         else:
             self.group_randomly()
+
 
         # if Constants.num_rounds_practice > 1 and self.round_number==2:
         #     # need roles to be swapped between rounds one and two
