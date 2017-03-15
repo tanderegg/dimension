@@ -33,11 +33,6 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-
-    def set_payoff(self):
-        """Calculate payoff, which is zero for the survey"""
-        self.payoff = 0
-
     q_risk1 = models.PositiveIntegerField(initial=None,
                                 choices=[
                                     [1, 'A 50% chance of $35'],

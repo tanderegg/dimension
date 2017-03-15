@@ -8,8 +8,6 @@ from .models import Constants
 class Risk1(Page):
     form_model = models.Player
     form_fields = ['q_risk1']
-    def before_next_page(self):
-        self.player.set_payoff()
 
 # Questions 2 and 3 are conditional on the first response
 class Risk2(Page):

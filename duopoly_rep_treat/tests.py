@@ -20,13 +20,20 @@ class PlayerBot(Bot):
           yield(views.InstructionsRolesQuiz)
 
         # New treatment page only comes in between two treatments for paid rounds
-        if (self.subsession.show_instructions_block and not self.subsession.show_instructions_base):
+        if ((self.subsession.show_instructions_base and self.subsession.dims > 1) or \
+               (self.subsession.show_instructions_block and not self.subsession.show_instructions_base)):
           yield(views.InstructionsNewTreatment)
 
         if (self.subsession.show_instructions_roles):
           yield(views.InstructionsSeller)
+
+        if (self.subsession.show_instructions_base or self.subsession.treatment_first_multiple):
           yield(views.InstructionsSellerQuiz)
+
+        if (self.subsession.show_instructions_roles):
           yield(views.InstructionsBuyer)
+          
+        if (self.subsession.show_instructions_base):
           yield(views.InstructionsBuyerQuiz)
 
         if (self.subsession.show_instructions_base):
