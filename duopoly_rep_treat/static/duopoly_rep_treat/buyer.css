@@ -6,7 +6,7 @@ section{
 
 /* General Buyer */
 table{
-    margin-left: 56px;
+    margin-left: 50px;
     width: 265px;
 }
 table th{
@@ -17,7 +17,7 @@ table th:first-child{
 }
 
 .col:last-child{
-    margin-right: -60px;
+    margin-right: -40px;
 }
 td label{
     color: #888;
@@ -33,9 +33,9 @@ td{
 #buyer-choice-radios{
     float: left;
     position: relative;
-    width: 380px;
+    width: 355px;
     margin-top: 30px;
-    /*margin-left: -60px;*/
+    margin-left: 10px;
 }
 #buyer-choice-radios .controls{
     border: 1px solid #5b616b;
@@ -51,7 +51,7 @@ td{
     position: relative;
     float: left;
     /*background-color: #bbb;*/
-    padding: 8px 12px;
+    padding: 8px;
     border-left: 1px solid #5b616b;
     cursor: pointer;
     font-size:20px;

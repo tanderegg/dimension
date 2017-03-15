@@ -10,7 +10,10 @@
         <div class="col">
             <section>
                 <p>
-                    A buyer earns tokens by buying an object from a seller and then giving it to the experimenter.  The experimenter will give {{ Constants.consbenefit }} tokens for an object.
+                    A buyer earns tokens by buying an object from a seller and then giving it to the experimenter.
+                </p>
+                <p>
+                    The experimenter gives {{ Constants.consbenefit }} tokens for an object.
                 </p><p>
                     When you are a buyer, your only job is to choose whether you want to buy an object from Seller 1 or Seller 2.
                 </p>
@@ -39,8 +42,11 @@
                     After you buy an object, you will automatically give the object to the experimenter and get {{ Constants.consbenefit }} tokens.
                 </p><p>
                     Other than the price, it does not matter which seller you choose &mdash; the sellers' objects are the same in every way.
-                </p><p>
-                    Therefore, accounting for everything, within a given round you will gain {{ Constants.consbenefit }} tokens and lose the total price you pay for the object.
+                </p>
+            </section>
+            <section>
+                <p>
+                    Therefore, accounting for everything, within a given round, you will gain {{ Constants.consbenefit }} tokens and lose the {{ subsession.dims | pluralize:"price,total price" }} you pay for the object.
                 </p><p>
                     Before continuing, please choose a seller in the example interface to the right.
                 </p>
