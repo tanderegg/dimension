@@ -59,7 +59,8 @@ class InstructionsRolesQuiz(Page):
 class InstructionsNewTreatment(Page):
 
     def is_displayed(self):
-        return self.subsession.show_instructions_block and not self.subsession.show_instructions_base
+        return (self.subsession.show_instructions_base and self.subsession.dims > 1) or \
+               (self.subsession.show_instructions_block and not self.subsession.show_instructions_base)
 
 
 class InstructionsSeller(Page):
