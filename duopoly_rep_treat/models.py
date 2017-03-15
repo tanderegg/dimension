@@ -73,8 +73,6 @@ class Subsession(BaseSubsession):
         for i in [1, 2]:
             new_block_rounds.append(Constants.num_rounds_treatment * i + numpracticerounds(i) + 1)
 
-        print(new_block_rounds)
-
         # practice rounds
         practice_rounds = []
         for r in new_block_rounds:
@@ -140,7 +138,7 @@ class Subsession(BaseSubsession):
         # Set player level variables
         # Randomize groups each round.
         # If previous round was a practice round, play opposite role this round
-        if self.round_number-1 in practice_rounds:
+        if self.round_number in practice_rounds and self.round_number-1 in practice_rounds:
             matrix = self.get_group_matrix()
             for group in matrix:
                 # since roles assigned by row position, this should flip roles btween buyer and seller
