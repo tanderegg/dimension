@@ -14,10 +14,10 @@
         </p>
     {% elif subsession.treatment_first_multiple %}
         <p>
-            In this game the price of an object is composed of “sub-prices”. A sub-price is a part of the total price.  Sellers will choose values for each sub-price and buyers will pay sellers the sum of all the sub-prices.
+            In this game the price of an object is made up of “sub-prices”. A sub-price is a part of the total price.  Sellers will choose values for each sub-price and buyers will pay sellers the sum of all the sub-prices.
         </p>
         <p>
-            The challenge for buyers will be that they will not see the total price – buyers will only see the sub-prices before they make their choices.
+            Buyers will not see the total price &mdash; instead, buyers will only see the sub-prices before they make their choices.
         </p>
         <p>
             In this game, each object has {{ subsession.dims }} sub-prices.
@@ -27,7 +27,7 @@
         </p>
     {% else %}
         <p>
-            In this game, objects have {{ subsession.dims }} sub-prices.
+            In this game, each object has {{ subsession.dims }} sub-prices.
         </p>
         <p>
             As before, sellers will choose values for all sub-prices, and buyers will pay sellers the sum of all the sub-prices.

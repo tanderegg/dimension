@@ -6,25 +6,31 @@
 {% block content %}
     <div class="col_container">
         <div class="col">
+            {% if subsession.round_num == 1  %}
+                <section>
+                    <p>
+                        Sellers earn tokens by producing objects and selling them to buyers.  When you are a seller, your only job is to set your {{ subsession.dims | pluralize:"price, sub-prices" }}.
+                    </p>
+                    <p>
+                        When a buyer chooses to buy an object from you, you will automatically produce it.  Since there are two buyers in your group, you can sell 0, 1, or 2 objects each round.
+                    </p>
+                </section>
+            {% endif %}
             <section>
+                {% if subsession.round_num == 1  %}
+                    <p>
+                        When you are a seller, each object you sell will cost you 100 tokens to produce.  Your total earnings at the end of a round will therefore equal the tokens you received from buyers, less your total production costs.
+                    </p>
+                {% endif %}
                 <p>
-                    Sellers earn tokens by producing objects and selling them to buyers.  When you are a seller your only task is to set your {{ subsession.dims | pluralize:"price, sub-prices" }}.
-                </p>
-                <p>
-                    After buyers choose, you will automatically produce the number of objects that you sell.  Since there are two buyers, you can produce and sell between 0 and 2 objects each round.
-                </p>
-            </section>
-            <section>
-                <p>
-                    When you are a seller, each object you sell will cost you 100 tokens in production costs.  It is important to consider this when choosing your price{{ subsession.dims | pluralize }} since production costs will be subtracted from what you receive from buyers.
-                    The below chart summarizes the three possible outcomes for a seller.
+                    This table summarizes what can happen each round:
                 </p>
                 <table class="seller_outcomes">
                     <thead><tr>
                         <th># Sold</th>
                         <th>Received from Buyers</th>
                         <th>Production Cost</th>
-                        <th>Total Earned</th>
+                        <th>Total Earnings</th>
                     </tr></thead>
                     <tbody>
                         <tr>
@@ -63,7 +69,7 @@
             </section>
             <section>
                 <p>
-                    Now we will go over how sellers set {{ subsession.dims | pluralize:"prices,sub-prices" }}. To the right, you see an example of the seller interface. Feel free to experiment with entering prices there.
+                    Now we will go over how sellers set {{ subsession.dims | pluralize:"prices,sub-prices" }}. To the right is an example of a seller's interface. Feel free to enter prices there to see how it works.
                 </p>
                 <p>
                     There are a few things to keep in mind:

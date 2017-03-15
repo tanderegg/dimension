@@ -6,18 +6,18 @@
 {% endblock %}
 
 {% block content %}
-	<p>We will now go through {{ Constants.num_rounds_practice }} practice rounds.</p>
+	<p>We will now go through {{ Constants.num_rounds_practice }} practice rounds to help you understand the game.</p>
     <p>
-		 You are not paid for your performance in these rounds; they are simply meant to familiarize you with the game before you begin the paid rounds.
+		 You will not be paid for your performance in these rounds.
     </p>
 
     <p>
-    You will play the {{ player.roledesc }} role this
-    {% if Constants.num_rounds_practice > 1 %}
-         round and the {{ otherrole }} role next round.
-    {% else %}
-        round.
-    {% endif %}
+        You will play the {{ player.roledesc }} role this
+        {% if Constants.num_rounds_practice > 1 %}
+             round and in the second practice round you will play the {{ otherrole }} role.
+        {% else %}
+            round.
+        {% endif %}
     </p>
     <nav>
         <button class="a-btn next">Next</button>

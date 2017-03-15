@@ -10,9 +10,9 @@
         <div class="col">
             <section>
                 <p>
-                    Buyers earn tokens by buying objects from sellers and then exchanging them for tokens.
+                    A buyer earns tokens by buying an object from a seller and then giving it to the experimenter.  The experimenter will give {{ Constants.consbenefit }} tokens for an object.
                 </p><p>
-                    When you are a buyer, your only task is to choose the seller you want to buy from.
+                    When you are a buyer, your only job is to choose whether you want to buy an object from Seller 1 or Seller 2.
                 </p>
                 {% if subsession.dims == 1 %}
                     <p>
@@ -20,25 +20,27 @@
                     </p>
                 {% endif %}
                 <p>
-                    To the right is an example buyer interface. Feel free to experiment with choosing a seller there.
+                    To the right is an example of a buyer's interface.
                 </p>
 
             </section>
             {% if subsession.dims > 1 %}
                 <section>
                     <p>
-                        As you can see, buyers do not see the sellers’ total prices, but they do see their sub-prices.
+                        As you can see in the example interface, if you are a buyer, you will not see the sellers’ total prices.  Instead, you will see their sub-prices.
                     </p>
                     <p>
-                        After a buyer chooses a seller, the buyer pays the seller the sum of the seller’s sub-prices (the total price).
+                        After you choose a seller, you will pay the seller the sum of the seller’s sub-prices (the total price).
                     </p>
                 </section>
             {% endif %}
             <section>
                 <p>
-                    After the buyer buys an object, the buyer will automatically exchange the object with the experimenter for 800 tokens.
+                    After you buy an object, you will automatically give the object to the experimenter and get {{ Constants.consbenefit }} tokens.
                 </p><p>
-                    Other than the price, it does not matter which seller the buyers buy from – they will always get 800 tokens at the end of the round.
+                    Other than the price, it does not matter which seller you choose &mdash; the sellers' objects are the same in every way.
+                </p><p>
+                    Therefore, accounting for everything, within a given round you will gain {{ Constants.consbenefit }} tokens and lose the total price you pay for the object.
                 </p><p>
                     Before continuing, please choose a seller in the example interface to the right.
                 </p>

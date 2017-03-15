@@ -6,7 +6,11 @@ table.seller_outcomes{
 .seller_widget.example{
     display: none;
 }
+
 form.selected_section_2 .seller_widget.example, form.selected_section_3 .seller_widget.example, form.selected_section_4 .seller_widget.example{
+    display: inline;
+}
+form.selected_section_1 .seller_widget.example.truncated_instructions{
     display: inline;
 }
 section{
