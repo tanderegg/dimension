@@ -21,6 +21,17 @@ class IntroductionPRA(Page):
     def is_displayed(self):
         return self.subsession.show_instructions_base
 
+# class InstructionsSellerQ1(Page):
+#     form_model = models.Player
+#     form_fields = ['quiz_q1']
+#
+#     def is_displayed(self):
+#         return self.subsession.show_instructions_base
+#
+# class InstructionsSellerQ1Ans(Page):
+#
+#     def is_displayed(self):
+#         return self.subsession.show_instructions_base
 
 # INSTRUCTIONS PAGES
 class InstructionsBasics(Page):
@@ -35,6 +46,8 @@ class InstructionsBasics(Page):
         }
 
 class InstructionsBasicsQuiz(Page):
+    form_model = models.Player
+    form_fields = ['basics_q1']
 
     def is_displayed(self):
         return self.subsession.show_instructions_base
@@ -51,6 +64,8 @@ class InstructionsRoles(Page):
         return self.subsession.show_instructions_base
 
 class InstructionsRolesQuiz(Page):
+    form_model = models.Player
+    form_fields = ['roles_q1', 'roles_q2']
 
     def is_displayed(self):
         return self.subsession.show_instructions_base
@@ -77,6 +92,8 @@ class InstructionsSeller(Page):
         return self.subsession.show_instructions_roles
 
 class InstructionsSellerQuiz(Page):
+    form_model = models.Player
+    form_fields = ['seller_q1']
 
     def is_displayed(self):
         return self.subsession.show_instructions_base or self.subsession.treatment_first_multiple
@@ -93,6 +110,8 @@ class InstructionsBuyer(Page):
         }
 
 class InstructionsBuyerQuiz(Page):
+    form_model = models.Player
+    form_fields = ['buyer_q1']
 
     def is_displayed(self):
         return self.subsession.show_instructions_base
@@ -315,7 +334,6 @@ def AutoPricedims(request):
         ask = player.create_ask(total=pricejson["ask_total"], auto=True, manual=False, stdev=pricejson["ask_stdev"],
                             pricedims=pricejson["pricedims"])
 
-    print(pricejson)
     return JsonResponse(pricejson)
 
 def ManualPricedims(request):
@@ -431,6 +449,8 @@ page_sequence = [
     WaitStartInstructions,
     IntroductionSplash,
     IntroductionPRA,
+    # InstructionsSellerQ1,
+    # InstructionsSellerQ1Ans,
     InstructionsBasics,
     InstructionsBasicsQuiz,
     # InstructionsPayment,

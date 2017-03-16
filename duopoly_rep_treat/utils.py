@@ -177,7 +177,7 @@ def get_autopricedims(ask_total, numdims):
     # this rounds the numbers to nearest int
     #   and makes sure there is no negative #s or numbers greater than maxVal
     dvalues = copy.copy(rawvals)
-    print(dvalues)
+    # print(dvalues)
 
     def diff():
         """ gets value to control while loops """
@@ -191,7 +191,7 @@ def get_autopricedims(ask_total, numdims):
             # increment while staying in bounds
             dvalues[dim] = max(0, dvalues[dim] + increment)
             dvalues[dim] = min(Constants.maxprice, dvalues[dim])
-        print(dvalues)
+        # print(dvalues)
 
     # Now we get to our target by incrementing a randomly chosen subset of dims without replacement.
     #   This will distort the chosen stdev somewhat, but not a lot.
@@ -203,7 +203,7 @@ def get_autopricedims(ask_total, numdims):
         for dim in dims:
             dvalues[dim] = max(0, dvalues[dim] + increment)
             dvalues[dim] = min(Constants.maxprice, dvalues[dim])
-        print(dvalues)
+        # print(dvalues)
 
     return {
         'ask_total': ask_total,

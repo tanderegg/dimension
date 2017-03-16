@@ -375,7 +375,7 @@ def export_docs(app_name):
                 Model = Session
             else:
                 Model = getattr(models_module, model_name)
-            print(model_name)
+            # print(model_name)
 
             field_names = set(field.name for field in Model._meta.fields)
 
@@ -431,36 +431,5 @@ def export_docs(app_name):
 
         return header, body
 
-        # output = u'\n'.join(lines)
-        # return output.replace('\n', line_break).replace('\t', '    ')
-
-    # def docs_as_string(doc_dict):
-    #
-    #     first_line = '{}: Documentation'.format(app_name_format(app_name))
-    #     second_line = '*' * len(first_line)
-    #
-    #     lines = [
-    #         first_line, second_line, '',
-    #         'Accessed: {}'.format(datetime.date.today().isoformat()), '']
-    #
-    #     app_doc = getattr(models_module, 'doc', '')
-    #     if app_doc:
-    #         lines += [app_doc, '']
-    #
-    #     for model_name in doc_dict:
-    #         lines.append(model_name)
-    #
-    #         for member in doc_dict[model_name]:
-    #             lines.append('\t{}'.format(member))
-    #             for info_type in doc_dict[model_name][member]:
-    #                 lines.append('\t\t{}'.format(info_type))
-    #                 for info_line in doc_dict[model_name][member][info_type]:
-    #                     lines.append(u'{}{}'.format('\t' * 3, info_line))
-
-        # output = u'\n'.join(lines)
-        # return output.replace('\n', line_break).replace('\t', '    ')
-
     doc_dict = generate_doc_dict()
     return docs_as_lists(doc_dict)
-    # doc = docs_as_string(doc_dict)
-    # fp.write(doc)

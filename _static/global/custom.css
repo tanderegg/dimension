@@ -19,7 +19,7 @@ section{
     float: left;
     height: auto;
     display: none;
-    min-height: 275px;
+    min-height: 315px;
 
 }
 section.selected{

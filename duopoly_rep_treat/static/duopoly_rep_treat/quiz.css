@@ -3,7 +3,7 @@
     float: left;
     position: relative;
     display: none;
-    min-height: 205px
+    min-height: 212px
 }
 .quiz_js.selected{
     display: inline;

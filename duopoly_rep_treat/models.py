@@ -99,13 +99,6 @@ class Subsession(BaseSubsession):
             self.practiceround = False
             self.realround = True
 
-        # if self.round_number == 1:
-        #     self.block = 1
-        # elif self.block_new:
-        #     self.block = self.in_round(self.round_number - 1).block + 1
-        # else:
-        #     self.block = self.in_round(self.round_number - 1).block
-
         # store treatment number and dims
         self.treatment = treatmentorder[self.block - 1]
         self.dims = Constants.treatmentdims[self.treatment - 1]
@@ -145,17 +138,6 @@ class Subsession(BaseSubsession):
             self.set_group_matrix(matrix)
         else:
             self.group_randomly()
-
-
-        # if Constants.num_rounds_practice > 1 and self.round_number==2:
-        #     # need roles to be swapped between rounds one and two
-        #     matrix = self.get_group_matrix()
-        #     for group in matrix:
-        #         # since roles assigned by row position, this should flip roles btween buyer and seller
-        #         group.reverse()
-        #     self.set_group_matrix(matrix)
-        # else:
-        #     self.group_randomly()
 
         for p in self.get_players():
             # set player roles
@@ -215,15 +197,19 @@ class Player(BasePlayer):
     roledesc = models.CharField(doc="The player's role description. E.g., 'Seller' or 'Buyer'")
 
     # Instruction Questions
+    basics_q1 = models.CharField()
+    roles_q1 = models.CharField()
+    roles_q2 = models.CharField()
+    seller_q1 = models.CharField()
+    buyer_q1 = models.CharField()
+
     quiz_q1 = models.CharField(
         choices = ['0 tokens', '{} tokens'.format(Constants.consbenefit), 'It depends on the prices I set'],
-        blank = True,
         widget = widgets.RadioSelect(),
         verbose_name = "How many tokens will you receive if you don't sell an object?")
 
     quiz_q2 = models.CharField(
         choices = ['0 tokens', '{} tokens'.format(Constants.consbenefit), 'It depends on the prices I set'],
-        blank = True,
         widget = widgets.RadioSelect(),
         verbose_name = 'How many tokens will you receive if you sell an object?')
     
