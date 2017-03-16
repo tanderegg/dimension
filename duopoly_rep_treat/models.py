@@ -128,7 +128,8 @@ class Subsession(BaseSubsession):
 
         # Set player level variables
         # Randomize groups each round.
-        # If previous round was a practice round, play opposite role this round
+        # If this is practice round and if previous round was a practice round,
+        #    then play opposite role this round
         if self.round_number in practice_rounds and self.round_number-1 in practice_rounds:
             self.group_like_round(self.round_number - 1)
             matrix = self.get_group_matrix()
@@ -172,11 +173,19 @@ class Group(BaseGroup):
             buyer = contract.bid.player
 
             seller.numsold += 1
-            seller.payoff += seller.ask_total - Constants.prodcost
 
-            buyer.payoff = Constants.consbenefit - buyer.bid_total
+            if self.subsession.practiceround:
+                seller.payoff = 0
+                buyer.payoff  = 0
+            else:
+                seller.payoff += seller.ask_total - Constants.prodcost
+                buyer.payoff = Constants.consbenefit - buyer.bid_total
 
         for player in self.get_players():
+            if self.subsession.round_number == 1:
+                # Give players their starting token allocation
+                player.payoff += Constants.consbenefit
+            # keep track of interim total payoff
             player.payoff_interim = player.payoff + player.participant.payoff
 
         # Market data
@@ -203,18 +212,6 @@ class Player(BasePlayer):
     seller_q1 = models.CharField()
     buyer_q1 = models.CharField()
 
-    quiz_q1 = models.CharField(
-        choices = ['0 tokens', '{} tokens'.format(Constants.consbenefit), 'It depends on the prices I set'],
-        widget = widgets.RadioSelect(),
-        verbose_name = "How many tokens will you receive if you don't sell an object?")
-
-    quiz_q2 = models.CharField(
-        choices = ['0 tokens', '{} tokens'.format(Constants.consbenefit), 'It depends on the prices I set'],
-        widget = widgets.RadioSelect(),
-        verbose_name = 'How many tokens will you receive if you sell an object?')
-    
-    # profit = models.IntegerField(default=0) # use built-in payoff field
-    # profit_interim = models.IntegerField(default=0)
     payoff_interim = models.CurrencyField(default=0, doc="Player's earnings up to and including this round")
     buyer_bool = models.BooleanField(doc="True iff this player is a buyer in this round")
     seller_bool = models.BooleanField(doc="True iff this player is a seller in this round")

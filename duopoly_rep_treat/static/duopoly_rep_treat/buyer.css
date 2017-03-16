@@ -51,7 +51,7 @@ td{
     position: relative;
     float: left;
     /*background-color: #bbb;*/
-    padding: 8px;
+    padding: 8px 7px;
     border-left: 1px solid #5b616b;
     cursor: pointer;
     font-size:20px;

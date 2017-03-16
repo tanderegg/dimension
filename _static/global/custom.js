@@ -1,4 +1,8 @@
 $(document).ready(function() {
+    //
+    // disable right-click
+    //
+    document.oncontextmenu = document.body.oncontextmenu = function(){ return false; }
 
     //
     // Section Nav

@@ -25,8 +25,16 @@ $(document).ready(function() {
     // in utils.js
     setup_csrf();
 
-    // When player manually changes a field, we want to send the whole list of fields back as a list
+    $("#id_ask_total").focus(function(){
+        // If a user brings the ask_total field into focus, then the dim fields
+        //  get reset to empty.  This prevents the user from entering values
+        //  into sub-prices, and then entering a total price that is unequal to
+        //  the sum of the already-entered sub-prices.
+        $(".pricedim").val("");
+    });
+
     $(".pricedim").change(function () {
+        // When player manually changes a field, we want to send the whole list of fields back as a list
 
         var pricedims = [];
         var sum = 0;

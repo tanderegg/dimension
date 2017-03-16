@@ -21,17 +21,6 @@ class IntroductionPRA(Page):
     def is_displayed(self):
         return self.subsession.show_instructions_base
 
-# class InstructionsSellerQ1(Page):
-#     form_model = models.Player
-#     form_fields = ['quiz_q1']
-#
-#     def is_displayed(self):
-#         return self.subsession.show_instructions_base
-#
-# class InstructionsSellerQ1Ans(Page):
-#
-#     def is_displayed(self):
-#         return self.subsession.show_instructions_base
 
 # INSTRUCTIONS PAGES
 class InstructionsBasics(Page):
@@ -54,7 +43,7 @@ class InstructionsBasicsQuiz(Page):
 
     def vars_for_template(self):
         return {
-            'tokens_per_dollar': int(100. / float(self.session.config["real_world_currency_per_point"])),
+            'tokens_per_dollar': int(1. / float(self.session.config["real_world_currency_per_point"])),
         }
 
 
@@ -449,26 +438,17 @@ page_sequence = [
     WaitStartInstructions,
     IntroductionSplash,
     IntroductionPRA,
-    # InstructionsSellerQ1,
-    # InstructionsSellerQ1Ans,
     InstructionsBasics,
     InstructionsBasicsQuiz,
-    # InstructionsPayment,
     InstructionsRoles,
     InstructionsRolesQuiz,
     InstructionsNewTreatment,
     InstructionsSeller,
     InstructionsSellerQuiz,
-    # InstructionsSellerPrices,
-    # InstructionsSellerQ1,
-    # InstructionsSellerQ1Ans,
-    # InstructionsSellerQ2,
-    # InstructionsSellerQ2Ans,
     InstructionsBuyer,
     InstructionsBuyerQuiz,
     InstructionsRoundResults,
     InstructionsWaitGame,
-    # InstructionsCleanUp,
     WaitStartMatch,
     PracticeBegin,
     PracticeEnd,
