@@ -15,9 +15,9 @@ class PlayerBot(Bot):
           yield Submission(views.IntroductionSplash, check_html = False) # Different syntax for splash pages (don't have 'next' buttons)
           yield(views.IntroductionPRA)
           yield(views.InstructionsBasics)
-          yield(views.InstructionsBasicsQuiz)
+          yield(views.InstructionsBasicsQuiz, {"basics_q1" : "True"})
           yield(views.InstructionsRoles)
-          yield(views.InstructionsRolesQuiz)
+          yield(views.InstructionsRolesQuiz, {"roles_q1" : "True", "roles_q2" : "It depends"})
 
         # New treatment page only comes in between two treatments for paid rounds
         if ((self.subsession.show_instructions_base and self.subsession.dims > 1) or \
@@ -28,13 +28,13 @@ class PlayerBot(Bot):
           yield(views.InstructionsSeller)
 
         if (self.subsession.show_instructions_base or self.subsession.treatment_first_multiple):
-          yield(views.InstructionsSellerQuiz)
+          yield(views.InstructionsSellerQuiz, {"seller_q1" : "False"})
 
         if (self.subsession.show_instructions_roles):
           yield(views.InstructionsBuyer)
           
         if (self.subsession.show_instructions_base):
-          yield(views.InstructionsBuyerQuiz)
+          yield(views.InstructionsBuyerQuiz, {"buyer_q1" : "test"})
 
         if (self.subsession.show_instructions_base):
           yield(views.InstructionsRoundResults)

@@ -113,8 +113,8 @@ mturk_hit_settings = {
 # e.g. self.session.config['participation_fee']
 
 SESSION_CONFIG_DEFAULTS = {
-    'real_world_currency_per_point': 0.01,
-    'participation_fee': 10.00,
+    'real_world_currency_per_point': (1.00/10000),
+    'participation_fee': 5.00,
     'num_bots': 12,
     'doc': "",
     'mturk_hit_settings': mturk_hit_settings,
@@ -158,7 +158,7 @@ SESSION_CONFIGS = [
         ],
         'treatmentorder': "2,1,3",
         'participation_fee': 5,
-        'real_world_currency_per_point': .01,
+        'real_world_currency_per_point': (1.00/10000),
         'date': "20170130",
         'time': "1430",
         'experimenter_present': True, # set false to show "Next" button on ALL pages.
