@@ -1,6 +1,10 @@
 {% load staticfiles otree_tags %}
 
-<div class="seller_widget {% if example == "True" %}example{% endif %} {% if subsession.round_number > 1 %}truncated_instructions{% endif %}">
+<div class="seller_widget
+        {% if example == "True" %}example{% endif %}
+        {% if subsession.round_number > 1 %}truncated_instructions{% endif %}
+        {% if subsession.dims == 1 %}one_dim{% endif %}
+">
     <input type="submit" style="display:none"></input>
     {% if subsession.treatment > 1 %}
         <div class="form-group required">
@@ -52,7 +56,7 @@
         <input type='hidden' id='id_ask_stdev' name='ask_stdev' value="" />
     {% else %}
         <div class="form-group required">
-            <label for="id_ask_total" class="control-label">Price:</label>
+            <label for="id_ask_total" class="control-label">Price</label>
             <div class="controls  field-ask_total">
                 <input type="number" class="form-control" id="id_ask_total" max="800" min="0" required name="ask_total"></input>
             </div>

@@ -65,3 +65,7 @@ td{
 .field-contract_seller_rolenum label:first-child{
     border:none;
 }
+
+p{
+    min-width: 405px;
+}
