@@ -1,5 +1,8 @@
+.page-header h2{
+    margin: 0 0 0;
+}
 .col_container{
-    margin-bottom: 45px;
+    margin-bottom: 20px;
 }
 .col_container:last-child{
     margin-bottom: 0px;
@@ -12,11 +15,11 @@
 }
 
 .col p{
-    font-size: 17px;
+    font-size: 16px;
     clear: left;
 }
 h2{
-    margin: 10px 0 15px;
+    margin: 10px 0 7px;
 }
 hr{
     float: left;
@@ -29,14 +32,21 @@ hr{
 
 td label{
     color: #888;
-    font-size: 14px;
+    font-size: 12.5px;
     font-weight: normal;
     margin: 0 10px 0 0;
     min-width: 16px;
     text-align: right;
 }
 td{
-    padding: .5em .625em;
+    padding: 5px .625em 2px;
+}
+th{
+    padding: 10px 10px 5px;
+}
+th:first-child{
+    font-weight:normal;
+    font-size:12px;
 }
 .earnings{
     min-width: 185px;

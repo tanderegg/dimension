@@ -147,10 +147,10 @@ SESSION_CONFIGS = [
             'duopoly_rep_treat',
             'survey'
         ],
-        'treatmentorder': "2,1,3",
+        'treatmentorder': "3,1,2",
         'participation_fee': 5,
         'real_world_currency_per_point': (1.00/700),
-        'date': "20170130",
+        'date': "20170317",
         'time': "1430",
         'experimenter_present': True, # set false to show "Next" button on ALL pages.
     },

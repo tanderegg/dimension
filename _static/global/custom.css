@@ -4,12 +4,12 @@
 }
 .page-header{
     border:none;
-    margin: 50px 0 0;
-    padding-bottom: 0;
+    margin: 40px 0 0;
+    padding: 10px 0 0;
 }
 .page-header h2{
     font-size: 2em;
-    margin: 0.67em 0;
+    margin: 20px 0 10px;
 }
 #otree-content{
     padding: 0;

@@ -6,14 +6,19 @@ section{
 
 /* General Buyer */
 table{
-    margin-left: 50px;
+    margin-left: 54px;
     width: 265px;
 }
 table th{
     white-space:nowrap;
+    font-size:13px;
+    padding: 6px 6px 4px;
 }
 table th:first-child{
     white-space:normal;
+    font-weight: normal;
+    width: 76px;
+    font-size:11px;
 }
 
 .col:last-child{
@@ -28,13 +33,16 @@ td label{
     text-align: right;
 }
 td{
-    padding: .5em .625em;
+    padding: 6px .625em 3px;
+}
+td:first-child label{
+    font-size:12.5px;
 }
 #buyer-choice-radios{
     float: left;
     position: relative;
     width: 355px;
-    margin-top: 30px;
+    margin-top: 20px;
     margin-left: 10px;
 }
 #buyer-choice-radios .controls{
