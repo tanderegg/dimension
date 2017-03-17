@@ -182,15 +182,16 @@ class Group(BaseGroup):
                 buyer.payoff = Constants.consbenefit - buyer.bid_total
 
         for player in self.get_players():
-            # if self.subsession.round_number == 1:
-            #     # Give players their starting token allocation
-            #     player.payoff += Constants.consbenefit
+            if self.subsession.round_number == 1:
+                # Give players their starting token allocation
+                player.payoff += Constants.consbenefit
             # # keep track of interim total payoff
             # player.payoff_interim =  player.participant.payoff
-            if self.subsession.round_number > 1:
-                player.payoff_interim = player.payoff  + player.in_round(self.subsession.round_number - 1).payoff_interim
-            else:
-                player.payoff_interim = Constants.starting_tokens
+            # if self.subsession.round_number > 1:
+            #     player.payoff_interim = player.payoff  + player.in_round(self.subsession.round_number - 1).payoff_interim
+            # else:
+            #     player.payoff_interim = Constants.starting_tokens
+            player.payoff_interim = player.participant.payoff
                 
         # Market data
         # self.mkt_ask_min = min([c.ask.total for c in contracts])

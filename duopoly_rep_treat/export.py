@@ -34,6 +34,7 @@ def list_from_obj(fieldnames, obj):
         Small helper function to create a list from an object <obj> using <fieldnames>
         as attributes.
     """
+
     data = []
     for f in fieldnames:
         if type(obj) == dict:
@@ -95,6 +96,8 @@ def export_asks():
     sessions = Session.objects.order_by("code")
     # loop through all sessions
     for session in sessions:
+        if not session.config["name"] == "duopoly_rep_treat":
+            continue
         session_list = list_from_obj(session_fns, session)
 
         # loop through all subsessions (i.e. rounds) ordered by round number
@@ -141,6 +144,8 @@ def export_contracts():
 
     sessions = Session.objects.order_by("code")
     for session in sessions:
+        if not session.config["name"] == "duopoly_rep_treat":
+            continue
         session_list = list_from_obj(session_fns, session)
 
         # I believe this method excludes subsessions from other apps, and thus we do not need to filter on app name
@@ -184,6 +189,8 @@ def export_surveydata():
 
     sessions = Session.objects.order_by("code")
     for session in sessions:
+        if not session.config["name"] == "duopoly_rep_treat":
+            continue
         session_list = list_from_obj(session_fns, session)
 
         subsessions = [ss for ss in session.get_subsessions() if ss.__class__._meta.app_config.name=="survey"]
@@ -257,6 +264,8 @@ def export_marketdata():
 
     sessions = Session.objects.order_by("code")
     for session in sessions:
+        if not session.config["name"] == "duopoly_rep_treat":
+            continue
         session_list = list_from_obj(session_fns, session)
 
         # I believe this method excludes subsessions from other apps, and thus we do not need to filter on app name
@@ -305,7 +314,11 @@ def export_combineddata():
               pricedim_fns + survey_fns
 
     sessions = Session.objects.order_by("pk")
+    # subsessions = [ss for ss in session.get_subsessions() if ss.__class__._meta.app_config.name == "survey"]
+
     for session in sessions:
+        if not session.config["name"] == "duopoly_rep_treat":
+            continue
         session_list = list_from_obj(session_fns, session)
         metadata_list = list_from_obj(metadata_fns, session.config)
 
