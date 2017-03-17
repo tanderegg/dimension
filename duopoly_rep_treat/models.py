@@ -199,7 +199,6 @@ class Group(BaseGroup):
 
 
 
-
 class Player(BasePlayer):
     # Both
     rolenum = models.IntegerField(doc="The player's role number")
