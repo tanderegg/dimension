@@ -168,7 +168,7 @@ class Player(BasePlayer):
                                 widget=widgets.RadioSelect())
     q_gender = models.CharField(initial=None,
                                 blank=True,
-                                choices=['Male', 'Female'],
+                                choices=['Male', 'Female', 'Other'],
                                 verbose_name='What is your gender?',
                                 widget=widgets.RadioSelect())
     q_age = models.PositiveIntegerField(verbose_name='How old are you, in years?',

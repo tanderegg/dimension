@@ -22,7 +22,7 @@ class Constants(BaseConstants):
     treatmentdims = [1, 8, 16]
     practicerounds = [True, True, True]
     num_treatments = 3
-    num_rounds_treatment = 8
+    num_rounds_treatment = 2
     num_rounds_practice = 2
     num_rounds = num_rounds_treatment * num_treatments + num_rounds_practice * sum([ 1 if x else 0 for x in practicerounds ])
     num_players = 12
@@ -56,17 +56,17 @@ class Subsession(BaseSubsession):
                 }
     def before_session_starts(self):
 
-        # take the string inputted by the experimenter and change it to a list
-        treatmentorder = [int(t) for t in self.session.config["treatmentorder"].split(",")]
-
-        def numpracticerounds(treat):
+        def numpracticerounds(block):
             """
                 Helper function to determine treatment block variables.
-                :param treat: treatment number (1,2)
-                :return: the number of practice rounds that occured before treat
+                :param block: block number (1,2)
+                :return: the number of practice rounds that occured before treat, including current block
             """
-            nums = [Constants.num_rounds_practice if x else 0 for x in Constants.practicerounds[: treat]]
+            nums = [Constants.num_rounds_practice if x else 0 for x in Constants.practicerounds[: block]]
             return sum(nums)
+
+        # take the string inputted by the experimenter and change it to a list
+        treatmentorder = [int(t) for t in self.session.config["treatmentorder"].split(",")]
 
         # new treatment rounds
         new_block_rounds = [1]
@@ -173,24 +173,23 @@ class Group(BaseGroup):
             buyer = contract.bid.player
 
             seller.numsold += 1
+            seller.payoff_marginal += seller.ask_total - Constants.prodcost 
+            buyer.payoff_marginal = Constants.consbenefit - buyer.bid_total
 
             if self.subsession.practiceround:
                 seller.payoff = 0
                 buyer.payoff  = 0
             else:
-                seller.payoff += seller.ask_total - Constants.prodcost
-                buyer.payoff = Constants.consbenefit - buyer.bid_total
+                seller.payoff = seller.payoff_marginal
+                buyer.payoff = buyer.payoff_marginal
 
         for player in self.get_players():
             if self.subsession.round_number == 1:
                 # Give players their starting token allocation
+                #   payoff_marginal ignores this
                 player.payoff += Constants.consbenefit
-            # # keep track of interim total payoff
-            # player.payoff_interim =  player.participant.payoff
-            # if self.subsession.round_number > 1:
-            #     player.payoff_interim = player.payoff  + player.in_round(self.subsession.round_number - 1).payoff_interim
-            # else:
-            #     player.payoff_interim = Constants.starting_tokens
+
+            # Keep track of interim total payoff
             player.payoff_interim = player.participant.payoff
                 
         # Market data
@@ -216,6 +215,7 @@ class Player(BasePlayer):
     seller_q1 = models.CharField()
     buyer_q1 = models.CharField()
 
+    payoff_marginal  = models.CurrencyField(default=0, doc="Tracks player's earnings, ignoring endowments and ignoring practice-round status")
     payoff_interim = models.CurrencyField(default=0, doc="Player's earnings up to and including this round")
     buyer_bool = models.BooleanField(doc="True iff this player is a buyer in this round")
     seller_bool = models.BooleanField(doc="True iff this player is a seller in this round")

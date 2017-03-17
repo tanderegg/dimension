@@ -30,7 +30,7 @@ class InstructionsBasics(Page):
 
     def vars_for_template(self):
         return {
-            'tokens_per_dollar': int(100./float(self.session.config["real_world_currency_per_point"])),
+            'tokens_per_dollar': int(1./float(self.session.config["real_world_currency_per_point"])),
             'showup': self.session.config['participation_fee'],
         }
 
@@ -112,7 +112,7 @@ class InstructionsRoundResults(Page):
         return self.subsession.show_instructions_base
 
     def vars_for_template(self):
-        player = Player(roledesc="Seller", payoff=225, ask_total=325, numsold=1, rolenum=1)
+        player = Player(roledesc="Seller", payoff_marginal=225, ask_total=325, numsold=1, rolenum=1)
 
         return{
             "player": player,
@@ -123,6 +123,7 @@ class InstructionsRoundResults(Page):
             "b1_seller": 1,
             "b2_seller": 2,
             "prodcost": 100,
+            "benefit": 325,
         }
 
 class InstructionsWaitGame(Page):
@@ -162,12 +163,16 @@ class ChoiceSeller(Page):
         return self.player.roledesc == "Seller"
 
     def vars_for_template(self):
-        round_temp = (self.subsession.round_number - Constants.num_rounds_practice) % Constants.num_rounds_treatment
-        round = round_temp if round_temp > 0 else Constants.num_rounds_treatment
+        numpracticerounds = sum([Constants.num_rounds_practice if x else 0 for x in Constants.practicerounds[: self.subsession.block]])
+        numtreatrounds = Constants.num_rounds_treatment * (self.subsession.block - 1)
+        roundnum = self.subsession.round_number - numpracticerounds - numtreatrounds
+
+        # round_temp = (self.subsession.round_number - Constants.num_rounds_practice) % Constants.num_rounds_treatment
+        # round = round_temp if round_temp > 0 else Constants.num_rounds_treatment
         return{
             #'price_dims': self.player.pricedim_set.all()
             "price_dims": range(1, self.subsession.dims+1),
-            "round": round
+            "round": roundnum
         }
 
     def before_next_page(self):
@@ -194,8 +199,12 @@ class ChoiceBuyer(Page):
         return self.player.roledesc == "Buyer"
 
     def vars_for_template(self):
-        round_temp = (self.subsession.round_number - Constants.num_rounds_practice) % Constants.num_rounds_treatment
-        round = round_temp if round_temp > 0 else Constants.num_rounds_treatment
+        # round_temp = (self.subsession.round_number - Constants.num_rounds_practice) % Constants.num_rounds_treatment
+        # round = round_temp if round_temp > 0 else Constants.num_rounds_treatment
+        numpracticerounds = sum([Constants.num_rounds_practice if x else 0 for x in Constants.practicerounds[: self.subsession.block]])
+        # numpracticerounds = numpracticerounds(self.subsession.block - 1)
+        numtreatrounds = Constants.num_rounds_treatment * (self.subsession.block - 1)
+        roundnum = self.subsession.round_number - numpracticerounds - numtreatrounds
         # if self.subsession.dims > 1:
         prices = zip(range(1, self.subsession.dims + 1),
             [pd.value for pd in self.group.get_player_by_role("S1").get_ask().pricedim_set.all()],
@@ -204,7 +213,7 @@ class ChoiceBuyer(Page):
         #     prices = [[self.group.get_player_by_role("S1").ask_total, self.group.get_player_by_role("S2").ask_total]]
         return {
             "prices": prices,
-            "round": round
+            "round": roundnum
         }
 
     def before_next_page(self):

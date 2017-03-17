@@ -21,10 +21,6 @@ def get_player_from_request(request):
     return player
 
 
-
-
-
-
 def export_marketdata():
     """
         TODO: profit_final mistake_count mistake_count_1 mistake_count_8 mistake_count_16

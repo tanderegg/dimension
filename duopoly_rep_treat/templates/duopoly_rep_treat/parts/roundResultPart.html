@@ -4,25 +4,26 @@
 <div class="results">
 <div class="col_container">
     <div class="col">
-        <p>
-            This round you were {{ player.roledesc }} {{ player.rolenum }} and earned {{ player.payoff }} tokens.
-        </p>
-        {% if player.roledesc == "Buyer" %}
+        <div class="earnings_prose">
             <p>
-                You purchased an object from Seller {{ player.contract_seller_rolenum }} for {{ player.bid_total }} tokens, and you exchanged your object for {{ Constants.consbenefit }} tokens.
+                This round you were {{ player.roledesc }} {{ player.rolenum }} and earned {{ player.payoff_marginal }} tokens.
             </p>
-        {% else %}
+            {% if player.roledesc == "Buyer" %}
+                <p>
+                    You purchased an object from Seller {{ player.contract_seller_rolenum }} for {{ player.bid_total }} tokens, and you exchanged your object for {{ Constants.consbenefit }} tokens.
+                </p>
+            {% else %}
+                <p>
+                    You sold {{ player.numsold }} object{{ player.numsold | pluralize }} for {{ player.ask_total }} tokens each.
+                </p><p>
+                    Your total production cost was {{ prodcost }} tokens.
+                </p>
+            {% endif %}
             <p>
-                You sold {{ player.numsold }} object{{ player.numsold | pluralize }} for {{ player.ask_total }} tokens each.
-            </p><p>
-                Your total production cost was {{ prodcost }} tokens.
+                Your earnings are itemized in the table below.
             </p>
-        {% endif %}
-        <p>
-            Your earnings are itemized in the table to the right.
-        </p>
-    </div>
-    <div class="col">
+        </div>
+    
         <div class="table_container">
             <h2>Your Earnings</h2>
             {% if player.roledesc == "Buyer" %}
@@ -32,7 +33,7 @@
                 </tr><tr>
                     <td>Cost</td><td>-{{ player.bid_total }}</td>
                 </tr><tr class="total">
-                    <td>Total </td><td>{{ player.payoff }}tokens</td>
+                    <td>Total </td><td>{{ player.payoff_marginal }}tokens</td>
                 </tr>
             </tbody></table>
             {% else %}
@@ -52,22 +53,19 @@
                     <tr>
                         <td>Cost</td><td>-{{ Constants.prodcost }}</td>
                         <td> x {{ player.numsold }}</td>
-                        <td> -{{ prodcost }} </td>
+                        <td> {% if prodcost > 0 %} -{{ prodcost }} {% else %} 0 {% endif %}</td>
                     </tr>
 
                     <tr class="total">
                         <td>Total</td>
                         <td>{{ subtotal }}</td>
                         <td> x {{ player.numsold }}</td>
-                        <td>{{ player.payoff }}tokens</td>
+                        <td>{{ player.payoff_marginal }}tokens</td>
                     </tr>
             </tbody></table>
             {% endif %}
         </div>
-    </div>
-</div>
-<div class="col_container">
-    <div class="col">
+    
         <div class="table_container">
             <h2>Buyers' Choices</h2>
             <table>
