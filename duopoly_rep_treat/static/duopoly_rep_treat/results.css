@@ -48,7 +48,7 @@ td label{
     text-align: right;
 }
 td{
-    padding: 4px .625em 1px;
+    padding: 3px .625em 0px;
     font-size: 16px;
 }
 thead th{

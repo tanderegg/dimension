@@ -26,7 +26,7 @@
                 </td>
             </tr>
         {% endfor %}
-    </tbody></table>
+    <!-- </tbody></table> -->
 {% else %}
     <table>
         <thead>
@@ -51,10 +51,24 @@
                     </td>
                 {% endfor %}
             </tr>
-    </tbody></table>
+    <!-- </tbody></table> -->
 {% endif %}
-<div id="buyer-choice-radios" class="form-group required">
-    <!--<label for="id_contract_seller_rolenum" class="control-label">Choose a Seller</label>-->
+    <tr class="controls field-contract_seller_rolenum">
+        <td>Choose:</td>
+        <td>
+            <label for="id_contract_seller_rolenum_1" class="u-w50pct"><input type="radio" required="" name="contract_seller_rolenum" value="1" id="id_contract_seller_rolenum_1">
+                Seller 1
+            </label>
+        </td>
+        <td>
+            <label for="id_contract_seller_rolenum_2" class="u-w50pct"><input type="radio" required="" name="contract_seller_rolenum" value="2" id="id_contract_seller_rolenum_2">
+                Seller 2
+            </label>
+        </td>
+    </tr>
+</tbody></table>
+
+<!-- <div id="buyer-choice-radios" class="form-group required">
     <div class="controls field-contract_seller_rolenum">
         <label for="id_contract_seller_rolenum_1" class="u-w50pct"><input type="radio" required="" name="contract_seller_rolenum" value="1" id="id_contract_seller_rolenum_1">
             Choose Seller 1
@@ -63,4 +77,4 @@
             Choose Seller 2
         </label>
     </div>
-</div>
+</div> -->
