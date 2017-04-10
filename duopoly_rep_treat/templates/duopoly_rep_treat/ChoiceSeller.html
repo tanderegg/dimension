@@ -12,8 +12,13 @@
 {% block content %}
 
     <div class="col_container">
-        <div class="col">
-            <p>You are seller {{ player.rolenum }}. Please choose your {{ subsession.dims | pluralize:"price,sub-prices" }}.</p>
+        <div class="col realround_instructions">
+            <p>
+                You are Seller {{ player.rolenum }}.
+            </p>
+            <p> 
+                Please choose your {{ subsession.dims | pluralize:"price,sub-prices" }}.
+            </p>
             <p>As a reminder:</p>
             <ul>
                 <li>{{ subsession.dims | pluralize:"Prices,Sub-prices" }} must be whole numbers (no decimals).</li>
@@ -25,13 +30,10 @@
                     <li>You must enter values for all sub-prices.</li>
                     <li>Choose a "Total price" and press "Distribute" to choose random sub-prices that sum to "Total price".</li>
                     <li>You can press "Distribute" as many times as you like.</li>
+                    <li>You can edit individual sub-prices even if you already pressed the distribute button.</li>
                 {% endif %}
 
-
-
-
-                    <li>You can edit individual sub-prices even if you already pressed the distribute button.</li>
-                </ul>
+            </ul>
             <p>Press "Next" to submit your prices.</p>
            
         </div>

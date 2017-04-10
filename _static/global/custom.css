@@ -37,6 +37,14 @@ p{
     margin: 1em 0 .1em;
     clear: left;
 }
+.realround_instructions p{
+    font-size: 17px;
+    line-height: 1.45;
+}
+.realround_instructions li{
+    font-size: 15px;
+}
+
 .col p:first-child{
     margin-top: 1.2em;
 }

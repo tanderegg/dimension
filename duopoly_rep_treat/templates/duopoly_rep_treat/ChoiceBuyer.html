@@ -12,19 +12,19 @@
 {% block content %}
 
     <div class="col_container">
-        <div class="col">
-            <section>
+        <div class="col realround_instructions">
             <p>
-                You are buyer {{ player.rolenum }}. Please choose a seller to purchase an object from.
+                You are Buyer {{ player.rolenum }}. 
+            </p>
+            <p>
+            Please choose a seller to purchase from.
             </p>
             <p>As a reminder:</p>
             <ul>
                 <li>You will pay the {{ subsession.dims | pluralize:"price, sum of the sub-prices" }}.</li>
                 <li>You will exchange the object you buy for 800 tokens.</li>
             </ul>
-            <p>Press "Next" to submit your seller choice.</p>
-            </section>
-            
+            <p>Press "Next" to submit your choice.</p>            
         </div>
         <div class="col">
             {% include "duopoly_rep_treat/parts/buyerChoicePart.html" %}

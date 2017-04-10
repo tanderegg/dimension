@@ -7,11 +7,12 @@ section{
 /* General Buyer */
 table{
     margin-left: 20px;
-    width: 265px;
+    width: 275px;
 }
 table th{
     white-space:nowrap;
-    font-size:13px;
+    font-size:11px;
+    font-weight: normal;
     padding: 6px 6px 4px;
 }
 table th:first-child{
@@ -57,7 +58,7 @@ td:first-child label{
     position: relative;
     float: left;
     /*background-color: #bbb;*/
-    padding: 8px 12px 8px 0;
+    padding: 8px 16px 8px 0;
     border-right: 1px solid #ADDC91;
     cursor: pointer;
     font-size:19px;
@@ -65,7 +66,7 @@ td:first-child label{
     background-color: #DBEDD4;
     color: black;
     font-size: 16px;
-    width: 100%;
+    width: 100px;
     border-width: 0 1px;
 }
 .field-contract_seller_rolenum label:hover{
@@ -83,4 +84,8 @@ p{
 
 tr:last-child td:nth-child(2) label{
      border-left: 1px solid #ADDC91;
+}
+
+tr.one_dim td{
+    padding: 8px 4px 6px;
 }

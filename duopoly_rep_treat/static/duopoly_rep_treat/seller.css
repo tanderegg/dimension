@@ -29,13 +29,13 @@ section{
 .seller_widget{
     float:left;
     position:relative;
-    width: 279px;
-    margin: 19px 0 0 31px;
+    width: 298px;
+    margin: 19px 0 0 30px;
 }
 .seller_widget table{
     border-top: 1px solid #aaa;
     margin-top: 0px;
-    width: 115px;
+    width: 135px;
 }
 
 .seller_widget tbody tr{
@@ -66,12 +66,12 @@ section{
 }
 .seller_widget th:first-child{
     padding-left: 5px;
-    width: 40px;
+    width: 50px;
 }
 #distribute{
-    width: 141px;
+    width: 97px;
     height: 35px;
-    margin: 4px 0 0;
+    margin: 4px 0 0 43px;
     padding: 1px 0.875em 0;
     border-radius: .25em;
     border: none;
@@ -128,9 +128,9 @@ section{
     margin-left: 30px;
 }
 .one_dim #id_ask_total{
-    width: 170px;
-    height: 48px;
-    font-size: 24px;
+    width: 160px;
+    height: 45px;
+    font-size: 22px;
 }
 .one_dim .control-label{
     font-size: 21px;
