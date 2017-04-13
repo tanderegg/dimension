@@ -60,7 +60,8 @@ SENTRY_DSN = 'http://aa8f3376659444438933f0c0e9ca57c2:e6657515ec46456b9acbed3fd5
 # to DEMO. This will allow people to play in demo mode, but not access
 # the full admin interface.
 
-AUTH_LEVEL = environ.get('OTREE_AUTH_LEVEL')
+# AUTH_LEVEL = environ.get('OTREE_AUTH_LEVEL')
+AUTH_LEVEL = "STUDY"
 
 # setting for integration with AWS Mturk
 AWS_ACCESS_KEY_ID = environ.get('AWS_ACCESS_KEY_ID')
