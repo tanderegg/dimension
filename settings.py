@@ -14,7 +14,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 if environ.get('OTREE_PRODUCTION') not in {None, '', '0'}:
     DEBUG = False
 else:
-    DEBUG = True
+    # DEBUG = True
+    DEBUG = False
 
 ADMIN_USERNAME = 'admin'
 
@@ -113,7 +114,7 @@ mturk_hit_settings = {
 # e.g. self.session.config['participation_fee']
 
 SESSION_CONFIG_DEFAULTS = {
-    'real_world_currency_per_point': (1.00/700),
+    'real_world_currency_per_point': (1.00/600),
     'participation_fee': 5.00,
     'num_bots': 12,
     'doc': "",
@@ -149,7 +150,7 @@ SESSION_CONFIGS = [
         ],
         'treatmentorder': "3,1,2",
         'participation_fee': 5,
-        'real_world_currency_per_point': (1.00/700),
+        'real_world_currency_per_point': (1.00/600),
         'date': "20170317",
         'time': "1430",
         'experimenter_present': True, # set false to show "Next" button on ALL pages.
