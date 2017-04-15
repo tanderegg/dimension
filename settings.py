@@ -151,9 +151,9 @@ SESSION_CONFIGS = [
         ],
         'treatmentorder': "3,1,2",
         'participation_fee': 5,
-        'real_world_currency_per_point': (1.00/600),
-        'date': "20170317",
-        'time': "1430",
+        'real_world_currency_per_point': (1.00/550),
+        'date': "20170415",
+        'time': "1200",
         'experimenter_present': True, # set false to show "Next" button on ALL pages.
     },
     {

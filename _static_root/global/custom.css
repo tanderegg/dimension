@@ -2,6 +2,21 @@
 .container{
     width: 800px;
 }
+#timer{
+    position: absolute;
+    top: -94px;
+    right: 0;
+    border: none;
+    width: 21px;
+    background:white;
+    font-size: 16px;
+    font-weight: lighter;
+    color: #aaa;
+}
+#timer.timerFinished{
+    color: red;
+    font-weight: normal;
+}
 .page-header{
     border:none;
     margin: 40px 0 10px;

@@ -40,7 +40,7 @@ class Constants(BaseConstants):
     starting_tokens = 500
     production_cost = 100
     # For convenience of testing the experience of players
-    show_instructions = True
+    show_instructions = False
 
 
 class Subsession(BaseSubsession):
