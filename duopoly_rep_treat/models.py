@@ -33,8 +33,8 @@ class Constants(BaseConstants):
     starting_tokens = maxprice
     # For convenience of testing the experience of players
     show_instructions_admin = True # set false to not show any instructions whatsoever
-    show_seller_timer = False
-    show_buyer_timer = False
+    show_seller_timer = True
+    show_buyer_timer = True
     seller_timer = 60
     buyer_timer = 60
 
