@@ -22,7 +22,7 @@ class Constants(BaseConstants):
     treatmentdims = [1, 8, 16]
     practicerounds = [True, True, True]
     num_treatments = 3
-    num_rounds_treatment = 12
+    num_rounds_treatment = 10
     num_rounds_practice = 2
     num_rounds = num_rounds_treatment * num_treatments + num_rounds_practice * sum([ 1 if x else 0 for x in practicerounds ])
     num_players = 12
