@@ -20,19 +20,19 @@ class Constants(BaseConstants):
     sellers_per_group = 2
     buyers_per_group = 2
     treatmentdims = [1, 8, 16]
-    practicerounds = [True, True, True]
+    practicerounds = [True, False, False]
     num_treatments = 3
-    num_rounds_treatment = 10
+    num_rounds_treatment = 12
     num_rounds_practice = 2
-    num_rounds = num_rounds_treatment * num_treatments + num_rounds_practice * sum([ 1 if x else 0 for x in practicerounds ])
+    num_rounds = num_rounds_treatment * num_treatments + num_rounds_practice * \
+        sum([ 1 if x else 0 for x in practicerounds ])
     num_players = 12
     prodcost = 100
     consbenefit = 800
     maxprice = 800
     minprice = 0
     starting_tokens = maxprice
-    # For convenience of testing the experience of players
-    show_instructions_admin = True # set false to not show any instructions whatsoever
+    show_instructions_admin = True # Set false to not show any instructions
     show_seller_timer = True
     show_buyer_timer = True
     seller_timer = 60
@@ -79,9 +79,10 @@ class Subsession(BaseSubsession):
 
         # practice rounds
         practice_rounds = []
-        for r in new_block_rounds:
-            for i in range(r, r + Constants.num_rounds_practice):
-               practice_rounds.append(i)
+        for idx, r in enumerate(new_block_rounds):
+            if Constants.practicerounds[idx]:
+                for i in range(r, r + Constants.num_rounds_practice):
+                   practice_rounds.append(i)
 
         # set treatment-level variables
         # Determine if this is the first round of a new block. This is also used to display new instructions

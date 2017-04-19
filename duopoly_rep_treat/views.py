@@ -85,7 +85,8 @@ class InstructionsSellerQuiz(Page):
     form_fields = ['seller_q1']
 
     def is_displayed(self):
-        return self.subsession.show_instructions_base or self.subsession.treatment_first_multiple
+        return self.subsession.show_instructions_base or \
+            (self.subsession.treatment_first_multiple and Constants.show_instructions_admin)
 
 
 class InstructionsBuyer(Page):

@@ -37,55 +37,17 @@
 {% block scripts %}
     <script type="text/javascript" src="{% static 'duopoly_rep_treat/wordfind.js' %}"></script>
     <script type="text/javascript" src="{% static 'duopoly_rep_treat/wordfindgame.js' %}"></script>
+    <script type="text/javascript" src="{% static 'duopoly_rep_treat/waitgame.js' %}"></script>
     <script type="text/javascript" src="{% static 'duopoly_rep_treat/utils.js' %}"></script>
 
     <script type="text/javascript">
-
-        var words = ['cat', 'bird', 'fish', 'hamster', 
-                    'lion', 'tiger', 'elephant', 'giraffe', 'hippo', 'buffalo',
-                    'camel', 'anteater', 'rhino', 'boar', 'tapir', 'lemur',
-                    'cheetah', 'zebra', 'wombat', 'leopard', 'meerkat',
-                    'porcupine', 'puma', 'antelope', 'gazelle',
-                    'bear', 'deer', 'elk', 'bison', 'fox', 'woodpecker',
-                    'beaver', 'otter', 'seal', 'chipmunk', 'racoon', 
-                    'squirrel', 'opossum', 'hare',
-                    'eagle', 'hawk', 'starling', 'cardinal', 'oriole', 'robin',
-                    'owl', 'sparrow', 'pigeon', 'dove', 'finch', 'magpie',
-                    'ostrich', 'emu', 'heron', 'bluebird', 'blackbird', 
-                    'chickadee', 'raven', 'wren', 'mallard', 'duck', 'bat',
-                    'pelican', 'swan', 'crane', 'stork', 'parrot', 'goose',
-                    'penguin', 'falcon', 'flamingo', 'peacock', 'puffin',
-                    'toucan', 'quail',
-                    'horse', 'sheep', 'pig', 'chicken', 'goat', 'cow', 
-                    'rooster', 'turkey', 'bull', 'donkey', 'mouse', 
-                    'lizard', 'frog', 'toad', 'gecko', 'iguana',
-                    'monkey', 'baboon', 'bandicoot', 'sloth', 'armadillo',
-                    'dolphin', 'whale', 'seahorse', 'octopus', 'squid', 'crab',
-                    'snail', 'bee', 'dragonfly', 'cricket', 'firefly',
-                    'butterfly', 'moth',
-                    'llama', 'lemming', 'tortoise', 'reindeer', 'moose', 
-                    'kangaroo', 'koala', 'panda', 'wallaby', 'gorilla'
-                    ];
-
-        function getRandomSubarray(arr, size) {
-            // A "Fisher-Yates shuffle"
-            // From: http://stackoverflow.com/questions/11935175/sampling-a-random-subset-from-an-array/11935263
-            var shuffled = arr.slice(0), i = arr.length, min = i - size, temp, index;
-            while (i-- > min) {
-                index = Math.floor((i + 1) * Math.random());
-                temp = shuffled[index];
-                shuffled[index] = shuffled[i];
-                shuffled[i] = temp;
-            }
-            return shuffled.slice(min);
-        }
 
         $(document).ready(function(){
             // AJAX stuff
             setup_csrf();
 
             var resultHandler = function(result) {
-//                console.log(result);
+               // console.log(result);
             };
 
             // When player manually changes a field, we want to send the whole list of fields back as a list

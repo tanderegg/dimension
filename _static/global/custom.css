@@ -7,11 +7,11 @@
     top: -94px;
     right: 0;
     border: none;
-    width: 21px;
+    width: 23px;
     background:white;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: lighter;
-    color: #aaa;
+    color: #222;
 }
 #timer.timerFinished{
     color: red;
