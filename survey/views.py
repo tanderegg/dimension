@@ -81,6 +81,6 @@ page_sequence = [
     SubjNumeracy1,SubjNumeracy2,SubjNumeracy3,
     ObjNumeracy,
     Demographics1,Demographics2,
-    FutureStudies,
+    # FutureStudies,
     Splash
 ]
