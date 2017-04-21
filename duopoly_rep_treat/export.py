@@ -331,7 +331,7 @@ def export_combineddata():
     player_fns = get_field_names_for_csv(Player)
     pricedim_fns = ["p" + str(i) for i in range(1, maxdim + 1)]
     survey_fns = get_field_names_for_csv(PlayerSurvey)
-    survey_fns = [ fn for fn in survey_fns if fn != "payoff" ] # extraneous var conflicts in namespace
+    survey_fns = [ fn for fn in survey_fns if not fn in ["payoff", "id_in_group"] ] # extraneous var conflicts in namespace
 
     sessions_full = Session.objects.order_by("pk")
     sessions = [ sess for sess in sessions_full if sess.config["name"] == "duopoly_rep_treat" ]
