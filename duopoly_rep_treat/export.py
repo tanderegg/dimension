@@ -13,6 +13,7 @@ import inspect
 import six
 from otree.common_internal import get_models_module, app_name_format
 from collections import OrderedDict
+import collections
 
 
 # HELPER METHODS

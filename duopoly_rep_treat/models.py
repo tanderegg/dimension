@@ -32,8 +32,8 @@ class Constants(BaseConstants):
     maxprice = 800
     minprice = 0
     starting_tokens = maxprice
-    show_instructions_admin = True # Set false to not show any instructions
-    show_seller_timer = True
+    show_instructions_admin = True # Set False to not show any instructions
+    show_seller_timer = True # Set False to hide "time remaining" counter
     show_buyer_timer = True
     seller_timer = 60
     buyer_timer = 60
@@ -47,7 +47,14 @@ class Subsession(BaseSubsession):
     dims = models.IntegerField(doc="The number of price dimensions in the treatment.")
     block_new = models.BooleanField(default=False, doc="True if round is the first in a new treatment block")
     treatment_first_singular = models.BooleanField(default=False, doc="True if block>1 and treatment==1")
-    treatment_first_multiple = models.BooleanField(default=False, doc="True if block==2 and block1 treatment==1 ")
+    treatment_first_multiple = models.BooleanField(default=False, doc="True if block==2 and block1 treatment==1")
+    treatment1_bool = models.BooleanField(default=False, doc="True iff treatment==1")
+    treatment2_bool = models.BooleanField(default=False, doc="True iff treatment==2")
+    treatment3_bool = models.BooleanField(default=False, doc="True iff treatment==3")
+    block1_bool = models.BooleanField(default=False, doc="True iff block==1")
+    block2_bool = models.BooleanField(default=False, doc="True iff block==2")
+    block3_bool = models.BooleanField(default=False, doc="True iff block==3")
+
 
     show_instructions_base = models.BooleanField(doc="True if basic instructions are to be shown this round.")
     show_instructions_block = models.BooleanField(doc="True if new-block instructions are to be shown this round.")
@@ -95,6 +102,11 @@ class Subsession(BaseSubsession):
             self.block = new_block_rounds.index(
                 min(new_block_rounds, key=lambda x: abs(self.round_number - x) if x <= self.round_number else 999)) + 1
 
+        # block bools
+        self.block1_bool = True if self.block==1 else False
+        self.block2_bool = True if self.block==2 else False
+        self.block3_bool = True if self.block==3 else False
+
 
         # Is this a practice round?
         if self.round_number in practice_rounds:
@@ -106,6 +118,9 @@ class Subsession(BaseSubsession):
 
         # store treatment number and dims
         self.treatment = treatmentorder[self.block - 1]
+        self.treatment1_bool = True if self.treatment==1 else False
+        self.treatment2_bool = True if self.treatment==2 else False
+        self.treatment3_bool = True if self.treatment==3 else False
         self.dims = Constants.treatmentdims[self.treatment - 1]
 
         # Flag if this is the first round with either a multiple-dim treatment or a single-dim treatment
@@ -128,8 +143,9 @@ class Subsession(BaseSubsession):
             Constants.show_instructions_admin else False
         self.show_instructions_practice = True if (self.practiceround and not self.round_number-1 in practice_rounds) \
             and Constants.show_instructions_admin else False
-        self.show_instructions_real = True if (self.realround and self.round_number - 1 in practice_rounds) \
-                                                  and Constants.show_instructions_admin else False
+        self.show_instructions_real = True if (self.realround and 
+            (self.round_number - 1 in practice_rounds or self.treatment != self.in_round(self.round_number - 1).treatment)) \
+            and Constants.show_instructions_admin else False
 
         # Set player level variables
         # Randomize groups each round.
@@ -214,11 +230,11 @@ class Player(BasePlayer):
     roledesc = models.CharField(doc="The player's role description. E.g., 'Seller' or 'Buyer'")
 
     # Instruction Questions
-    basics_q1 = models.CharField()
-    roles_q1 = models.CharField()
-    roles_q2 = models.CharField()
-    seller_q1 = models.CharField()
-    buyer_q1 = models.CharField()
+    basics_q1 = models.CharField(doc="Instructions quiz, basics")
+    roles_q1 = models.CharField(doc="Instructions quiz, roles 1")
+    roles_q2 = models.CharField(doc="Instructions quiz, roles 2")
+    seller_q1 = models.CharField(doc="Instructions quiz, seller")
+    buyer_q1 = models.CharField(doc="Instructions quiz, buyer")
 
     payoff_marginal  = models.CurrencyField(default=0, doc="Tracks player's earnings, ignoring endowments and ignoring practice-round status")
     payoff_interim = models.CurrencyField(default=0, doc="Player's earnings up to and including this round")

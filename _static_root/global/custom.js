@@ -7,7 +7,7 @@ $(document).ready(function() {
     //
     // Timer
     //
-    var timer = $("#timer");
+    var timer = $("#timer input");
     var tr = 999
     var ticdown = function(){
         tr = tr - 1;

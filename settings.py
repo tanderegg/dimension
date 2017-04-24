@@ -44,7 +44,7 @@ DATABASES = {
     #     'USER': 'otree_user',
     #     'PASSWORD': 'Pr3te$ting',
     #     'HOST': 'localhost',
-    #     'PORT': '8000'
+    #     'PORT': '5432'
     # }
 }
 
@@ -149,11 +149,11 @@ SESSION_CONFIGS = [
             'duopoly_rep_treat',
             'survey'
         ],
-        'treatmentorder': "1,2,3",
+        'treatmentorder': "3,2,1",
         'participation_fee': 10,
         'real_world_currency_per_point': (1.00/550),
-        'date': "20170418",
-        'time': "1200",
+        'date': "20170424",
+        'time': "1000",
         'experimenter_present': True, # set false to show "Next" button on ALL pages.
     },
     {

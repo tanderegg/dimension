@@ -15,11 +15,20 @@ class Risk2(Page):
     form_fields = ['q_risk2']
     def is_displayed(self):
         return self.player.q_risk1 == 1
+
+    def before_next_page(self):
+        self.player.set_risk()
+    
+
 class Risk3(Page):
     form_model = models.Player
     form_fields = ['q_risk3']
     def is_displayed(self):
         return self.player.q_risk1 == 2
+
+    def before_next_page(self):
+        self.player.set_risk()
+    
 
 class Risk4(Page):
     form_model = models.Player
@@ -66,13 +75,19 @@ class Demographics2(Page):
     #  return {'q_course_micro', 'q_course_mkt', 'q_course_law'}
 
 
-class FutureStudies(Page):
-    form_model = models.Player
-    form_fields = ['q_futureStudies']
+# class FutureStudies(Page):
+#     form_model = models.Player
+#     form_fields = ['q_futureStudies']
 
 class Splash(Page):
     form_model = models.Player
     form_fields = [ ]
+
+    # def after_all_players_arrive(self):
+    #     players = self.group.get_players()
+
+    #     for player in players:
+    #         player.set_risk()
 
 
 page_sequence = [

@@ -11,9 +11,12 @@
 
 {% block content %}
     {% if Constants.show_seller_timer %}
-        <input id="timer" type="text" disabled="disabled"
-            value="{{ Constants.seller_timer }}">
-        </input>
+        <div id="timer">
+            <label>Time Remaining:</label>
+            <input type="text" disabled="disabled"
+                value="{{ Constants.seller_timer }}">
+            </input>
+        </div>
     {% endif %}
     <div class="col_container">
         <div class="col realround_instructions">
