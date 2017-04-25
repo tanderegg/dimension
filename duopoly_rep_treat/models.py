@@ -35,8 +35,10 @@ class Constants(BaseConstants):
     show_instructions_admin = True # Set False to not show any instructions
     show_seller_timer = True # Set False to hide "time remaining" counter
     show_buyer_timer = True
+    show_results_timer = True
     seller_timer = 60
     buyer_timer = 60
+    results_timer = 30
 
 
 class Subsession(BaseSubsession):

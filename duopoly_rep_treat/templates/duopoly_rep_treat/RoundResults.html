@@ -10,7 +10,14 @@
 {% endblock %}
 
 {% block content %}
-
+    {% if Constants.show_results_timer %}
+        <div id="timer">
+            <label>Time Remaining:</label>
+            <input type="text" disabled="disabled"
+                value="{{ Constants.results_timer }}">
+            </input>
+        </div>
+    {% endif %}
     {% include "duopoly_rep_treat/parts/roundResultPart.html" %}
     <nav >
         <button class="a-btn next">Next</button>

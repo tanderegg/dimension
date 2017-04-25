@@ -7,19 +7,24 @@ $(document).ready(function() {
     //
     // Timer
     //
-    var timer = $("#timer input");
+    var timer = $("#timer");
     var tr = 999
     var ticdown = function(){
-        tr = tr - 1;
-        timer.val(tr);
-        if (tr >= 1){
-            setTimeout(ticdown, 1000);
-        } else{
+        console.log(tr);
+        if(tr <= 0){
             timer.addClass("timerFinished");
+            timer.fadeToggle(1000);
+        } else {
+            tr = tr - 1;
+            $("input", timer).val(tr);
         }
+        
+        setTimeout(ticdown, 1000);
+        
+ 
     }
-    if (timer.length > 0){
-        tr = Number(timer.val());
+    if ($("input", timer).length > 0){
+        tr = Number($("input", timer).val());
         setTimeout(ticdown, 1000);
     }
 

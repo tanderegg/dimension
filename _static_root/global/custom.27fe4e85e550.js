@@ -23,8 +23,8 @@ $(document).ready(function() {
         
  
     }
-    if ($("input", timer).length > 0){
-        tr = Number($("input", timer).val());
+    if (timer.length > 0){
+        tr = Number(timer.val());
         setTimeout(ticdown, 1000);
     }
 

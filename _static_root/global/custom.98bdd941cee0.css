@@ -30,7 +30,7 @@
     line-height: 1.25;
     margin-right: 4px;
 }
-#timer.timerFinished input{
+#timer.timerFinished{
     color: red;
     font-weight: normal;
 }

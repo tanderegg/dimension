@@ -25,12 +25,12 @@
 #timer label{
     position: relative;
     float: left;
-    color: #ccc;
+    color: #333;
     font-size: 16px;
     line-height: 1.25;
     margin-right: 4px;
 }
-#timer.timerFinished{
+#timer.timerFinished input{
     color: red;
     font-weight: normal;
 }

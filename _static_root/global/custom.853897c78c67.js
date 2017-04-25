@@ -10,10 +10,11 @@ $(document).ready(function() {
     var timer = $("#timer");
     var tr = 999
     var ticdown = function(){
-        console.log(tr);
+        
         if(tr <= 0){
             timer.addClass("timerFinished");
             timer.fadeToggle(1000);
+            return;
         } else {
             tr = tr - 1;
             $("input", timer).val(tr);
@@ -23,8 +24,8 @@ $(document).ready(function() {
         
  
     }
-    if ($("input", timer).length > 0){
-        tr = Number($("input", timer).val());
+    if (timer.length > 0){
+        tr = Number(timer.val());
         setTimeout(ticdown, 1000);
     }
 
