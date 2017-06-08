@@ -337,10 +337,8 @@ def export_combineddata():
     sessions_full = Session.objects.order_by("pk")
     sessions = [ sess for sess in sessions_full if sess.config["name"] == "duopoly_rep_treat" ]
 
-    participant_codes, sellerbool_headers, buyerbool_headers = get_rolebool_headers(sessions)
-
     headers = session_fns + metadata_fns + subsession_fns + group_fns + market_fns + participant_fns_d + player_fns + \
-              pricedim_fns + survey_fns + sellerbool_headers + buyerbool_headers
+              pricedim_fns + survey_fns
 
     for session in sessions:
         # if not session.config["name"] == "duopoly_rep_treat":
@@ -368,14 +366,8 @@ def export_combineddata():
                     player_survey = PlayerSurvey.objects.get(session=session, participant__code=participant.code)
                     survey_list = list_from_obj(survey_fns, player_survey)
 
-                    player_sellerbools = [ True if participant.code == pc and player.seller_bool == True 
-                                           else False for pc in participant_codes ]
-                    player_buyerbools = [ True if participant.code == pc and player.buyer_bool == True 
-                                           else False for pc in participant_codes ]
-
                     body.append(session_list + metadata_list + subsession_list + group_list + market_list +
-                                participant_list + player_list + pricedim_list + survey_list +
-                                player_sellerbools + player_buyerbools)
+                                participant_list + player_list + pricedim_list + survey_list)
 
     return headers, body
 
