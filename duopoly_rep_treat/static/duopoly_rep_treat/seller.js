@@ -1,4 +1,5 @@
-
+var ajaxRequestCount = 0;
+var nextButtonPressed = false;
 
 var resultHandlerManual = function(result) {
     // Do NOT over-write the sub-price fields as this causes unwanted behavior if there is network latency
@@ -6,6 +7,8 @@ var resultHandlerManual = function(result) {
     // Updating via JS instead to avoid race conditions
     //$("#id_ask_total").val(result.ask_total); // updating via js first
     //$("#id_ask_stdev").val(result.ask_stdev);
+    ajaxRequestCount--;
+    console.log(ajaxRequestCount);
 };
 var resultHandlerAuto = function(result) {
     // Over-writing user-input to enforce consistency.  The only reason this should ever be different
@@ -18,6 +21,7 @@ var resultHandlerAuto = function(result) {
     $("#id_ask_total").val(result.ask_total);
     $("#id_ask_stdev").val(result.ask_stdev);
 };
+
 $(document).ready(function() {
     // when this is called from the instructions page, the example flag should be set to True, which should prevent
     // the server from adding a row to the Ask database.
@@ -48,8 +52,8 @@ $(document).ready(function() {
         $(pricedims).each(function (i, val) {
             std += Math.pow(val - avg, 2) / pricedims.length;
         });
-        std = Math.pow(std, 0.5) ;
-
+        std = Math.pow(std, 0.5) 
+        ;
         // Set totals variables via js
         $("#id_ask_total").val(sum);
         $("#id_ask_stdev").val(std);
@@ -62,6 +66,10 @@ $(document).ready(function() {
             url: $("#distribute").attr("data-manual-url"),
             data: data,
             dataType: "json",
+            beforeSend: function(){
+                ajaxRequestCount++;
+                console.log(ajaxRequestCount);
+            },
             success: resultHandlerManual
         });
     });
@@ -94,4 +102,26 @@ $(document).ready(function() {
         });
     });
 
+    $('.next_page').click(function(){
+        $(".next_page").prop("disabled", true);
+        $(".pricedim").prop("disabled", true);
+        nextButtonPressed = true;
+        if (ajaxRequestCount == 0){
+            console.log("Now proceeding to next page");
+            $(".next_page").prop("disabled", false);
+            $(".pricedim").prop("disabled", false);
+            $("nav input[type='submit']").click();
+        }
+    });
+})
+
+$(document).ajaxStop(function(){
+    console.log("Finished AJAX requests");
+    if(ajaxRequestCount == 0 && nextButtonPressed){
+        console.log("Now proceeding to next page");
+        nextButtonPressed = false;
+        $("nav input[type='submit']").click();
+        $(".next_page").prop("disabled", false);
+        $(".pricedim").prop("disabled", false);
+    }
 })

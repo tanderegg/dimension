@@ -32,7 +32,7 @@ class Constants(BaseConstants):
     maxprice = 800
     minprice = 0
     starting_tokens = maxprice
-    show_instructions_admin = True # Set False to not show any instructions
+    show_instructions_admin = False # Set False to not show any instructions
     show_seller_timer = True # Set False to hide "time remaining" counter
     show_buyer_timer = True
     show_results_timer = True
